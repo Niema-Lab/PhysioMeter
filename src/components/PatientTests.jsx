@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
 
+import Title from './form/Title'
+
 export class PatientTests extends Component {
     render() {
         return (
             <div id="patient-tests">
-                <h1 className="text-center w-100 my-5">Patient Tests</h1>
+                <Title>Patient Tests (IN DEVELOPMENT)</Title>
             </div>
         )
     }

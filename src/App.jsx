@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import { HashRouter, Routes, Route } from 'react-router-dom'
 
-import { Home } from './components/Home'
-import { PatientHome } from './components/PatientHome'
-import { PatientTests } from './components/PatientTests'
-import { Utilities } from './components/Utilities'
-import { NewUser } from './components/NewUser'
-import { ExistingUser } from './components/ExistingUser'
+import Home from './components/Home'
+import PatientHome from './components/PatientHome'
+import PatientTests from './components/PatientTests'
+import Utilities from './components/Utilities'
+import NewUser from './components/NewUser'
+import ExistingUser from './components/ExistingUser'
 
 export class App extends Component {
   render() {

@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 
-import { Name } from './measurements/Name'
-import { Date } from './measurements/Date'
-import { getCurrentUser } from '../DB.js'
+import { Name, Date, Sex } from './measurements/Measurement'
+import VitalSigns from './measurements/VitalSigns'
 import MultipleMeasurements from './MultipleMeasurements'
+import { getCurrentUser } from '../DB.js'
+import Title from './form/Title'
+import Submit from './form/Submit.jsx'
 
 export class Utilities extends Component {
     constructor(props) {
@@ -12,7 +14,9 @@ export class Utilities extends Component {
         this.state = {
             user: null,
             names: null,
-            dates: null
+            dates: null,
+            sexes: null,
+            vitals: null
         }
     }
 
@@ -23,15 +27,20 @@ export class Utilities extends Component {
     render() {
         return (
             <div id="utilities">
-                <h1 className="text-center w-100 my-5">Utilities {this.state.user && `(${this.state.user.name})`}</h1>
+                <Title>Utilities {this.state.user && `(${this.state.user.name})`}</Title>
                 <div className="utilities-list d-flex flex-column align-items-center">
                     <div className="utility-item w-100">
                         {!this.state.user &&
                             <MultipleMeasurements name="Name" component={Name} onChange={(names) => this.setState({ names })} />
                         }
                         <MultipleMeasurements name="Date of Birth" component={Date} onChange={(dates) => this.setState({ dates })} />
+                        <MultipleMeasurements name="Sex" component={Sex} onChange={(sexes) => this.setState({ sexes })} />
+                        <MultipleMeasurements name="Vital Signs" component={VitalSigns} onChange={(vitals) => this.setState({ vitals })} />
                     </div>
                 </div>
+                <Submit value="Save Utilities" onClick={() => {
+                    console.log(this.state)
+                }} />
             </div>
         )
     }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
-import { Name } from './measurements/Name'
+import { Name } from './measurements/Measurement'
 import Submit from './form/Submit'
 import Title from './form/Title'
 import Text from './form/Text'
@@ -68,7 +68,7 @@ export class NewUser extends Component {
     render() {
         return (
             <div id="new-user">
-                <Title tag="h1" value="Create New User" />
+                <Title>Create New User</Title>
                 <Link to="/existing-user" className="link text-decoration-underline"><h2>View Existing Users</h2></Link>
                 <Name
                     value={this.state.name}
@@ -77,7 +77,7 @@ export class NewUser extends Component {
                 />
                 <Submit onClick={this.createUser} />
                 {this.state.submitText &&
-                    <Text tag="h4" value={this.state.submitText} type={this.state.submitTextType} />
+                    <Text value={this.state.submitText} type={this.state.submitTextType} />
                 }
             </div>
         )

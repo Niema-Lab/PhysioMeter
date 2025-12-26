@@ -6,9 +6,7 @@ function Text(props) {
             {props.value &&
                 <h4 className={props.type ? `text-${props.type}` : ''}>{props.value}</h4>
             }
-            {props.children &&
-                props.children
-            }
+            {props.children}
         </div >
     )
 }

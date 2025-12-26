@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
 import { getCurrentUser } from '../DB.js'
@@ -19,17 +19,17 @@ export class PatientHome extends Component {
 
     render() {
         return (
-            <div id="home">
+            <div id="patient-home">
                 {this.state.user ?
-                    <Fragment>
-                        <Title value={`Patient Home Page: ${this.state.user.name}`} />
+                    <>
+                        <Title>Patient Home Page: {this.state.user.name}</Title>
                         <nav className="d-flex flex-column align-items-center">
-                            <Link to={`/patient-tests${this.state.user ? `?uid=${this.state.user.uid}` : ''}`} className="link text-decoration-underline"><h2>Patient Tests</h2></Link>
-                            <Link to={`/utilities${this.state.user ? `?uid=${this.state.user.uid}` : ''}`} className="link text-decoration-underline"><h2>Utilities</h2></Link>
+                            <Link to={`/patient-tests?uid=${this.state.user.uid}`} className="link text-decoration-underline"><h2>Patient Tests</h2></Link>
+                            <Link to={`/utilities?uid=${this.state.user.uid}`} className="link text-decoration-underline"><h2>Utilities</h2></Link>
                         </nav>
-                    </Fragment>
+                    </>
                     :
-                    <Title value="Patient Home Page" />
+                    <Title>Patient Home Page</Title>
                 }
 
             </div>

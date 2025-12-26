@@ -28,7 +28,7 @@ const getCurrentUser = async () => {
     const tx = db.transaction('users', 'readonly')
     const store = tx.objectStore('users')
 
-    const urlParams = new URLSearchParams(window.location.search)
+    const urlParams = new URLSearchParams(window.location.hash.split('?')[1])
     const uid = urlParams.get('uid')
 
     if (!uid) {

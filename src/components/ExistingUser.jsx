@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
 import { openDB } from '../DB.js'
-import Text from './form/Text'
 import Title from './form/Title'
 
 export class ExistingUser extends Component {
@@ -14,7 +13,7 @@ export class ExistingUser extends Component {
         }
     }
 
-    async componentDidMount() {
+    componentDidMount = async () => {
         const db = await openDB()
 
         const tx = db.transaction('users', 'readonly')
@@ -22,7 +21,6 @@ export class ExistingUser extends Component {
 
         const allUsers = store.getAll()
         allUsers.onsuccess = () => {
-            console.log('Existing users:', allUsers.result)
             this.setState({ users: allUsers.result })
         }
         allUsers.onerror = (e) => {
@@ -33,7 +31,9 @@ export class ExistingUser extends Component {
     render() {
         return (
             <div id="existing-user">
-                <Title tag="h1" value="Select Existing User" />
+                <Title>Select Existing User</Title>
+                <Link to="/new-user" className="link text-decoration-underline"><h2>Create New User</h2></Link>
+                <Title>Existing Users</Title>
                 {this.state.users.map((user) => (
                     <Link key={user.uid} to={`/patient-home?uid=${user.uid}`} className="link text-decoration-underline">
                         <h2>{user.name}</h2>

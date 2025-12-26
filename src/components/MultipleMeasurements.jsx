@@ -47,11 +47,11 @@ export class MultipleMeasurements extends Component {
         return (
             <div className="multiple-measurements">
                 <h2 className="measurement-header text-center w-100 cursor-p" onClick={this.addMeasurement}>{this.props.name} <i className="bi bi-plus-circle-fill text-primary ms-3"></i></h2>
-                {this.state.measurements.map((value, index) => (
+                {this.state.measurements.map((measurement, index) => (
                     <MeasurementComponent
                         key={index}
-                        value={this.state.measurements[index].value || ''}
-                        label={this.state.measurements[index].label || ''}
+                        value={measurement.value || ''}
+                        label={measurement.label || ''}
                         onChange={(value) => this.updateMeasurement(index, value)}
                         onLabelChange={(label) => this.updateMeasurementLabel(index, label)}
                         onDelete={() => this.deleteMeasurement(index)}

@@ -7,7 +7,7 @@ export class Home extends Component {
     render() {
         return (
             <div id="home">
-                <Title value="Physical Therapy App" />
+                <Title>Physical Therapy App</Title>
                 <nav className="d-flex flex-column align-items-center">
                     <Link to="/new-user" className="link text-decoration-underline"><h2>New Patient</h2></Link>
                     <Link to="/existing-user" className="link text-decoration-underline"><h2>Existing Patient</h2></Link>

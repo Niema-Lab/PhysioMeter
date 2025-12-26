@@ -1,0 +1,77 @@
+.link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 20vh;
+  text-align: center;
+  color: black;
+  text-decoration: none;
+  transition: 0.5s;
+
+  &:hover {
+    background-color: #c6c6c6;
+  }
+}
+
+.measurement-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  width: 100%;
+  height: 20vh;
+  transition: 0.5s;
+
+  &:hover {
+    background-color: #c6c6c6;
+  }
+}
+
+.measurement {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 20vh;
+  transition: 0.5s;
+
+  &:hover {
+    background-color: #c6c6c6;
+  }
+
+  .measurement-input {
+    font-size: 2rem;
+    width: 100%;
+  }
+
+  .measurement-delete {
+    font-size: 2rem;
+    cursor: pointer;
+    margin-left: 1rem;
+  }
+}
+
+.submit {
+  width: 100%;
+  height: 20vh;
+  transition: 0.5s;
+
+  &:hover {
+    background-color: #c6c6c6;
+  }
+
+  .submit-button {
+    font-size: 2rem;
+  }
+}
+
+.text-label {
+  min-height: 10vh;
+}
+
+.cursor-p {
+  cursor: pointer;
+}

@@ -1,0 +1,30 @@
+import React, { Component } from 'react'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+
+import { Home } from './components/Home'
+import { PatientHome } from './components/PatientHome'
+import { PatientTests } from './components/PatientTests'
+import { Utilities } from './components/Utilities'
+import { NewUser } from './components/NewUser'
+import { ExistingUser } from './components/ExistingUser'
+
+export class App extends Component {
+  render() {
+    return (
+      <div id="app">
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/patient-home" element={<PatientHome />} />
+            <Route path="/patient-tests" element={<PatientTests />} />
+            <Route path="/utilities" element={<Utilities />} />
+            <Route path="/new-user" element={<NewUser />} />
+            <Route path="/existing-user" element={<ExistingUser />} />
+          </Routes>
+        </BrowserRouter>
+      </div>
+    )
+  }
+}
+
+export default App

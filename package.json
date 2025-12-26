@@ -1,8 +1,10 @@
 {
   "name": "pt-web-app",
-  "private": true,
+  "description": "A React web application for physical therapy measurements, interpretations, and assessments.",
+  "private": false,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "https://daniel-ji.github.io/pt-web-app/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

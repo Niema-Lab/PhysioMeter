@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { HashRouter, Routes, Route } from 'react-router-dom'
 
 import { Home } from './components/Home'
 import { PatientHome } from './components/PatientHome'
@@ -12,7 +12,7 @@ export class App extends Component {
   render() {
     return (
       <div id="app">
-        <BrowserRouter>
+        <HashRouter>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/patient-home" element={<PatientHome />} />
@@ -21,7 +21,7 @@ export class App extends Component {
             <Route path="/new-user" element={<NewUser />} />
             <Route path="/existing-user" element={<ExistingUser />} />
           </Routes>
-        </BrowserRouter>
+        </HashRouter>
       </div>
     )
   }

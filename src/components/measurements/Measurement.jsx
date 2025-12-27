@@ -1,4 +1,10 @@
 import React, { Component } from 'react'
+import Markdown from 'react-markdown'
+import Stopwatch from './Stopwatch'
+import BloodPressureText from './instructions/BloodPressure.md?raw'
+import OxygenSaturationText from './instructions/OxygenSaturation.md?raw'
+import FiveMeterUsualWalkingSpeedText from './instructions/FiveMeterUsualWalkingSpeed.md?raw'
+import FiveMeterFastWalkingSpeedText from './instructions/FiveMeterFastWalkingSpeed.md?raw'
 
 export class Measurement extends Component {
     constructor(props) {
@@ -38,9 +44,12 @@ export class Measurement extends Component {
         if (!instructions) return null
 
         return (
-            <div className="measurement-instructions my-3">
-                <p className="text-muted mb-0 text-center"><strong>Instructions: </strong>{instructions}</p>
-            </div>
+            <>
+                <div className="measurement-instructions my-3 p-3">
+                    <h5>Instructions:</h5>
+                    <Markdown>{instructions}</Markdown>
+                </div>
+            </>
         )
     }
 
@@ -94,17 +103,17 @@ export class Measurement extends Component {
                     const optionValue = option.toLowerCase()
                     const optionId = `${type}-${optionValue}-${this.uuid}`
                     return (
-                        <div key={optionId} className="form-check mt-3">
+                        <div key={optionId} className="form-check mt-3 cursor-p">
                             <input
                                 type={type}
-                                className={`form-check-input ${valid === false ? 'is-invalid' : ''}`}
+                                className={`form-check-input  cursor-p ${valid === false ? 'is-invalid' : ''}`}
                                 name={`measurement-${type}-${this.uuid}`}
                                 id={optionId}
                                 value={optionValue}
                                 checked={value === optionValue}
                                 onChange={(e) => onChange(e.target.value)}
                             />
-                            <label className="form-check-label" htmlFor={optionId}>{option}</label>
+                            <label className="form-check-label cursor-p" htmlFor={optionId}>{option}</label>
                         </div>
                     )
                 })}
@@ -139,6 +148,19 @@ export class Measurement extends Component {
         )
     }
 
+    renderStopwatch = () => {
+        const { value, onChange, valid, placeholder, computedFields } = this.props
+        return (
+            <Stopwatch
+                value={value}
+                onChange={onChange}
+                valid={valid}
+                placeholder={placeholder}
+                computedFields={computedFields}
+            />
+        )
+    }
+
     render() {
         const { type } = this.props
 
@@ -150,6 +172,8 @@ export class Measurement extends Component {
             content = this.renderRadioOrCheckbox()
         } else if (type === "integer" || type === "decimal") {
             content = this.renderNumber()
+        } else if (type === "stopwatch") {
+            content = this.renderStopwatch()
         }
 
         if (!content) return null
@@ -170,9 +194,9 @@ const MEASUREMENT_CONFIGS = {
         defaultLabel: 'Name',
         placeholder: 'Enter name'
     },
-    date: {
+    dob: {
         type: 'date',
-        defaultLabel: 'Date',
+        defaultLabel: 'Date of Birth',
         placeholder: 'mm/dd/yyyy'
     },
     sex: {
@@ -184,7 +208,7 @@ const MEASUREMENT_CONFIGS = {
         type: 'text',
         defaultLabel: 'Blood Pressure',
         placeholder: 'Enter blood pressure (e.g., 120/80 systolic/diastolic mmHg)',
-        instructions: "May I take your blood pressure? Please sit in this chair with your feet flat on the ground, and don't cross your legs. Before I take your blood pressure, I'd like you to rest here for 1 minute. Have you had a mastectomy or lumpectomy? [If yes, ask which arm, if no, use left arm]. I'm going to support your arm to keep it level with your shoulder while I take your blood pressure."
+        instructions: BloodPressureText,
     },
     oxygenSaturation: {
         type: 'decimal',
@@ -193,7 +217,7 @@ const MEASUREMENT_CONFIGS = {
         min: 0,
         max: 100,
         unit: '%',
-        instructions: 'Now I will measure your blood oxygen level using this pulse oximeter. I need to put it on your warmest finger. May I touch your hand to figure out which finger is best?'
+        instructions: OxygenSaturationText,
     },
     restingPulseRate: {
         type: 'integer',
@@ -201,8 +225,41 @@ const MEASUREMENT_CONFIGS = {
         placeholder: 'Enter resting pulse rate (bpm)',
         min: 0,
         max: 300,
-        instructions: 'Now I will measure your resting pulse rate. I need to put this heart rate monitor strap around your chest. May I touch you to do that?'
-    }
+    },
+    fiveMeterUsualWalkingSpeed: {
+        type: 'stopwatch',
+        defaultLabel: '5 Meter Usual Walking Speed',
+        placeholder: 'Time to walk 5 meters (seconds)',
+        instructions: FiveMeterUsualWalkingSpeedText,
+        computedFields: (value) => {
+            if (!value) {
+                return {
+                    'Walking Speed': 'N/A'
+                }
+            }
+
+            return {
+                'Walking Speed': `${(5 / parseFloat(value)).toFixed(3)} m/s`
+            }
+        }
+    },
+    fiveMeterFastWalkingSpeed: {
+        type: 'stopwatch',
+        defaultLabel: '5 Meter Fast Walking Speed',
+        placeholder: 'Time to walk 5 meters (seconds)',
+        instructions: FiveMeterFastWalkingSpeedText,
+        computedFields: (value) => {
+            if (!value) {
+                return {
+                    'Walking Speed': 'N/A'
+                }
+            }
+
+            return {
+                'Walking Speed': `${(5 / parseFloat(value)).toFixed(3)} m/s`
+            }
+        }
+    },
 }
 
 const createMeasurement = (configKey) => {
@@ -215,10 +272,11 @@ const createMeasurement = (configKey) => {
 }
 
 export const Name = createMeasurement('name')
-export const Date = createMeasurement('date')
+export const DoB = createMeasurement('dob')
 export const Sex = createMeasurement('sex')
 export const BloodPressure = createMeasurement('bloodPressure')
 export const OxygenSaturation = createMeasurement('oxygenSaturation')
 export const RestingPulseRate = createMeasurement('restingPulseRate')
-
+export const FiveMeterUsualWalkingSpeed = createMeasurement('fiveMeterUsualWalkingSpeed')
+export const FiveMeterFastWalkingSpeed = createMeasurement('fiveMeterFastWalkingSpeed')
 export default Measurement

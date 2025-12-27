@@ -5,7 +5,7 @@ import { Name } from './measurements/Measurement'
 import Submit from './form/Submit'
 import Title from './form/Title'
 import Text from './form/Text'
-import { openDB } from '../DB.js'
+import { openDB } from '../DB'
 
 export class NewUser extends Component {
     constructor(props) {

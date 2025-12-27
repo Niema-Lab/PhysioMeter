@@ -3,7 +3,7 @@
 A React web application for physical therapy measurements, interpretations, and assessments. Deployed at https://daniel-ji.github.io/pt-web-app.
 
 ## Roadmap
-- [ ] A home page button
+- [ ] Add logic for Vitals Signs and Physical Activities
 - [ ] Add more measurements
 - [ ] Save feature for the utilites page
 - [ ] Add Patient Tests page

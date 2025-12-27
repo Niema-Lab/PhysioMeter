@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 
-import { Name, Date, Sex } from './measurements/Measurement'
+import { Name, DoB, Sex, FiveMeterUsualWalkingSpeed, FiveMeterFastWalkingSpeed } from './measurements/Measurement'
 import VitalSigns from './measurements/VitalSigns'
-import MultipleMeasurements from './MultipleMeasurements'
-import { getCurrentUser } from '../DB.js'
+import MultipleMeasurements from './measurements/MultipleMeasurements'
+import { getCurrentUser } from '../DB'
 import Title from './form/Title'
-import Submit from './form/Submit.jsx'
+import Submit from './form/Submit'
 
 export class Utilities extends Component {
     constructor(props) {
@@ -16,7 +16,9 @@ export class Utilities extends Component {
             names: null,
             dates: null,
             sexes: null,
-            vitals: null
+            vitals: null,
+            usualSpeeds: null,
+            fastSpeeds: null
         }
     }
 
@@ -33,9 +35,11 @@ export class Utilities extends Component {
                         {!this.state.user &&
                             <MultipleMeasurements name="Name" component={Name} onChange={(names) => this.setState({ names })} />
                         }
-                        <MultipleMeasurements name="Date of Birth" component={Date} onChange={(dates) => this.setState({ dates })} oneMax={this.state.user} />
+                        <MultipleMeasurements name="Date of Birth" component={DoB} onChange={(dates) => this.setState({ dates })} oneMax={this.state.user} />
                         <MultipleMeasurements name="Sex" component={Sex} onChange={(sexes) => this.setState({ sexes })} oneMax={this.state.user} />
                         <MultipleMeasurements name="Vital Signs" component={VitalSigns} onChange={(vitals) => this.setState({ vitals })} />
+                        <MultipleMeasurements name="5 Meter Usual Walking Speed" component={FiveMeterUsualWalkingSpeed} onChange={(usualSpeeds) => this.setState({ usualSpeeds })} />
+                        <MultipleMeasurements name="5 Meter Fast Walking Speed" component={FiveMeterFastWalkingSpeed} onChange={(fastSpeeds) => this.setState({ fastSpeeds })} />
                     </div>
                 </div>
                 <Submit value="Save Utilities" onClick={() => {

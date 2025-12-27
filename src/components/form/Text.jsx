@@ -1,5 +1,3 @@
-import React from 'react'
-
 function Text(props) {
     return (
         <div className="text-label d-flex flex-column align-items-center justify-content-center w-100 text-center">

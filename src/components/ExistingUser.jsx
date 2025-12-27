@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
-import { openDB } from '../DB.js'
+import { openDB } from '../DB'
 import Title from './form/Title'
 
 export class ExistingUser extends Component {

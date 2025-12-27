@@ -12,6 +12,13 @@ export class App extends Component {
   render() {
     return (
       <div id="app">
+        <div id="home-icon" className="position-fixed top-0 start-0 mt-3">
+          <a href="#/">
+            <h1>
+              <i className="bi bi-house-fill"></i>
+            </h1>
+          </a>
+        </div>
         <HashRouter>
           <Routes>
             <Route path="/" element={<Home />} />

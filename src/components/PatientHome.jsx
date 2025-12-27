@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
-import { getCurrentUser } from '../DB.js'
+import { getCurrentUser } from '../DB'
 import Title from './form/Title'
 
 export class PatientHome extends Component {

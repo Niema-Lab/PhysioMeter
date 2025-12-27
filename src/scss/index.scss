@@ -64,12 +64,30 @@ input {
   }
 
   .measurement-instructions {
+    border: 3px solid #dddddd;
     max-width: min(90vw, 800px);
+    background: white;
   }
 
   .measurement-delete {
     font-size: 2rem;
     margin-left: 1rem;
+  }
+
+  .stopwatch-measurement {
+    font-size: 2rem;
+
+    i {
+      font-size: 2.5rem;
+    }
+    
+    button {
+      font-size: 2rem;
+    }
+
+    li {
+      font-size: 1.5rem;
+    }
   }
 }
 
@@ -87,4 +105,14 @@ input {
 
 .cursor-p {
   cursor: pointer;
+}
+
+#home-icon {
+  margin-left: 30px;
+}
+
+@media screen and (max-width: 768px) {
+  #home-icon {
+    margin-left: 20px;
+  }
 }

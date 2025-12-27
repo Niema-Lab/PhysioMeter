@@ -76,6 +76,7 @@ export class Measurement extends Component {
                     onChange={(e) => onChange(e.target.value)}
                     placeholder={placeholder}
                     onFocus={(e) => type === 'date' && (e.target.type = 'date')}
+                    onTouchStart={(e) => type === 'date' && (e.target.type = 'date')}
                     onBlur={(e) => type === 'date' && (e.target.type = 'text')}
                     min={min}
                     max={max}

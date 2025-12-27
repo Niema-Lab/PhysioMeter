@@ -33,8 +33,8 @@ export class Utilities extends Component {
                         {!this.state.user &&
                             <MultipleMeasurements name="Name" component={Name} onChange={(names) => this.setState({ names })} />
                         }
-                        <MultipleMeasurements name="Date of Birth" component={Date} onChange={(dates) => this.setState({ dates })} />
-                        <MultipleMeasurements name="Sex" component={Sex} onChange={(sexes) => this.setState({ sexes })} />
+                        <MultipleMeasurements name="Date of Birth" component={Date} onChange={(dates) => this.setState({ dates })} oneMax={this.state.user} />
+                        <MultipleMeasurements name="Sex" component={Sex} onChange={(sexes) => this.setState({ sexes })} oneMax={this.state.user} />
                         <MultipleMeasurements name="Vital Signs" component={VitalSigns} onChange={(vitals) => this.setState({ vitals })} />
                     </div>
                 </div>

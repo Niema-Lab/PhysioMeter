@@ -74,7 +74,9 @@ export class Measurement extends Component {
                     className={`measurement-input form-control ${valid === false ? 'is-invalid' : ''}`}
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
-                    placeholder={placeholder}
+                    placeholder={placeholder ?? (type === 'date' ? 'MM/DD/YYYY' : '')}
+                    onFocus={(e) => type === 'date' && (e.target.type = 'date')}
+                    onBlur={(e) => type === 'date' && (e.target.type = 'text')}
                     min={min}
                     max={max}
                 />

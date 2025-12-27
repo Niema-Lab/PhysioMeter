@@ -70,11 +70,11 @@ export class Measurement extends Component {
             <div className="d-flex align-items-center">
                 <input
                     name={`measurement-${type}`}
-                    type={type}
+                    type="text"
                     className={`measurement-input form-control ${valid === false ? 'is-invalid' : ''}`}
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
-                    placeholder={placeholder ?? (type === 'date' ? 'MM/DD/YYYY' : '')}
+                    placeholder={placeholder}
                     onFocus={(e) => type === 'date' && (e.target.type = 'date')}
                     onBlur={(e) => type === 'date' && (e.target.type = 'text')}
                     min={min}
@@ -172,7 +172,7 @@ const MEASUREMENT_CONFIGS = {
     date: {
         type: 'date',
         defaultLabel: 'Date',
-        placeholder: 'Select date'
+        placeholder: 'mm/dd/yyyy'
     },
     sex: {
         type: 'radio',

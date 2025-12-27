@@ -70,14 +70,14 @@ export class Measurement extends Component {
             <div className="d-flex align-items-center">
                 <input
                     name={`measurement-${type}`}
-                    type="text"
+                    type={(type === 'date' && value) ? 'date' : 'text'}
                     className={`measurement-input form-control ${valid === false ? 'is-invalid' : ''}`}
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
                     placeholder={placeholder}
                     onFocus={(e) => type === 'date' && (e.target.type = 'date')}
                     onTouchStart={(e) => type === 'date' && (e.target.type = 'date')}
-                    onBlur={(e) => type === 'date' && (e.target.type = 'text')}
+                    onBlur={(e) => type === 'date' && !e.target.value && (e.target.type = 'text')}
                     min={min}
                     max={max}
                 />

@@ -3,6 +3,7 @@ Set up: Measure a 10-15 m (32-49 ft) long by 1 m (39 in.) wide space for the wal
 Data Collection: Start timing as soon as any part of the participant's body crosses the plane into the center 5 meters of the walkway, as marked by the tape (participant should be unaware of the tape). Stop timing as soon as the participant crosses the plane out of the center 5 meters of the walkway.
 
 Script:
+
 - This time, when I say "Go," I'd like you to walk back to the other chair as quickly as you safely can. Walk as if you were in a hurry, but don't run.
 - Do you have any questions? [The tester clarifies the task as necessary.]
 - Are you ready? Ready, Set, Go.

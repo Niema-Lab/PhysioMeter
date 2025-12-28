@@ -1,4 +1,4 @@
-let dbPromise = null;
+let dbPromise = null
 
 const openDB = () => {
     if (!dbPromise) {

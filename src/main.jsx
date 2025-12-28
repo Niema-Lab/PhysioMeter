@@ -8,3 +8,22 @@ import App from './App'
 createRoot(document.getElementById('root')).render(
   <App />
 )
+
+document.addEventListener('focusin', function (e) {
+  if (e.target.matches('input[type="number"]')) {
+    const input = e.target
+    input._disableWheel = function (ev) {
+      ev.preventDefault()
+    }
+    input.addEventListener('wheel', input._disableWheel, { passive: false })
+  }
+})
+document.addEventListener('focusout', function (e) {
+  if (e.target.matches('input[type="number"]')) {
+    const input = e.target
+    if (input._disableWheel) {
+      input.removeEventListener('wheel', input._disableWheel)
+      delete input._disableWheel
+    }
+  }
+})

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
-import { Name } from './measurements/Measurement'
+import { Name } from './measurements/MeasurementFactory'
 import Submit from './form/Submit'
 import Title from './form/Title'
 import Text from './form/Text'

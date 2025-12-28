@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 
-import { Name, DoB, Sex, FiveMeterUsualWalkingSpeed, FiveMeterFastWalkingSpeed } from './measurements/Measurement'
-import VitalSigns from './measurements/VitalSigns'
+import { Name, DoB, Sex, VitalSigns, FiveMeterUsualWalkingSpeed, FiveMeterFastWalkingSpeed, ThirtySecondSitToStand, AssistiveDevice, FourSquareStepTest, ModifiedFourSquareStepTest, TimedUpAndGo, TimedUpAndGoCognitive } from './measurements/MeasurementFactory'
 import MultipleMeasurements from './measurements/MultipleMeasurements'
 import { getCurrentUser } from '../DB'
 import Title from './form/Title'
@@ -18,7 +17,13 @@ export class Utilities extends Component {
             sexes: null,
             vitals: null,
             usualSpeeds: null,
-            fastSpeeds: null
+            fastSpeeds: null,
+            sitToStands: null,
+            assistiveDevices: null,
+            fourSquareStepTests: null,
+            modifiedFourSquareStepTests: null,
+            timedUpAndGos: null,
+            timedUpAndGosCognitive: null,
         }
     }
 
@@ -40,6 +45,12 @@ export class Utilities extends Component {
                         <MultipleMeasurements name="Vital Signs" component={VitalSigns} onChange={(vitals) => this.setState({ vitals })} />
                         <MultipleMeasurements name="5 Meter Usual Walking Speed" component={FiveMeterUsualWalkingSpeed} onChange={(usualSpeeds) => this.setState({ usualSpeeds })} />
                         <MultipleMeasurements name="5 Meter Fast Walking Speed" component={FiveMeterFastWalkingSpeed} onChange={(fastSpeeds) => this.setState({ fastSpeeds })} />
+                        <MultipleMeasurements name="30 Second Sit to Stand" component={ThirtySecondSitToStand} onChange={(sitToStands) => this.setState({ sitToStands })} />
+                        <MultipleMeasurements name="Assistive Device" component={AssistiveDevice} onChange={(assistiveDevices) => this.setState({ assistiveDevices })} />
+                        <MultipleMeasurements name="Four Square Step Test" component={FourSquareStepTest} onChange={(fourSquareStepTests) => this.setState({ fourSquareStepTests })} />
+                        <MultipleMeasurements name="Modified Four Square Step Test" component={ModifiedFourSquareStepTest} onChange={(modifiedFourSquareStepTests) => this.setState({ modifiedFourSquareStepTests })} />
+                        <MultipleMeasurements name="Timed Up and Go" component={TimedUpAndGo} onChange={(timedUpAndGos) => this.setState({ timedUpAndGos })} />
+                        <MultipleMeasurements name="Timed Up and Go Cognitive" component={TimedUpAndGoCognitive} onChange={(timedUpAndGos) => this.setState({ timedUpAndGos })} />
                     </div>
                 </div>
                 <Submit value="Save Utilities" onClick={() => {

@@ -72,29 +72,29 @@ export class Stopwatch extends Component {
     }
 
     render() {
-        const { value, onChange, valid, placeholder, computedFields } = this.props
+        const { value, onChange, valid, placeholder, computedFields, disabled } = this.props
         const { running, elapsed } = this.state
 
         const displayTime = this.formatTime(elapsed)
-        const computedValues = computedFields ? computedFields(value) : {}
+        const computedValues = computedFields ? computedFields(value) : null
 
         return (
             <div className="d-flex flex-column stopwatch-measurement">
                 <div className="d-flex align-items-center mb-3">
                     <i className="bi bi-stopwatch me-3"></i>
-                    <span className="font-monospace me-5">
+                    <span className="font-monospace me-4">
                         {displayTime}
                     </span>
                     {!running ? (
-                        <button type="button" className="btn btn-success d-flex align-items-center" onClick={this.start}>
+                        <button type="button" className={`btn btn-${disabled ? 'secondary' : 'success'} d-flex align-items-center`} onClick={this.start} disabled={disabled}>
                             <i className="bi bi-play-fill me-1"></i>Start
                         </button>
                     ) : (
-                        <button type="button" className="btn btn-danger d-flex align-items-center" onClick={this.stop}>
+                        <button type="button" className={`btn btn-${disabled ? 'secondary' : 'danger'} d-flex align-items-center`} onClick={this.stop} disabled={disabled}>
                             <i className="bi bi-stop-fill me-1"></i>Stop
                         </button>
                     )}
-                    <button type="button" className="btn btn-secondary d-flex align-items-center ms-3" onClick={this.reset}>
+                    <button type="button" className={`btn btn-${disabled ? 'secondary' : 'warning'} d-flex align-items-center ms-3`} onClick={this.reset} disabled={disabled}>
                         <i className="bi bi-arrow-counterclockwise me-1"></i>Reset
                     </button>
                 </div>
@@ -106,23 +106,26 @@ export class Stopwatch extends Component {
                             step="0.01"
                             inputMode="decimal"
                             className={`measurement-input form-control ${valid === false ? 'is-invalid' : ''}`}
-                            value={value}
+                            value={disabled ? '' : value}
                             onChange={(e) => onChange(e.target.value)}
                             placeholder={placeholder || 'Seconds'}
                             min="0"
+                            disabled={disabled}
                         />
                         <span className="input-group-text">sec</span>
                     </div>
                 </div>
-                <div className="d-flex mt-3">
-                    <ul>
-                        {computedValues && Object.keys(computedValues).map((fieldKey) => (
-                            <li key={fieldKey}>
-                                {fieldKey}: {computedValues[fieldKey]}
-                            </li>
-                        ))}
-                    </ul>
-                </div>
+                {computedValues &&
+                    <div className="d-flex mt-3">
+                        <ul>
+                            {Object.keys(computedValues).map((fieldKey) => (
+                                <li key={fieldKey}>
+                                    {fieldKey}: {computedValues[fieldKey]}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                }
             </div>
         )
     }

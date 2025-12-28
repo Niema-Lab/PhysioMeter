@@ -15,35 +15,35 @@ export class MultipleMeasurements extends Component {
                 ...prevState.measurements,
                 { label: `${this.props.name} ${prevState.measurements.length + 1}`, value: '' }
             ]
-        }));
+        }))
     }
 
     updateMeasurement = (index, value) => {
-        const measurements = [...this.state.measurements];
-        measurements[index].value = value;
+        const measurements = [...this.state.measurements]
+        measurements[index].value = value
         this.setState({ measurements }, () => {
-            this.props.onChange(this.state.measurements);
-        });
+            this.props.onChange(this.state.measurements)
+        })
     }
 
     updateMeasurementLabel = (index, label) => {
-        const measurements = [...this.state.measurements];
-        measurements[index].label = label;
+        const measurements = [...this.state.measurements]
+        measurements[index].label = label
         this.setState({ measurements }, () => {
-            this.props.onChange(this.state.measurements);
-        });
+            this.props.onChange(this.state.measurements)
+        })
     }
 
     deleteMeasurement = (index) => {
-        const measurements = [...this.state.measurements];
-        measurements.splice(index, 1);
+        const measurements = [...this.state.measurements]
+        measurements.splice(index, 1)
         this.setState({ measurements }, () => {
-            this.props.onChange(this.state.measurements);
-        });
+            this.props.onChange(this.state.measurements)
+        })
     }
 
     render() {
-        const MeasurementComponent = this.props.component;
+        const MeasurementComponent = this.props.component
         return (
             <div className="multiple-measurements">
                 <h2 className={`measurement-header text-center w-100 ${this.props.oneMax && this.state.measurements.length === 1 ? 'pe-none' : 'cursor-p'}`} onClick={this.addMeasurement}>{this.props.name} <i className={`bi bi-plus-circle-fill ${this.props.oneMax && this.state.measurements.length === 1 ? 'text-secondary' : 'text-primary'} ms-3`}></i></h2>

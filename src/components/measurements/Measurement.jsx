@@ -1,15 +1,19 @@
 import React, { Component } from 'react'
 import Markdown from 'react-markdown'
-import Stopwatch from './Stopwatch'
-import BloodPressureText from './instructions/BloodPressure.md?raw'
-import OxygenSaturationText from './instructions/OxygenSaturation.md?raw'
-import FiveMeterUsualWalkingSpeedText from './instructions/FiveMeterUsualWalkingSpeed.md?raw'
-import FiveMeterFastWalkingSpeedText from './instructions/FiveMeterFastWalkingSpeed.md?raw'
+import Stopwatch from './custom/Stopwatch'
+import CountdownTimer from './custom/CountdownTimer'
 
 export class Measurement extends Component {
     constructor(props) {
         super(props)
         this.uuid = crypto.randomUUID()
+
+        const numFields = this.props.fields?.length || this.props.numTrials || 0
+        this.state = {
+            multipleValues: numFields > 0 ? Array(numFields).fill(null) : [],
+            disabledValues: props.disabledCases ? Array(props.disabledCases.length).fill(false) : [],
+            disabled: false,
+        }
     }
 
     renderLabel = () => {
@@ -38,9 +42,7 @@ export class Measurement extends Component {
         )
     }
 
-    renderInstructions = () => {
-        const { instructions } = this.props
-
+    renderInstructions = (instructions) => {
         if (!instructions) return null
 
         return (
@@ -72,16 +74,50 @@ export class Measurement extends Component {
         )
     }
 
-    renderTextOrDate = () => {
-        const { type, value, onChange, valid, placeholder, min, max } = this.props
+    renderDisabledToggles = (disabledCases) => {
+        if (!disabledCases || disabledCases.length === 0) {
+            return null
+        }
 
         return (
-            <div className="d-flex align-items-center">
+            <div className="d-flex mb-3">
+                {disabledCases.map((caseText, index) => (
+                    <div key={index} className="d-flex form-check">
+                        <input
+                            className="form-check-input me-2"
+                            type="checkbox"
+                            id={`disabled-case-${index}-${this.uuid}`}
+                            checked={this.state.disabledValues?.[index] || false}
+                            onChange={() => this.updateDisabledValues(index)}
+                        />
+                        <label className="form-check-label" htmlFor={`disabled-case-${index}-${this.uuid}`}>
+                            {caseText}
+                        </label>
+                    </div>
+                ))}
+            </div>
+        )
+    }
+
+    updateDisabledValues = (index) => {
+        const newValues = [...(this.state.disabledValues || [])]
+        newValues[index] = !newValues[index]
+        const disabled = newValues.some(val => val)
+        this.setState({ disabledValues: newValues, disabled })
+        this.props.onChange(disabled ? null : this.props.value)
+    }
+
+    renderTextOrDate = (props) => {
+        const { type, value, onChange, valid, placeholder, min, max } = props
+        const disabled = this.state.disabled || props.disabled
+
+        return (
+            <div className="d-flex align-items-center justify-content-center">
                 <input
                     name={`measurement-${type}`}
                     type={(type === 'date' && value) ? 'date' : 'text'}
                     className={`measurement-input form-control ${valid === false ? 'is-invalid' : ''}`}
-                    value={value}
+                    value={disabled ? '' : value}
                     onChange={(e) => onChange(e.target.value)}
                     placeholder={placeholder}
                     onFocus={(e) => type === 'date' && (e.target.type = 'date')}
@@ -89,13 +125,15 @@ export class Measurement extends Component {
                     onBlur={(e) => type === 'date' && !e.target.value && (e.target.type = 'text')}
                     min={min}
                     max={max}
+                    disabled={disabled}
                 />
             </div>
         )
     }
 
-    renderRadioOrCheckbox = () => {
-        const { type, value, onChange, valid, options = [] } = this.props
+    renderRadioOrCheckbox = (props) => {
+        const { type, value, onChange, valid, options = [] } = props
+        const disabled = this.state.disabled || props.disabled
 
         return (
             <div>
@@ -110,8 +148,9 @@ export class Measurement extends Component {
                                 name={`measurement-${type}-${this.uuid}`}
                                 id={optionId}
                                 value={optionValue}
-                                checked={value === optionValue}
+                                checked={disabled ? false : (type === 'radio' ? value === optionValue : Array.isArray(value) && value.includes(optionValue))}
                                 onChange={(e) => onChange(e.target.value)}
+                                disabled={disabled}
                             />
                             <label className="form-check-label cursor-p" htmlFor={optionId}>{option}</label>
                         </div>
@@ -121,162 +160,200 @@ export class Measurement extends Component {
         )
     }
 
-    renderNumber = () => {
-        const { type, value, onChange, valid, placeholder, min, max, unit } = this.props
+    renderNumber = (props) => {
+        const { type, value, onChange, valid, placeholder, min, max, unit, counterButtons } = props
+        const disabled = this.state.disabled || props.disabled
 
         const step = type === 'decimal' ? 'any' : '1'
         const inputMode = type === 'decimal' ? 'decimal' : 'numeric'
+        const currentValue = value ? parseFloat(value) : 0
+
+        const decrement = () => {
+            const newValue = currentValue - 1
+            if (min !== undefined && newValue < min) return
+            onChange(newValue)
+        }
+
+        const increment = () => {
+            const newValue = currentValue + 1
+            if (max !== undefined && newValue > max) return
+            onChange(newValue)
+        }
+
+        const canDecrement = !disabled && (min === undefined || currentValue > min)
+        const canIncrement = !disabled && (max === undefined || currentValue < max)
 
         return (
-            <div className="d-flex align-items-center">
-                <div className={unit ? 'input-group' : ''}>
+            <div className="d-flex align-items-center justify-content-center">
+                <div className={unit || (type === 'integer' && counterButtons) ? 'input-group' : ''}>
+                    {type === 'integer' && counterButtons && (
+                        <button
+                            type="button"
+                            className={`btn btn-${disabled ? 'secondary' : 'primary'}`}
+                            onClick={decrement}
+                            disabled={!canDecrement}
+                        >
+                            <i className="bi bi-dash"></i>
+                        </button>
+                    )}
                     <input
                         name={`measurement-${type}`}
                         type="number"
                         step={step}
                         inputMode={inputMode}
                         className={`measurement-input form-control ${valid === false ? 'is-invalid' : ''}`}
-                        value={value}
+                        value={disabled ? '' : value}
                         onChange={(e) => onChange(e.target.value)}
                         placeholder={placeholder}
                         min={min}
                         max={max}
+                        disabled={disabled}
                     />
+                    {type === 'integer' && counterButtons && (
+                        <button
+                            type="button"
+                            className={`btn btn-${disabled ? 'secondary' : 'primary'}`}
+                            onClick={increment}
+                            disabled={!canIncrement}
+                        >
+                            <i className="bi bi-plus"></i>
+                        </button>
+                    )}
                     {unit && <span className="input-group-text">{unit}</span>}
                 </div>
             </div>
         )
     }
 
-    renderStopwatch = () => {
-        const { value, onChange, valid, placeholder, computedFields } = this.props
+    renderStopwatch = (props) => {
         return (
             <Stopwatch
-                value={value}
-                onChange={onChange}
-                valid={valid}
-                placeholder={placeholder}
-                computedFields={computedFields}
+                {...props}
+                disabled={this.state.disabled || props.disabled}
             />
         )
     }
 
-    render() {
-        const { type } = this.props
+    renderCountdownTimer = (props) => {
+        return (
+            <CountdownTimer
+                {...props}
+                disabled={this.state.disabled || props.disabled}
+            />
+        )
+    }
 
-        let content = null
+    renderContent = (props) => {
+        const renderFunc = this.renderFunction(props)
+        if (!renderFunc) return null
+
+        if (props.numTrials && props.numTrials > 1) {
+            return this.renderMultipleTrials(props, renderFunc)
+        } else {
+            return renderFunc(props)
+        }
+    }
+
+    renderFunction = (props) => {
+        const { type } = props
 
         if (type === "text" || type === "date") {
-            content = this.renderTextOrDate()
+            return this.renderTextOrDate
         } else if (type === "radio" || type === "checkbox") {
-            content = this.renderRadioOrCheckbox()
+            return this.renderRadioOrCheckbox
         } else if (type === "integer" || type === "decimal") {
-            content = this.renderNumber()
+            return this.renderNumber
         } else if (type === "stopwatch") {
-            content = this.renderStopwatch()
+            return this.renderStopwatch
+        } else if (type === "countdown") {
+            return this.renderCountdownTimer
+        } else if (type === "fields") {
+            return this.renderMultipleFields
         }
+
+        console.error(`Measurement: Unknown measurement type "${type}"`)
+        return null
+    }
+
+    renderMultipleFields = (props) => {
+        const { fields } = props
+
+        if (!fields || fields.length === 0) {
+            return null
+        }
+
+        return (
+            <div>
+                {fields.map((field, i) => {
+                    const newProps = {
+                        ...field,
+                        value: this.state.multipleValues[i],
+                        onChange: (value) => this.multipleValuesOnChange(i, value),
+                    }
+                    return <div key={`field-${i}`} className="d-flex flex-column align-items-center mb-4">
+                        {this.renderContent(newProps)}
+                        {this.renderInstructions(field.instructions)}
+                    </div>
+                })}
+            </div>
+        )
+    }
+
+    renderMultipleTrials = (props, renderFunction) => {
+        let { numTrials = 1, trialNames } = props
+
+        if (numTrials <= 1) {
+            return null
+        }
+
+        if (trialNames && trialNames.length !== numTrials) {
+            console.error(`Measurement: trialNames length (${trialNames.length}) does not match numTrials (${numTrials}). Ignoring trialNames.`)
+            trialNames = null
+        }
+
+        const trials = []
+        for (let i = 0; i < numTrials; i++) {
+            const newProps = {
+                ...props,
+                value: this.state.multipleValues[i],
+                onChange: (value) => this.multipleValuesOnChange(i, value),
+            }
+            trials.push(
+                <div key={`trial-${i}`} className="mb-4">
+                    <h5>{trialNames ? trialNames[i] : `Trial ${i + 1}`}</h5>
+                    {renderFunction(newProps)}
+                </div>
+            )
+        }
+
+        return <div>{trials}</div>
+    }
+
+    multipleValuesOnChange = (index, value) => {
+        const { onChange } = this.props
+
+        const updatedValues = [...(this.state.multipleValues)]
+        updatedValues[index] = value
+        this.setState({ multipleValues: updatedValues })
+        if (onChange) {
+            onChange(updatedValues)
+        }
+    }
+
+    render() {
+        const content = this.renderContent(this.props)
 
         if (!content) return null
 
         return (
             <div className="measurement px-3 py-3">
                 {this.renderLabelAndDelete()}
+                {this.renderDisabledToggles(this.props.disabledCases)}
                 {content}
-                {this.renderInstructions()}
+                {this.renderInstructions(this.props.instructions)}
             </div>
         )
     }
 }
 
-const MEASUREMENT_CONFIGS = {
-    name: {
-        type: 'text',
-        defaultLabel: 'Name',
-        placeholder: 'Enter name'
-    },
-    dob: {
-        type: 'date',
-        defaultLabel: 'Date of Birth',
-        placeholder: 'mm/dd/yyyy'
-    },
-    sex: {
-        type: 'radio',
-        defaultLabel: 'Sex',
-        options: ['Male', 'Female']
-    },
-    bloodPressure: {
-        type: 'text',
-        defaultLabel: 'Blood Pressure',
-        placeholder: 'Enter blood pressure (e.g., 120/80 systolic/diastolic mmHg)',
-        instructions: BloodPressureText,
-    },
-    oxygenSaturation: {
-        type: 'decimal',
-        defaultLabel: 'Oxygen Saturation',
-        placeholder: 'Enter oxygen saturation (%)',
-        min: 0,
-        max: 100,
-        unit: '%',
-        instructions: OxygenSaturationText,
-    },
-    restingPulseRate: {
-        type: 'integer',
-        defaultLabel: 'Resting Pulse Rate',
-        placeholder: 'Enter resting pulse rate (bpm)',
-        min: 0,
-        max: 300,
-    },
-    fiveMeterUsualWalkingSpeed: {
-        type: 'stopwatch',
-        defaultLabel: '5 Meter Usual Walking Speed',
-        placeholder: 'Time to walk 5 meters (seconds)',
-        instructions: FiveMeterUsualWalkingSpeedText,
-        computedFields: (value) => {
-            if (!value) {
-                return {
-                    'Walking Speed': 'N/A'
-                }
-            }
-
-            return {
-                'Walking Speed': `${(5 / parseFloat(value)).toFixed(3)} m/s`
-            }
-        }
-    },
-    fiveMeterFastWalkingSpeed: {
-        type: 'stopwatch',
-        defaultLabel: '5 Meter Fast Walking Speed',
-        placeholder: 'Time to walk 5 meters (seconds)',
-        instructions: FiveMeterFastWalkingSpeedText,
-        computedFields: (value) => {
-            if (!value) {
-                return {
-                    'Walking Speed': 'N/A'
-                }
-            }
-
-            return {
-                'Walking Speed': `${(5 / parseFloat(value)).toFixed(3)} m/s`
-            }
-        }
-    },
-}
-
-const createMeasurement = (configKey) => {
-    const config = MEASUREMENT_CONFIGS[configKey]
-    return class extends Component {
-        render() {
-            return <Measurement {...config} {...this.props} />
-        }
-    }
-}
-
-export const Name = createMeasurement('name')
-export const DoB = createMeasurement('dob')
-export const Sex = createMeasurement('sex')
-export const BloodPressure = createMeasurement('bloodPressure')
-export const OxygenSaturation = createMeasurement('oxygenSaturation')
-export const RestingPulseRate = createMeasurement('restingPulseRate')
-export const FiveMeterUsualWalkingSpeed = createMeasurement('fiveMeterUsualWalkingSpeed')
-export const FiveMeterFastWalkingSpeed = createMeasurement('fiveMeterFastWalkingSpeed')
 export default Measurement

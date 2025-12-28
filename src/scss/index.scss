@@ -1,4 +1,13 @@
 $bg-hover-color: #cccccc;
+:root {
+  --base-font-size: 2rem;
+}
+
+@media screen and (max-width: 768px) {
+  :root {
+    --base-font-size: 1.25rem;
+  }
+}
 
 @mixin hoverable-section($min-height: 20vh) {
   width: 100%;
@@ -45,17 +54,18 @@ input {
   }
 
   .input-group-text {
-    font-size: 2rem;
+    font-size: var(--base-font-size);
   }
 
   .form-check-label,
   .form-check-input {
-    font-size: 1.5rem;
+    font-size: calc(var(--base-font-size) * 0.75);
   }
 
   .measurement-input {
-    font-size: 2rem;
-    min-width: max(300px, 20vw);
+    font-size: var(--base-font-size);
+    min-width: max(240px, 20vw);
+    max-width: 90vw;
     text-align: center;
   }
 
@@ -70,23 +80,23 @@ input {
   }
 
   .measurement-delete {
-    font-size: 2rem;
+    font-size: var(--base-font-size);
     margin-left: 1rem;
   }
 
-  .stopwatch-measurement {
-    font-size: 2rem;
+  .stopwatch-measurement, .countdown-measurement {
+    font-size: var(--base-font-size);
 
     i {
-      font-size: 2.5rem;
+      font-size: calc(var(--base-font-size) * 1.25);
     }
     
     button {
-      font-size: 2rem;
+      font-size: var(--base-font-size);
     }
 
     li {
-      font-size: 1.5rem;
+      font-size: calc(var(--base-font-size) * 0.75);
     }
   }
 }
@@ -95,7 +105,7 @@ input {
   @include hoverable-section;
 
   .submit-button {
-    font-size: 2rem;
+    font-size: var(--base-font-size);
   }
 }
 
@@ -109,6 +119,15 @@ input {
 
 #home-icon {
   margin-left: 30px;
+  background-color: white;
+  border: 2px solid #dddddd;
+  border-radius: 5px;
+  transition: 0.5s;
+  z-index: 1000;
+
+  &:hover {
+    background-color: $bg-hover-color;
+  }
 }
 
 @media screen and (max-width: 768px) {

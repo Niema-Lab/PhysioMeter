@@ -25,7 +25,7 @@ export class PatientHome extends Component {
                         <Title>Patient Home Page: {this.state.user.name}</Title>
                         <nav className="d-flex flex-column align-items-center">
                             <Link to={`/patient-tests?uid=${this.state.user.uid}`} className="link text-decoration-underline"><h2>Patient Tests</h2></Link>
-                            <Link to={`/utilities?uid=${this.state.user.uid}`} className="link text-decoration-underline"><h2>Utilities</h2></Link>
+                            <Link to={`/measurements?uid=${this.state.user.uid}`} className="link text-decoration-underline"><h2>Measurements</h2></Link>
                         </nav>
                     </>
                     :

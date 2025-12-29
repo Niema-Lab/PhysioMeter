@@ -55,6 +55,7 @@ export class MultipleMeasurements extends Component {
                         onChange={(value) => this.updateMeasurement(index, value)}
                         onLabelChange={(label) => this.updateMeasurementLabel(index, label)}
                         onDelete={() => this.deleteMeasurement(index)}
+                        formState={this.props.formState}
                     />
                 ))}
             </div>

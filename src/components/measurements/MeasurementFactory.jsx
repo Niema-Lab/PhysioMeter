@@ -80,6 +80,7 @@ const MEASUREMENT_CONFIGS = {
         type: 'stopwatch',
         defaultLabel: '5 Meter Usual Walking Speed',
         placeholder: 'Time to walk 5 meters (seconds)',
+        physicalActivity: true,
         instructions: FiveMeterUsualWalkingSpeedText,
         computedFields: (value) => {
             if (!value) {
@@ -97,6 +98,7 @@ const MEASUREMENT_CONFIGS = {
         type: 'stopwatch',
         defaultLabel: '5 Meter Fast Walking Speed',
         placeholder: 'Time to walk 5 meters (seconds)',
+        physicalActivity: true,
         instructions: FiveMeterFastWalkingSpeedText,
         computedFields: (value) => {
             if (!value) {
@@ -113,6 +115,7 @@ const MEASUREMENT_CONFIGS = {
     thirtySecondSitToStand: {
         type: 'fields',
         defaultLabel: '30 Second Chair Stand',
+        physicalActivity: true,
         instructions: ThirtySecondSitToStandText,
         disabledCases: ['Participant cannot stand without using their hands'],
         fields: [
@@ -139,6 +142,7 @@ const MEASUREMENT_CONFIGS = {
         type: 'stopwatch',
         defaultLabel: 'Four Square Step Test',
         placeholder: 'Time to complete test (seconds)',
+        physicalActivity: true,
         instructions: FourSquareStepTestText,
         numTrials: 2,
     },
@@ -146,6 +150,7 @@ const MEASUREMENT_CONFIGS = {
         type: 'stopwatch',
         defaultLabel: 'Modified Four Square Step Test',
         placeholder: 'Time to complete test (seconds)',
+        physicalActivity: true,
         instructions: ModifiedFourSquareStepTestText,
         numTrials: 2,
     },
@@ -153,12 +158,14 @@ const MEASUREMENT_CONFIGS = {
         type: 'stopwatch',
         defaultLabel: 'Timed Up and Go (TUG)',
         placeholder: 'Time to complete test (seconds)',
+        physicalActivity: true,
         instructions: TimedUpAndGoText,
         numTrials: 2,
     },
     timedUpAndGoCognitive: {
         type: 'fields',
         defaultLabel: 'Timed Up and Go Cognitive Dual Task',
+        physicalActivity: true,
         instructions: TimedUpAndGoCognitiveText,
         fields: [
             {

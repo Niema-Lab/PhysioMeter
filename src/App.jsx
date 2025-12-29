@@ -4,7 +4,7 @@ import { HashRouter, Routes, Route } from 'react-router-dom'
 import Home from './components/Home'
 import PatientHome from './components/PatientHome'
 import PatientTests from './components/PatientTests'
-import Utilities from './components/Utilities'
+import AllMeasurementsPage from './components/AllMeasurementsPage'
 import NewUser from './components/NewUser'
 import ExistingUser from './components/ExistingUser'
 
@@ -24,7 +24,7 @@ export class App extends Component {
             <Route path="/" element={<Home />} />
             <Route path="/patient-home" element={<PatientHome />} />
             <Route path="/patient-tests" element={<PatientTests />} />
-            <Route path="/utilities" element={<Utilities />} />
+            <Route path="/measurements" element={<AllMeasurementsPage />} />
             <Route path="/new-user" element={<NewUser />} />
             <Route path="/existing-user" element={<ExistingUser />} />
           </Routes>

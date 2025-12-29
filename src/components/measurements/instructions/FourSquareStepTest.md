@@ -3,6 +3,9 @@ Set Up:
 - Place four 2.5 foot, 0.75 inch diameter PVC pipes arranged in a + pattern attached with L-attachments or 4-way coupler on the floor.
 - Place 2 chairs with one in each corner of the allotted space.
 
+![Four Square Step Test Setup](images/measurements/foursteptestdiagram.png)
+
+
 Script:
 
 - This test measures your balance as you move and step over obstacles. You will start standing in this "square", and when I say "Go" step forward into the next one, then sideways to the right, then back, then sideways to the left, and then reverse direction until you get back to the "square" you started in. It's like moving in a circle and then back again.

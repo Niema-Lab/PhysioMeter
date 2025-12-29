@@ -31,6 +31,17 @@ input {
   text-align: center;
   color: black;
   text-decoration: none;
+
+  a,
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: black;
+  }
 }
 
 .measurement-header {
@@ -77,6 +88,18 @@ input {
     border: 3px solid #dddddd;
     max-width: min(90vw, 800px);
     background: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    p:has(> img) {
+      align-self: center;
+    }
+
+    img {
+      max-width: 100%;
+      max-height: 40vh;
+    }
   }
 
   .measurement-delete {
@@ -84,19 +107,29 @@ input {
     margin-left: 1rem;
   }
 
-  .stopwatch-measurement, .countdown-measurement {
+  .stopwatch-measurement,
+  .countdown-measurement {
     font-size: var(--base-font-size);
 
     i {
       font-size: calc(var(--base-font-size) * 1.25);
     }
-    
+
     button {
       font-size: var(--base-font-size);
     }
 
     li {
       font-size: calc(var(--base-font-size) * 0.75);
+    }
+  }
+
+  .disabled-cases {
+    font-size: calc(var(--base-font-size) * 0.5);
+
+    .form-check-input,
+    .form-check-label {
+      font-size: calc(var(--base-font-size) * 0.6);
     }
   }
 }

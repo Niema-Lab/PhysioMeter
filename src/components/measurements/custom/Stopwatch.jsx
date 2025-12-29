@@ -106,7 +106,7 @@ export class Stopwatch extends Component {
                             step="0.01"
                             inputMode="decimal"
                             className={`measurement-input form-control ${valid === false ? 'is-invalid' : ''}`}
-                            value={disabled ? '' : value}
+                            value={value}
                             onChange={(e) => onChange(e.target.value)}
                             placeholder={placeholder || 'Seconds'}
                             min="0"

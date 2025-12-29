@@ -11,7 +11,7 @@ export class Home extends Component {
                 <nav className="d-flex flex-column align-items-center">
                     <Link to="/new-user" className="link text-decoration-underline"><h2>New Patient</h2></Link>
                     <Link to="/existing-user" className="link text-decoration-underline"><h2>Existing Patient</h2></Link>
-                    <Link to="/utilities" className="link text-decoration-underline"><h2>Utilities</h2></Link>
+                    <Link to="/measurements" className="link text-decoration-underline"><h2>Measurements</h2></Link>
                 </nav>
             </div>
         )

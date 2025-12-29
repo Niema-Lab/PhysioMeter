@@ -9,10 +9,44 @@ export class Measurement extends Component {
         this.uuid = crypto.randomUUID()
 
         const numFields = this.props.fields?.length || this.props.numTrials || 0
+        const disabledCases = this.props.disabledCases || []
+        const disabledValues = Array(disabledCases.length).fill(false)
+        let disabled = false
+
+        const vitals = this.props.formState?.vitals
+        if (this.props.physicalActivity && (vitals && vitals.length === 0)) {
+            disabledCases.unshift("You've selected Measurements that require physical activity, but have not measured Vital Signs. Uncheck this box to bypass the Vital Signs requirement.")
+            disabledValues.unshift(true)
+            disabled = true
+        }
+
         this.state = {
             multipleValues: numFields > 0 ? Array(numFields).fill(null) : [],
-            disabledValues: props.disabledCases ? Array(props.disabledCases.length).fill(false) : [],
-            disabled: false,
+            disabledCases,
+            disabledValues,
+            disabled
+        }
+    }
+
+    componentDidUpdate(prevProps) {
+        const prevVitals = prevProps.formState?.vitals
+        const vitals = this.props.formState?.vitals
+        if ((prevProps.physicalActivity !== this.props.physicalActivity || JSON.stringify(prevVitals) !== JSON.stringify(vitals))) {
+            const disabledCases = this.props.disabledCases || []
+            const disabledValues = this.state.disabledValues
+            let disabled = this.state.disabled || false
+
+            if (this.props.physicalActivity && (vitals && vitals.length === 0)) {
+                disabledCases.unshift("You've selected Measurements that require physical activity, but have not measured Vital Signs. Uncheck this box to bypass the Vital Signs requirement.")
+                disabledValues.unshift(true)
+                disabled = true
+            } else {
+                disabledCases.shift()
+                disabledValues.shift()
+                disabled = disabledValues.some(val => val)
+            }
+
+            this.setState({ disabledCases, disabledValues, disabled })
         }
     }
 
@@ -80,21 +114,24 @@ export class Measurement extends Component {
         }
 
         return (
-            <div className="d-flex mb-3">
-                {disabledCases.map((caseText, index) => (
-                    <div key={index} className="d-flex form-check">
-                        <input
-                            className="form-check-input me-2"
-                            type="checkbox"
-                            id={`disabled-case-${index}-${this.uuid}`}
-                            checked={this.state.disabledValues?.[index] || false}
-                            onChange={() => this.updateDisabledValues(index)}
-                        />
-                        <label className="form-check-label" htmlFor={`disabled-case-${index}-${this.uuid}`}>
-                            {caseText}
-                        </label>
-                    </div>
-                ))}
+            <div className={`disabled-cases d-flex flex-column align-items-center justify-content-center mt-3 mb-4 p-3`}>
+                {disabledCases.map((caseText, index) => {
+                    const checked = this.state.disabledValues?.[index] || false
+                    return (
+                        <div key={index} className="d-flex form-check mb-3">
+                            <input
+                                className={`form-check-input me-2 bg-${checked ? 'danger' : 'secondary'} border-${checked ? 'danger' : 'secondary'} cursor-p`}
+                                type="checkbox"
+                                id={`disabled-case-${index}-${this.uuid}`}
+                                checked={checked}
+                                onChange={() => this.updateDisabledValues(index)}
+                            />
+                            <label className={`form-check-label ${checked ? 'text-danger' : ''}`} htmlFor={`disabled-case-${index}-${this.uuid}`}>
+                                {caseText}
+                            </label>
+                        </div>
+                    )
+                })}
             </div>
         )
     }
@@ -117,7 +154,7 @@ export class Measurement extends Component {
                     name={`measurement-${type}`}
                     type={(type === 'date' && value) ? 'date' : 'text'}
                     className={`measurement-input form-control ${valid === false ? 'is-invalid' : ''}`}
-                    value={disabled ? '' : value}
+                    value={value}
                     onChange={(e) => onChange(e.target.value)}
                     placeholder={placeholder}
                     onFocus={(e) => type === 'date' && (e.target.type = 'date')}
@@ -148,7 +185,7 @@ export class Measurement extends Component {
                                 name={`measurement-${type}-${this.uuid}`}
                                 id={optionId}
                                 value={optionValue}
-                                checked={disabled ? false : (type === 'radio' ? value === optionValue : Array.isArray(value) && value.includes(optionValue))}
+                                checked={(type === 'radio' ? value === optionValue : Array.isArray(value) && value.includes(optionValue))}
                                 onChange={(e) => onChange(e.target.value)}
                                 disabled={disabled}
                             />
@@ -202,7 +239,7 @@ export class Measurement extends Component {
                         step={step}
                         inputMode={inputMode}
                         className={`measurement-input form-control ${valid === false ? 'is-invalid' : ''}`}
-                        value={disabled ? '' : value}
+                        value={value}
                         onChange={(e) => onChange(e.target.value)}
                         placeholder={placeholder}
                         min={min}
@@ -348,7 +385,7 @@ export class Measurement extends Component {
         return (
             <div className="measurement px-3 py-3">
                 {this.renderLabelAndDelete()}
-                {this.renderDisabledToggles(this.props.disabledCases)}
+                {this.renderDisabledToggles(this.state.disabledCases)}
                 {content}
                 {this.renderInstructions(this.props.instructions)}
             </div>

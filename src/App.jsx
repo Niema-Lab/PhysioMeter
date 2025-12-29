@@ -25,8 +25,8 @@ export class App extends Component {
             <Route path="/patient-home" element={<PatientHome />} />
             <Route path="/patient-tests" element={<PatientTests />} />
             <Route path="/measurements" element={<AllMeasurementsPage />} />
-            <Route path="/new-user" element={<NewUser />} />
-            <Route path="/existing-user" element={<ExistingUser />} />
+            <Route path="/new-patient" element={<NewUser />} />
+            <Route path="/existing-patient" element={<ExistingUser />} />
           </Routes>
         </HashRouter>
       </div>

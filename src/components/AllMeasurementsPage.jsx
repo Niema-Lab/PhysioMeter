@@ -81,7 +81,7 @@ export class Measurements extends Component {
 
         getUserRequest.onerror = (e) => {
             this.setState({
-                submitText: `Error retrieving user for saving measurements: ${e.target.error}`,
+                submitText: `Error retrieving patient for saving measurements: ${e.target.error}`,
                 submitTextType: 'error'
             })
             window.scrollTo(0, document.body.scrollHeight);

@@ -6,7 +6,7 @@ A React web application for physical therapy measurements, interpretations, and 
 Next day:
 - [ ] Validation for measurement inputs
 
-- Need clarity / TODO on: Berg Balance Scale, Four Square Step Test
+- Need clarity / TODO on: Berg Balance Scale, Four Square Step Test, Sessions implementation (should we drop the multi + feature and just have multiple sessions, each with max 1 measurement per measurement type?)
 
 Next week:
 - [ ] Build Calculations page

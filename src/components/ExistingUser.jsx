@@ -27,12 +27,12 @@ export class ExistingUser extends Component {
             this.setState({ users: allUsers.result })
         }
         allUsers.onerror = (e) => {
-            console.error('Failed to retrieve users:', e.target.error)
+            console.error('Failed to retrieve patients:', e.target.error)
         }
     }
 
     deleteUser = async (user) => {
-        if (!window.confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+        if (!window.confirm('Are you sure you want to delete this patient? This action cannot be undone.')) {
             return
         }
 
@@ -45,13 +45,13 @@ export class ExistingUser extends Component {
         deleteRequest.onsuccess = () => {
             this.setState((prevState) => ({
                 users: prevState.users.filter(u => u.uuid !== user.uuid),
-                submitText: `User ${user.name} deleted successfully.`,
+                submitText: `Patient ${user.name} deleted successfully.`,
                 submitTextType: 'success'
             }))
         }
         deleteRequest.onerror = (e) => {
             this.setState({
-                submitText: `Failed to delete user ${user.name}: ${e.target.error}`,
+                submitText: `Failed to delete patient ${user.name}: ${e.target.error}`,
                 submitTextType: 'error'
             })
         }
@@ -59,10 +59,10 @@ export class ExistingUser extends Component {
 
     render() {
         return (
-            <div id="existing-user">
-                <Title>Select Existing User</Title>
-                <Link to="/new-user" className="link text-decoration-underline"><h2>Create New User</h2></Link>
-                <Title>Existing Users</Title>
+            <div id="existing-patient">
+                <Title>Select Existing Patient</Title>
+                <Link to="/new-patient" className="link text-decoration-underline"><h2>Create New Patient</h2></Link>
+                <Title>Existing Patients</Title>
                 {this.state.submitText && (
                     <Text value={this.state.submitText} type={this.state.submitTextType} />
                 )}

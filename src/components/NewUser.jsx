@@ -41,14 +41,14 @@ export class NewUser extends Component {
             const user = await createDBUser(this.state.name, crypto.randomUUID())
         } catch (e) {
             this.setState({
-                submitText: `Error creating user: ${e}`,
+                submitText: `Error creating patient: ${e}`,
                 submitTextType: 'error'
             })
             return
         }
 
         this.setState({
-            submitText: `User "${this.state.name}" created successfully!`,
+            submitText: `Patient "${this.state.name}" created successfully!`,
             submitTextType: 'success',
             name: ''
         })
@@ -56,9 +56,9 @@ export class NewUser extends Component {
 
     render() {
         return (
-            <div id="new-user">
-                <Title>Create New User</Title>
-                <Link to="/existing-user" className="link text-decoration-underline"><h2>View Existing Users</h2></Link>
+            <div id="new-patient">
+                <Title>Create New Patient</Title>
+                <Link to="/existing-patient" className="link text-decoration-underline"><h2>View Existing Patients</h2></Link>
                 <Name
                     value={this.state.name}
                     onChange={(v) => this.setState({ name: v })}

@@ -41,10 +41,10 @@ export class ExistingUser extends Component {
         const tx = db.transaction('users', 'readwrite')
         const store = tx.objectStore('users')
 
-        const deleteRequest = store.delete(user.uid)
+        const deleteRequest = store.delete(user.uuid)
         deleteRequest.onsuccess = () => {
             this.setState((prevState) => ({
-                users: prevState.users.filter(u => u.uid !== user.uid),
+                users: prevState.users.filter(u => u.uuid !== user.uuid),
                 submitText: `User ${user.name} deleted successfully.`,
                 submitTextType: 'success'
             }))
@@ -66,16 +66,22 @@ export class ExistingUser extends Component {
                 {this.state.submitText && (
                     <Text value={this.state.submitText} type={this.state.submitTextType} />
                 )}
-                {this.state.users.map((user) => (
-                    <div className="link" key={user.uid}>
-                        <Link to={`/patient-home?uid=${user.uid}`} className="text-decoration-underline">
-                            <h2>{user.name}</h2>
-                        </Link>
-                        <h2>
-                            <i className="bi bi-trash-fill text-danger ms-4 cursor-p" onClick={() => this.deleteUser(user)}></i>
-                        </h2>
-                    </div>
-                ))}
+                {this.state.users.map((user) => {
+                    if (user.uuid === 'guest') {
+                        return null
+                    }
+
+                    return (
+                        <div className="link" key={user.uuid}>
+                            <Link to={`/patient-home?uuid=${user.uuid}`} className="text-decoration-underline">
+                                <h2>{user.name}</h2>
+                            </Link>
+                            <h2>
+                                <i className="bi bi-trash-fill text-danger ms-4 cursor-p" onClick={() => this.deleteUser(user)}></i>
+                            </h2>
+                        </div>
+                    )
+                })}
             </div>
         )
     }

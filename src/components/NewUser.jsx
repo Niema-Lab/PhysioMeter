@@ -5,7 +5,7 @@ import { Name } from './measurements/MeasurementFactory'
 import Submit from './form/Submit'
 import Title from './form/Title'
 import Text from './form/Text'
-import { openDB } from '../DB'
+import { createDBUser } from '../DB'
 
 export class NewUser extends Component {
     constructor(props) {
@@ -37,32 +37,21 @@ export class NewUser extends Component {
             return
         }
 
-        const db = await openDB()
-
-        const tx = db.transaction('users', 'readwrite')
-        const store = tx.objectStore('users')
-
-        const newUser = {
-            name: this.state.name,
-            uid: crypto.randomUUID(),
-            createdAt: new Date().toISOString()
-        }
-
-        store.add(newUser)
-
-        tx.oncomplete = () => {
+        try {
+            const user = await createDBUser(this.state.name, crypto.randomUUID())
+        } catch (e) {
             this.setState({
-                submitText: `User "${this.state.name}" created successfully!`,
-                submitTextType: 'success',
-                name: ''
-            })
-        }
-        tx.onerror = (e) => {
-            this.setState({
-                submitText: `Error creating user: ${e.target.error}`,
+                submitText: `Error creating user: ${e}`,
                 submitTextType: 'error'
             })
+            return
         }
+
+        this.setState({
+            submitText: `User "${this.state.name}" created successfully!`,
+            submitTextType: 'success',
+            name: ''
+        })
     }
 
     render() {

@@ -8,7 +8,7 @@ const openDB = () => {
             request.onupgradeneeded = (event) => {
                 const db = event.target.result
                 if (!db.objectStoreNames.contains('users')) {
-                    db.createObjectStore('users', { keyPath: 'uid' })
+                    db.createObjectStore('users', { keyPath: 'uuid' })
                 }
             }
 
@@ -22,24 +22,59 @@ const openDB = () => {
     return dbPromise
 }
 
-const getCurrentUser = async () => {
+const getUser = async (uuid) => {
     const db = await openDB()
 
     const tx = db.transaction('users', 'readonly')
     const store = tx.objectStore('users')
 
-    const urlParams = new URLSearchParams(window.location.hash.split('?')[1])
-    const uid = urlParams.get('uid')
-
-    if (!uid) {
-        return null
-    }
-
     return new Promise((resolve, reject) => {
-        const getUser = store.get(uid)
+        const getUser = store.get(uuid)
         getUser.onsuccess = () => resolve(getUser.result)
         getUser.onerror = (e) => reject(e.target.error)
     })
 }
 
-export { openDB, getCurrentUser }
+const getCurrentUser = async () => {
+    const urlParams = new URLSearchParams(window.location.hash.split('?')[1])
+    const uuid = urlParams.get('uuid')
+
+    if (!uuid) {
+        return await getGuestUser()
+    }
+
+    return await getUser(uuid)
+}
+
+const getGuestUser = async () => {
+    const guestUser = await getUser('guest');
+
+    if (!guestUser) {
+        return await createDBUser('Guest', 'guest')
+    }
+
+    return guestUser
+}
+
+const createDBUser = async (name, uuid) => {
+    const db = await openDB()
+
+    const tx = db.transaction('users', 'readwrite')
+    const store = tx.objectStore('users')
+
+    const newUser = {
+        name: name,
+        uuid: uuid,
+        createdAt: new Date().toISOString(),
+        measurements: {},
+    }
+
+    store.add(newUser)
+
+    return new Promise((resolve, reject) => {
+        tx.oncomplete = async () => resolve(await getUser(uuid))
+        tx.onerror = (e) => reject(e.target.error)
+    })
+}
+
+export { openDB, createDBUser, getCurrentUser }

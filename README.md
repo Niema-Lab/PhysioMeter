@@ -4,7 +4,6 @@ A React web application for physical therapy measurements, interpretations, and 
 
 ## Roadmap
 Next day:
-- [ ] Save feature for the measurements page
 - [ ] Validation for measurement inputs
 
 - Need clarity / TODO on: Berg Balance Scale, Four Square Step Test

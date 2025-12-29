@@ -14,14 +14,23 @@ export class Measurement extends Component {
         let disabled = false
 
         const vitals = this.props.formState?.vitals
-        if (this.props.physicalActivity && (vitals && vitals.length === 0)) {
+        if (this.props.physicalActivity && (vitals === undefined || vitals.length === 0)) {
             disabledCases.unshift("You've selected Measurements that require physical activity, but have not measured Vital Signs. Uncheck this box to bypass the Vital Signs requirement.")
             disabledValues.unshift(true)
             disabled = true
         }
 
+        let multipleValues = []
+        if (this.props.type === "fields" && this.props.value?.length === numFields) {
+            multipleValues = this.props.value
+        } else if (this.props.numTrials && this.props.value?.length === this.props.numTrials) {
+            multipleValues = this.props.value
+        } else if (numFields > 0) {
+            multipleValues = Array(numFields).fill(null)
+        }
+
         this.state = {
-            multipleValues: numFields > 0 ? Array(numFields).fill(null) : [],
+            multipleValues,
             disabledCases,
             disabledValues,
             disabled

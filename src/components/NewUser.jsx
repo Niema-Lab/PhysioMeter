@@ -37,8 +37,10 @@ export class NewUser extends Component {
             return
         }
 
+        const name = this.state.name.trim()
+
         try {
-            const user = await createDBUser(this.state.name, crypto.randomUUID())
+            const user = await createDBUser(name, crypto.randomUUID())
         } catch (e) {
             this.setState({
                 submitText: `Error creating patient: ${e}`,
@@ -48,7 +50,7 @@ export class NewUser extends Component {
         }
 
         this.setState({
-            submitText: `Patient "${this.state.name}" created successfully!`,
+            submitText: `Patient "${name}" created successfully!`,
             submitTextType: 'success',
             name: ''
         })

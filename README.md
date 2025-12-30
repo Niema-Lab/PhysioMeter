@@ -21,8 +21,8 @@ Next week:
 
 Final chores:
 
-- [ ] Improve design? Branding? UI?
 - [ ] Add Playwright E2E tests
+- [ ] Improve design? Branding? UI?
 - [ ] Add documentation to everything, especially:
   - [ ] Measurement components and how to create new ones
   - [ ] Custom measurement components

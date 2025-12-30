@@ -60,7 +60,8 @@ export class CountdownTimer extends Component {
             this.interval = null
         }
         this.setState({ running: false })
-        this.props.onChange((this.getDurationMs() - this.state.remaining) / 1000)
+        // currently not reporting elapsed time on stop
+        // this.props.onChange((this.getDurationMs() - this.state.remaining) / 1000)
     }
 
     reset = () => {

@@ -30,10 +30,13 @@ export class Measurement extends Component {
 
     componentDidMount() {
         const numFields = this.state.multipleValues.length
+        console.log(this.state.multipleValues)
 
         if (numFields > 0) {
             this.props.onChange(this.state.multipleValues)
-            this.props.onValidationChange(Array(numFields).fill(true))
+            if ((!Array.isArray(this.props.valid) || this.props.valid.length !== numFields) && this.props.onValidationChange) {
+                this.props.onValidationChange(Array(numFields).fill(false))
+            }
         }
     }
 
@@ -252,7 +255,7 @@ export class Measurement extends Component {
                         inputMode={inputMode}
                         className={`measurement-input form-control ${valid === false && !disabled ? 'is-invalid' : ''}`}
                         value={value}
-                        onChange={(e) => this.onChangeAndValidate(e.target.value, parameters)}
+                        onChange={(e) => this.onChangeAndValidate(parseFloat(e.target.value), parameters)}
                         placeholder={placeholder}
                         min={min}
                         max={max}
@@ -275,10 +278,11 @@ export class Measurement extends Component {
     }
 
     renderStopwatch = (parameters) => {
+        console.log(parameters.index)
         return (
             <Stopwatch
                 {...parameters}
-                onChange={(seconds) => this.onChangeAndValidate(seconds, parameters)}
+                onChange={(seconds) => this.state.multipleValues.length > 0 ? this.multipleValuesOnChangeAndValidate(parameters.index, seconds, parameters) : this.onChangeAndValidate(seconds, parameters)}
             />
         )
     }
@@ -287,7 +291,7 @@ export class Measurement extends Component {
         return (
             <CountdownTimer
                 {...parameters}
-                onChange={(seconds) => this.onChangeAndValidate(seconds, parameters)}
+                onChange={(seconds) => this.state.multipleValues.length > 0 ? this.multipleValuesOnChangeAndValidate(parameters.index, seconds, parameters) : this.onChangeAndValidate(seconds, parameters)}
             />
         )
     }
@@ -342,6 +346,7 @@ export class Measurement extends Component {
                 {mappedFields.map((field, i) => {
                     const newParameters = {
                         ...field,
+                        index: i,
                         value: this.state.multipleValues[i],
                         valid: parameters.valid[i],
                         disabled: this.isDisabled(),
@@ -372,6 +377,7 @@ export class Measurement extends Component {
         for (let i = 0; i < numTrials; i++) {
             const newParameters = {
                 ...parameters,
+                index: i,
                 value: this.state.multipleValues[i],
                 valid: parameters.valid[i],
                 disabled: this.isDisabled(),
@@ -409,7 +415,7 @@ export class Measurement extends Component {
         return (
             <div className="measurement px-3 py-3">
                 {this.renderLabelAndDelete()}
-                {this.renderDisabledToggles(this.state.disabledCases)}
+                {this.renderDisabledToggles(this.props.disabledCases)}
                 {content}
                 {this.renderInstructions(this.props.instructions)}
             </div>

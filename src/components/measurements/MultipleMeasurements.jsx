@@ -7,7 +7,7 @@ export class MultipleMeasurements extends Component {
         this.props.onChange(measurements);
         if (this.props.validations) {
             const validations = [...this.props.validations];
-            validations.push(true);
+            validations.push(false);
             this.props.onValidationChange(validations);
         }
         if (this.props.disabledValues) {

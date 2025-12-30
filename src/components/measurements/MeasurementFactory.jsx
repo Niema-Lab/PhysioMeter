@@ -48,6 +48,7 @@ export const MEASUREMENT_CONFIGS = {
         placeholder: 'Enter blood pressure (e.g., 120/80 systolic/diastolic mmHg)',
         instructions: BloodPressureText,
         validationFunction: (value) => {
+            console.log(value)
             const regex = /^(\d{1,3})\/(\d{1,3})$/
             const match = value.match(regex)
             if (!match) {
@@ -143,7 +144,7 @@ export const MEASUREMENT_CONFIGS = {
                 type: 'countdown',
                 duration: 30,
                 validationFunction: (value) => {
-                    return value > 0 && value <= 30
+                    return true
                 }
             },
             {

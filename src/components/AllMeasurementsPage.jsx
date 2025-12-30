@@ -111,45 +111,6 @@ export class Measurements extends Component {
             }
         }
 
-        // hard-coded additional validation: no empty labels or values allowed (and update validations accordingly)
-        const validations = JSON.parse(JSON.stringify(this.state.validations))
-        // for every component type component:
-        for (const key in this.state.formState) {
-            const measurementsArray = this.state.formState[key]
-            // for every instance of that component:
-            for (let i = 0; i < measurementsArray.length; i++) {
-                // check label
-                const measurement = measurementsArray[i]
-                if (measurement.label.trim() === '') {
-                    valid = false
-                }
-                // skip if disabled
-                const isDisabled = [...this.state.disabledValues[key][i]]
-                isDisabled.shift() // remove the vitals + physical activity disabled case
-                if (isDisabled.length > 0 && isDisabled.some(v => v)) {
-                    continue
-                }
-                // if the instance is composed of multiple fields, check each field
-                if (Array.isArray(measurement.value)) {
-                    if (!Array.isArray(validations[key][i])) {
-                        validations[key][i] = []
-                    }
-                    for (let j = 0; j < measurement.value.length; j++) {
-                        const val = measurement.value[j]
-                        // check valid value (not empty)
-                        if ((val === null || val === undefined || val.toString().trim() === '')) {
-                            validations[key][i][j] = false
-                            valid = false
-                        }
-                    }
-                } else if ((measurement.value === null || measurement.value === undefined || measurement.value.toString().trim() === '')) {
-                    validations[key][i] = false
-                    valid = false
-                }
-            }
-        }
-        this.setState({ validations })
-
         return valid
     }
 
@@ -166,16 +127,21 @@ export class Measurements extends Component {
 
     saveMeasurements = async (manual = false, lastCalled = -1) => {
         if (lastCalled !== -1 && lastCalled < this.state.saveMeasurementsLastCalled) {
+            console.info(`Throttled saveMeasurements call from ${lastCalled} ignored`)
             return
         }
 
         if (this.state.saveMeasurementsThrottled && Date.now() - this.state.saveMeasurementsLastCalled < THROTTLE_TIMEOUT && !manual) {
+            const lastCalled = Date.now()
+            console.info(`Throttling saveMeasurements call from ${lastCalled}`)
             setTimeout(() => {
-                this.saveMeasurements(false, Date.now())
+                this.saveMeasurements(false, lastCalled)
             }, THROTTLE_TIMEOUT)
             return
         }
 
+        console.info(`Executing saveMeasurements call from ${manual ? 'manual' : 'throttled'} at ${Date.now()}`)
+        
         this.setState({
             saveMeasurementsThrottled: true,
             saveMeasurementsLastCalled: Date.now(),

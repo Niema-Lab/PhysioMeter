@@ -25,18 +25,6 @@ export class Stopwatch extends Component {
         return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${centiseconds.toString().padStart(2, '0')}`
     }
 
-    parseTimeToSeconds = (timeStr) => {
-        if (!timeStr) return 0
-        // Handle mm:ss.cs format
-        const match = timeStr.match(/^(\d+):(\d+)\.(\d+)$/)
-        if (match) {
-            const [, min, sec, cs] = match
-            return parseFloat(min) * 60 + parseFloat(sec) + parseFloat(cs) / 100
-        }
-        // Handle plain seconds
-        return parseFloat(timeStr) || 0
-    }
-
     start = () => {
         const now = Date.now()
         this.setState({
@@ -105,7 +93,7 @@ export class Stopwatch extends Component {
                             type="number"
                             step="0.01"
                             inputMode="decimal"
-                            className={`measurement-input form-control ${valid === false ? 'is-invalid' : ''}`}
+                            className={`measurement-input form-control ${valid === false && !disabled ? 'is-invalid' : ''}`}
                             value={value}
                             onChange={(e) => onChange(e.target.value)}
                             placeholder={placeholder || 'Seconds'}

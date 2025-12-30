@@ -1,21 +1,42 @@
 import React, { Component } from 'react'
 
 export class MultipleMeasurements extends Component {
-    constructor(props) {
-        super(props)
-
-    }
-
     addMeasurement = () => {
         const measurements = [...this.props.measurements];
         measurements.push({ label: `${this.props.name} ${measurements.length + 1}`, value: '' });
         this.props.onChange(measurements);
+        if (this.props.validations) {
+            const validations = [...this.props.validations];
+            validations.push(true);
+            this.props.onValidationChange(validations);
+        }
+        if (this.props.disabledValues) {
+            const disabledValues = [...this.props.disabledValues];
+            disabledValues.push([true]); // the first value is always the vitals + physical activity case
+            this.props.onDisabledChange(disabledValues);
+        }
     }
 
     updateMeasurement = (index, value) => {
         const measurements = [...this.props.measurements]
         measurements[index].value = value
         this.props.onChange(measurements)
+    }
+
+    updateValidation = (index, isValid) => {
+        if (this.props.validations) {
+            const validations = [...this.props.validations]
+            validations[index] = isValid
+            this.props.onValidationChange(validations)
+        }
+    }
+
+    updatedDisabledValues = (index, disabledValue) => {
+        if (this.props.disabledValues) {
+            const disabledValues = [...this.props.disabledValues]
+            disabledValues[index] = disabledValue
+            this.props.onDisabledChange(disabledValues)
+        }
     }
 
     updateMeasurementLabel = (index, label) => {
@@ -28,6 +49,16 @@ export class MultipleMeasurements extends Component {
         const measurements = [...this.props.measurements]
         measurements.splice(index, 1)
         this.props.onChange(measurements)
+        if (this.props.validations) {
+            const validations = [...this.props.validations]
+            validations.splice(index, 1)
+            this.props.onValidationChange(validations)
+        }
+        if (this.props.disabledValues) {
+            const disabledValues = [...this.props.disabledValues]
+            disabledValues.splice(index, 1)
+            this.props.onDisabledChange(disabledValues)
+        }
     }
 
     render() {
@@ -40,10 +71,15 @@ export class MultipleMeasurements extends Component {
                         key={index}
                         value={measurement.value || ''}
                         label={measurement.label || ''}
+                        valid={this.props.validations ? this.props.validations[index] : true}
+                        checkValidVitals={this.props.checkValidVitals}
+                        disabledValues={this.props.disabledValues ? this.props.disabledValues[index] : false}
+                        formState={this.props.formState}
                         onChange={(value) => this.updateMeasurement(index, value)}
+                        onValidationChange={(isValid) => this.updateValidation(index, isValid)}
+                        onDisabledChange={(disabledValue) => this.updatedDisabledValues(index, disabledValue)}
                         onLabelChange={(label) => this.updateMeasurementLabel(index, label)}
                         onDelete={() => this.deleteMeasurement(index)}
-                        formState={this.props.formState}
                     />
                 ))}
             </div>

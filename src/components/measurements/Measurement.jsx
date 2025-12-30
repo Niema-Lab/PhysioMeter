@@ -1,24 +1,18 @@
 import React, { Component } from 'react'
 import Markdown from 'react-markdown'
+
 import Stopwatch from './custom/Stopwatch'
 import CountdownTimer from './custom/CountdownTimer'
+import { MEASUREMENT_CONFIGS } from './MeasurementFactory'
 
+
+const VITALS_DISABLED_CASE_TEXT = "You've selected Measurements that require physical activity, but have not measured Vital Signs. Uncheck this box to bypass the Vital Signs requirement."
 export class Measurement extends Component {
     constructor(props) {
         super(props)
         this.uuid = crypto.randomUUID()
 
-        const numFields = this.props.fields?.length || this.props.numTrials || 0
-        const disabledCases = this.props.disabledCases || []
-        const disabledValues = Array(disabledCases.length).fill(false)
-        let disabled = false
-
-        const vitals = this.props.formState?.vitals
-        if (this.props.physicalActivity && (vitals === undefined || vitals.length === 0)) {
-            disabledCases.unshift("You've selected Measurements that require physical activity, but have not measured Vital Signs. Uncheck this box to bypass the Vital Signs requirement.")
-            disabledValues.unshift(true)
-            disabled = true
-        }
+        const numFields = this.props.fields?.length || this.props.fieldNames?.length || this.props.numTrials || 0
 
         let multipleValues = []
         if (this.props.type === "fields" && this.props.value?.length === numFields) {
@@ -31,31 +25,15 @@ export class Measurement extends Component {
 
         this.state = {
             multipleValues,
-            disabledCases,
-            disabledValues,
-            disabled
         }
     }
 
-    componentDidUpdate(prevProps) {
-        const prevVitals = prevProps.formState?.vitals
-        const vitals = this.props.formState?.vitals
-        if ((prevProps.physicalActivity !== this.props.physicalActivity || JSON.stringify(prevVitals) !== JSON.stringify(vitals))) {
-            const disabledCases = this.props.disabledCases || []
-            const disabledValues = this.state.disabledValues
-            let disabled = this.state.disabled || false
+    componentDidMount() {
+        const numFields = this.state.multipleValues.length
 
-            if (this.props.physicalActivity && (vitals && vitals.length === 0)) {
-                disabledCases.unshift("You've selected Measurements that require physical activity, but have not measured Vital Signs. Uncheck this box to bypass the Vital Signs requirement.")
-                disabledValues.unshift(true)
-                disabled = true
-            } else {
-                disabledCases.shift()
-                disabledValues.shift()
-                disabled = disabledValues.some(val => val)
-            }
-
-            this.setState({ disabledCases, disabledValues, disabled })
+        if (numFields > 0) {
+            this.props.onChange(this.state.multipleValues)
+            this.props.onValidationChange(Array(numFields).fill(true))
         }
     }
 
@@ -72,7 +50,7 @@ export class Measurement extends Component {
                         <label className="me-2">Label:</label>
                         <input
                             type="text"
-                            className="measurement-label-input form-control"
+                            className={`measurement-label-input form-control ${label ? '' : 'is-invalid'}`}
                             value={label}
                             onChange={(e) => onLabelChange(e.target.value)}
                             placeholder="Enter label"
@@ -103,7 +81,7 @@ export class Measurement extends Component {
 
         return (
             <div className="measurement-delete ms-4 d-flex align-items-center cursor-p">
-                <i className="bi bi-trash-fill text-danger cursor-p" onClick={this.props.onDelete}></i>
+                <i className="bi bi-trash-fill text-danger cursor-p" onClick={this.props.onDelete} aria-label={`Delete measurement ${this.props.label || this.props.defaultLabel}`}></i>
             </div>
         )
     }
@@ -117,17 +95,37 @@ export class Measurement extends Component {
         )
     }
 
+    isDisabled = () => {
+        if (!this.props.formState) {
+            return this.props.disabled || false
+        }
+
+        const disabledValues = [...this.props.disabledValues]
+        if (!this.showVitalsDisabledCase()) {
+            disabledValues.shift()
+        }
+
+        return (disabledValues.some(val => val) || false)
+    }
+
+    showVitalsDisabledCase = () => {
+        return this.props.physicalActivity && !this.props.checkValidVitals()
+    }
+
     renderDisabledToggles = (disabledCases) => {
-        if (!disabledCases || disabledCases.length === 0) {
+        disabledCases = disabledCases || []
+        if (disabledCases.length === 0 && !this.showVitalsDisabledCase()) {
             return null
         }
+
+        disabledCases = [VITALS_DISABLED_CASE_TEXT, ...disabledCases]
 
         return (
             <div className={`disabled-cases d-flex flex-column align-items-center justify-content-center mt-3 mb-4 p-3`}>
                 {disabledCases.map((caseText, index) => {
-                    const checked = this.state.disabledValues?.[index] || false
+                    const checked = this.props.disabledValues?.[index] || false
                     return (
-                        <div key={index} className="d-flex form-check mb-3">
+                        <div key={caseText} className="d-flex form-check mb-3">
                             <input
                                 className={`form-check-input me-2 bg-${checked ? 'danger' : 'secondary'} border-${checked ? 'danger' : 'secondary'} cursor-p`}
                                 type="checkbox"
@@ -146,25 +144,31 @@ export class Measurement extends Component {
     }
 
     updateDisabledValues = (index) => {
-        const newValues = [...(this.state.disabledValues || [])]
-        newValues[index] = !newValues[index]
-        const disabled = newValues.some(val => val)
-        this.setState({ disabledValues: newValues, disabled })
-        this.props.onChange(disabled ? null : this.props.value)
+        const disabledValues = [...this.props.disabledValues]
+        disabledValues[index] = !disabledValues[index]
+        this.props.onDisabledChange(disabledValues)
     }
 
-    renderTextOrDate = (props) => {
-        const { type, value, onChange, valid, placeholder, min, max } = props
-        const disabled = this.state.disabled || props.disabled
+    onChangeAndValidate = (newValue, parameters) => {
+        if (!parameters.onChange) return
+        parameters.onChange(newValue)
+        if (parameters.onValidationChange !== undefined && parameters.onValidationChange !== null) {
+            parameters.onValidationChange(parameters.validationFunction(newValue))
+        }
+    }
+
+    renderTextOrDate = (parameters) => {
+        const { type, value, valid, placeholder, min, max } = parameters
+        const disabled = this.isDisabled()
 
         return (
             <div className="d-flex align-items-center justify-content-center">
                 <input
                     name={`measurement-${type}`}
                     type={(type === 'date' && value) ? 'date' : 'text'}
-                    className={`measurement-input form-control ${valid === false ? 'is-invalid' : ''}`}
+                    className={`measurement-input form-control ${valid === false && !disabled ? 'is-invalid' : ''}`}
                     value={value}
-                    onChange={(e) => onChange(e.target.value)}
+                    onChange={(e) => this.onChangeAndValidate(e.target.value, parameters)}
                     placeholder={placeholder}
                     onFocus={(e) => type === 'date' && (e.target.type = 'date')}
                     onTouchStart={(e) => type === 'date' && (e.target.type = 'date')}
@@ -177,25 +181,24 @@ export class Measurement extends Component {
         )
     }
 
-    renderRadioOrCheckbox = (props) => {
-        const { type, value, onChange, valid, options = [] } = props
-        const disabled = this.state.disabled || props.disabled
+    renderRadioOrCheckbox = (parameters) => {
+        const { type, value, valid, options = [] } = parameters
+        const disabled = this.isDisabled()
 
         return (
             <div>
                 {options.map((option) => {
-                    const optionValue = option.toLowerCase()
-                    const optionId = `${type}-${optionValue}-${this.uuid}`
+                    const optionId = `${type}-${option}-${this.uuid}`
                     return (
                         <div key={optionId} className="form-check mt-3 cursor-p">
                             <input
                                 type={type}
-                                className={`form-check-input  cursor-p ${valid === false ? 'is-invalid' : ''}`}
+                                className={`form-check-input  cursor-p ${valid === false && !disabled ? 'is-invalid' : ''}`}
                                 name={`measurement-${type}-${this.uuid}`}
                                 id={optionId}
-                                value={optionValue}
-                                checked={(type === 'radio' ? value === optionValue : Array.isArray(value) && value.includes(optionValue))}
-                                onChange={(e) => onChange(e.target.value)}
+                                value={option}
+                                checked={(type === 'radio' ? value === option : Array.isArray(value) && value.includes(option))}
+                                onChange={(e) => this.onChangeAndValidate(e.target.value, parameters)}
                                 disabled={disabled}
                             />
                             <label className="form-check-label cursor-p" htmlFor={optionId}>{option}</label>
@@ -206,9 +209,9 @@ export class Measurement extends Component {
         )
     }
 
-    renderNumber = (props) => {
-        const { type, value, onChange, valid, placeholder, min, max, unit, counterButtons } = props
-        const disabled = this.state.disabled || props.disabled
+    renderNumber = (parameters) => {
+        const { type, value, valid, placeholder, min, max, unit, counterButtons } = parameters
+        const disabled = this.isDisabled()
 
         const step = type === 'decimal' ? 'any' : '1'
         const inputMode = type === 'decimal' ? 'decimal' : 'numeric'
@@ -217,13 +220,13 @@ export class Measurement extends Component {
         const decrement = () => {
             const newValue = currentValue - 1
             if (min !== undefined && newValue < min) return
-            onChange(newValue)
+            this.onChangeAndValidate(newValue, parameters)
         }
 
         const increment = () => {
             const newValue = currentValue + 1
             if (max !== undefined && newValue > max) return
-            onChange(newValue)
+            this.onChangeAndValidate(newValue, parameters)
         }
 
         const canDecrement = !disabled && (min === undefined || currentValue > min)
@@ -247,9 +250,9 @@ export class Measurement extends Component {
                         type="number"
                         step={step}
                         inputMode={inputMode}
-                        className={`measurement-input form-control ${valid === false ? 'is-invalid' : ''}`}
+                        className={`measurement-input form-control ${valid === false && !disabled ? 'is-invalid' : ''}`}
                         value={value}
-                        onChange={(e) => onChange(e.target.value)}
+                        onChange={(e) => this.onChangeAndValidate(e.target.value, parameters)}
                         placeholder={placeholder}
                         min={min}
                         max={max}
@@ -271,37 +274,37 @@ export class Measurement extends Component {
         )
     }
 
-    renderStopwatch = (props) => {
+    renderStopwatch = (parameters) => {
         return (
             <Stopwatch
-                {...props}
-                disabled={this.state.disabled || props.disabled}
+                {...parameters}
+                onChange={(seconds) => this.onChangeAndValidate(seconds, parameters)}
             />
         )
     }
 
-    renderCountdownTimer = (props) => {
+    renderCountdownTimer = (parameters) => {
         return (
             <CountdownTimer
-                {...props}
-                disabled={this.state.disabled || props.disabled}
+                {...parameters}
+                onChange={(seconds) => this.onChangeAndValidate(seconds, parameters)}
             />
         )
     }
 
-    renderContent = (props) => {
-        const renderFunc = this.renderFunction(props)
+    renderContent = (parameters) => {
+        const renderFunc = this.renderFunction(parameters)
         if (!renderFunc) return null
 
-        if (props.numTrials && props.numTrials > 1) {
-            return this.renderMultipleTrials(props, renderFunc)
+        if (parameters.numTrials && parameters.numTrials > 1) {
+            return this.renderMultipleTrials(parameters, renderFunc)
         } else {
-            return renderFunc(props)
+            return renderFunc(parameters)
         }
     }
 
-    renderFunction = (props) => {
-        const { type } = props
+    renderFunction = (parameters) => {
+        const { type } = parameters
 
         if (type === "text" || type === "date") {
             return this.renderTextOrDate
@@ -321,23 +324,31 @@ export class Measurement extends Component {
         return null
     }
 
-    renderMultipleFields = (props) => {
-        const { fields } = props
+    renderMultipleFields = (parameters) => {
+        const { fields, fieldNames } = parameters
+        if (fields && fields.length > 0 && fieldNames && fieldNames.length > 0) {
+            console.error('Measurement: Both "fields" and "fieldNames" params provided for fields type. Please provide only one of these.')
+            return null
+        }
 
-        if (!fields || fields.length === 0) {
+        const mappedFields = fields && fields.length > 0 ? fields : fieldNames?.map(name => MEASUREMENT_CONFIGS[name]) || []
+
+        if (mappedFields.length === 0) {
             return null
         }
 
         return (
             <div>
-                {fields.map((field, i) => {
-                    const newProps = {
+                {mappedFields.map((field, i) => {
+                    const newParameters = {
                         ...field,
                         value: this.state.multipleValues[i],
-                        onChange: (value) => this.multipleValuesOnChange(i, value),
+                        valid: parameters.valid[i],
+                        disabled: this.isDisabled(),
+                        onChange: (value) => this.multipleValuesOnChangeAndValidate(i, value, field),
                     }
                     return <div key={`field-${i}`} className="d-flex flex-column align-items-center mb-4">
-                        {this.renderContent(newProps)}
+                        {this.renderContent(newParameters)}
                         {this.renderInstructions(field.instructions)}
                     </div>
                 })}
@@ -345,8 +356,8 @@ export class Measurement extends Component {
         )
     }
 
-    renderMultipleTrials = (props, renderFunction) => {
-        let { numTrials = 1, trialNames } = props
+    renderMultipleTrials = (parameters, renderFunction) => {
+        let { numTrials = 1, trialNames } = parameters
 
         if (numTrials <= 1) {
             return null
@@ -359,15 +370,17 @@ export class Measurement extends Component {
 
         const trials = []
         for (let i = 0; i < numTrials; i++) {
-            const newProps = {
-                ...props,
+            const newParameters = {
+                ...parameters,
                 value: this.state.multipleValues[i],
-                onChange: (value) => this.multipleValuesOnChange(i, value),
+                valid: parameters.valid[i],
+                disabled: this.isDisabled(),
+                onChange: (value) => this.multipleValuesOnChangeAndValidate(i, value, parameters),
             }
             trials.push(
                 <div key={`trial-${i}`} className="mb-4">
                     <h5>{trialNames ? trialNames[i] : `Trial ${i + 1}`}</h5>
-                    {renderFunction(newProps)}
+                    {renderFunction(newParameters)}
                 </div>
             )
         }
@@ -375,14 +388,16 @@ export class Measurement extends Component {
         return <div>{trials}</div>
     }
 
-    multipleValuesOnChange = (index, value) => {
-        const { onChange } = this.props
-
+    multipleValuesOnChangeAndValidate = (index, value, parameters) => {
         const updatedValues = [...(this.state.multipleValues)]
         updatedValues[index] = value
         this.setState({ multipleValues: updatedValues })
-        if (onChange) {
-            onChange(updatedValues)
+        this.props.onChange(updatedValues)
+        if (this.props.onValidationChange !== undefined && this.props.onValidationChange !== null) {
+            const isValid = parameters.validationFunction ? parameters.validationFunction(value) : true
+            const updatedValids = [...(this.props.valid)]
+            updatedValids[index] = isValid
+            this.props.onValidationChange(updatedValids)
         }
     }
 

@@ -10,28 +10,55 @@ import ModifiedFourSquareStepTestText from './instructions/ModifiedFourSquareSte
 import TimedUpAndGoText from './instructions/TimedUpAndGo.md?raw'
 import TimedUpAndGoCognitiveText from './instructions/TimedUpAndGoCognitive.md?raw'
 
-const MEASUREMENT_CONFIGS = {
+const MAX_LENGTH = 1000
+const MAX_SECONDS = 3600
+
+const SEX_OPTIONS = ['Male', 'Female']
+const ASSISTIVE_DEVICE_OPTIONS = ['None', 'Straight Cane', 'Small Based Quad Cane', 'Large Based Quad Cane', 'Hemi Walker', 'Front Wheeled Walker', 'Four Wheeled Walker']
+
+export const MEASUREMENT_CONFIGS = {
     name: {
         type: 'text',
         defaultLabel: 'Name',
-        placeholder: 'Enter name'
+        placeholder: 'Enter name',
+        validationFunction: (value) => {
+            return value.trim().length > 0 && value.length <= MAX_LENGTH
+        }
     },
     dob: {
         type: 'date',
         defaultLabel: 'Date of Birth',
-        placeholder: 'mm/dd/yyyy'
+        placeholder: 'mm/dd/yyyy',
+        validationFunction: (value) => {
+            return Boolean(Date.parse(value))
+        }
     },
     sex: {
         type: 'radio',
         defaultLabel: 'Sex',
-        options: ['Male', 'Female']
+        options: SEX_OPTIONS,
+        validationFunction: (value) => {
+            return SEX_OPTIONS.includes(value)
+        }
     },
+
     bloodPressure: {
         type: 'text',
         defaultLabel: 'Blood Pressure',
         placeholder: 'Enter blood pressure (e.g., 120/80 systolic/diastolic mmHg)',
         instructions: BloodPressureText,
+        validationFunction: (value) => {
+            const regex = /^(\d{1,3})\/(\d{1,3})$/
+            const match = value.match(regex)
+            if (!match) {
+                return false
+            }
+            const systolic = parseInt(match[1], 10)
+            const diastolic = parseInt(match[2], 10)
+            return systolic > diastolic && systolic >= 0 && systolic <= 200 && diastolic >= 0 && diastolic <= 200
+        }
     },
+
     oxygenSaturation: {
         type: 'decimal',
         defaultLabel: 'Oxygen Saturation',
@@ -40,41 +67,26 @@ const MEASUREMENT_CONFIGS = {
         max: 100,
         unit: '%',
         instructions: OxygenSaturationText,
+        validationFunction: (value) => {
+            return value >= 0 && value <= 100
+        }
     },
+
     restingPulseRate: {
         type: 'integer',
         defaultLabel: 'Resting Pulse Rate',
         placeholder: 'Enter resting pulse rate (bpm)',
         min: 0,
         max: 300,
+        validationFunction: (value) => {
+            return value >= 0 && value <= 300
+        }
     },
+
     vitalSigns: {
         type: 'fields',
         defaultLabel: 'Vital Signs',
-        fields: [
-            {
-                type: 'integer',
-                defaultLabel: 'Resting Pulse Rate',
-                placeholder: 'Enter resting pulse rate (bpm)',
-                min: 0,
-                max: 300,
-            },
-            {
-                type: 'text',
-                defaultLabel: 'Blood Pressure',
-                placeholder: 'Enter blood pressure (e.g., 120/80 systolic/diastolic mmHg)',
-                instructions: BloodPressureText,
-            },
-            {
-                type: 'decimal',
-                defaultLabel: 'Oxygen Saturation',
-                placeholder: 'Enter oxygen saturation (%)',
-                min: 0,
-                max: 100,
-                unit: '%',
-                instructions: OxygenSaturationText,
-            },
-        ],
+        fieldNames: ['restingPulseRate', 'bloodPressure', 'oxygenSaturation'],
     },
     fiveMeterUsualWalkingSpeed: {
         type: 'stopwatch',
@@ -82,6 +94,7 @@ const MEASUREMENT_CONFIGS = {
         placeholder: 'Time to walk 5 meters (seconds)',
         physicalActivity: true,
         instructions: FiveMeterUsualWalkingSpeedText,
+        numTrials: 2,
         computedFields: (value) => {
             if (!value) {
                 return {
@@ -92,6 +105,9 @@ const MEASUREMENT_CONFIGS = {
             return {
                 'Walking Speed': `${(5 / parseFloat(value)).toFixed(3)} m/s`
             }
+        },
+        validationFunction: (value) => {
+            return value > 0 && value < MAX_SECONDS
         }
     },
     fiveMeterFastWalkingSpeed: {
@@ -100,6 +116,7 @@ const MEASUREMENT_CONFIGS = {
         placeholder: 'Time to walk 5 meters (seconds)',
         physicalActivity: true,
         instructions: FiveMeterFastWalkingSpeedText,
+        numTrials: 2,
         computedFields: (value) => {
             if (!value) {
                 return {
@@ -110,6 +127,9 @@ const MEASUREMENT_CONFIGS = {
             return {
                 'Walking Speed': `${(5 / parseFloat(value)).toFixed(3)} m/s`
             }
+        },
+        validationFunction: (value) => {
+            return value > 0 && value < MAX_SECONDS
         }
     },
     thirtySecondSitToStand: {
@@ -122,7 +142,9 @@ const MEASUREMENT_CONFIGS = {
             {
                 type: 'countdown',
                 duration: 30,
-                noCounter: true,
+                validationFunction: (value) => {
+                    return value > 0 && value <= 30
+                }
             },
             {
                 type: 'integer',
@@ -130,13 +152,19 @@ const MEASUREMENT_CONFIGS = {
                 placeholder: 'Number of sit to stands',
                 min: 0,
                 counterButtons: true,
+                validationFunction: (value) => {
+                    return value >= 0 && value <= 100
+                }
             },
         ],
     },
     assistiveDevice: {
         type: 'radio',
         defaultLabel: 'Assistive Device Used',
-        options: ['None', 'Straight Cane', 'Small Based Quad Cane', 'Large Based Quad Cane', 'Hemi Walker', 'Front Wheeled Walker', 'Four Wheeled Walker',],
+        options: ASSISTIVE_DEVICE_OPTIONS,
+        validationFunction: (value) => {
+            return ASSISTIVE_DEVICE_OPTIONS.includes(value)
+        },
     },
     fourSquareStepTest: {
         type: 'stopwatch',
@@ -145,6 +173,9 @@ const MEASUREMENT_CONFIGS = {
         physicalActivity: true,
         instructions: FourSquareStepTestText,
         numTrials: 2,
+        validationFunction: (value) => {
+            return value > 0 && value < MAX_SECONDS
+        }
     },
     modifiedFourSquareStepTest: {
         type: 'stopwatch',
@@ -153,6 +184,9 @@ const MEASUREMENT_CONFIGS = {
         physicalActivity: true,
         instructions: ModifiedFourSquareStepTestText,
         numTrials: 2,
+        validationFunction: (value) => {
+            return value > 0 && value < MAX_SECONDS
+        }
     },
     timedUpAndGo: {
         type: 'stopwatch',
@@ -161,6 +195,9 @@ const MEASUREMENT_CONFIGS = {
         physicalActivity: true,
         instructions: TimedUpAndGoText,
         numTrials: 2,
+        validationFunction: (value) => {
+            return value > 0 && value < MAX_SECONDS
+        }
     },
     timedUpAndGoCognitive: {
         type: 'fields',
@@ -172,6 +209,9 @@ const MEASUREMENT_CONFIGS = {
                 type: 'stopwatch',
                 defaultLabel: 'Time',
                 placeholder: 'Time to complete test (seconds)',
+                validationFunction: (value) => {
+                    return value > 0 && value < MAX_SECONDS
+                }
             },
             {
                 type: 'integer',
@@ -179,6 +219,9 @@ const MEASUREMENT_CONFIGS = {
                 placeholder: 'Number of errors',
                 min: 0,
                 counterButtons: true,
+                validationFunction: (value) => {
+                    return value >= 0 && value <= 50
+                }
             },
         ],
     },

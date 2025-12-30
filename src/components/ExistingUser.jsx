@@ -77,7 +77,7 @@ export class ExistingUser extends Component {
                                 <h2>{user.name}</h2>
                             </Link>
                             <h2>
-                                <i className="bi bi-trash-fill text-danger ms-4 cursor-p" onClick={() => this.deleteUser(user)}></i>
+                                <i className="bi bi-trash-fill text-danger ms-4 cursor-p" onClick={() => this.deleteUser(user)} aria-label={`Delete patient ${user.name}`}></i>
                             </h2>
                         </div>
                     )

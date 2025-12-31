@@ -111,7 +111,7 @@ export const MEASUREMENT_CONFIGS = {
         min: 0,
         max: 300,
         validationFunction: (value) => {
-            return value >= 0 && value <= 300
+            return value >= 0 && value <= 300 && Number.isInteger(value)
         }
     },
 
@@ -188,7 +188,7 @@ export const MEASUREMENT_CONFIGS = {
                 min: 0,
                 counterButtons: true,
                 validationFunction: (value) => {
-                    return value >= 0 && value <= 100
+                    return value >= 0 && value <= 100 && Number.isInteger(value)
                 }
             },
         ],
@@ -260,7 +260,7 @@ export const MEASUREMENT_CONFIGS = {
                 min: 0,
                 counterButtons: true,
                 validationFunction: (value) => {
-                    return value >= 0 && value <= 50
+                    return value >= 0 && value <= 50 && Number.isInteger(value)
                 }
             },
         ],

@@ -11,8 +11,6 @@ Next day:
 - [ ] Timestamp patient creation date, measurement start dates, save dates
 - [ ] Implement Four Square Step Test "does not clear apparatus" to Modified Four Square Step Test (add a confirm prompt and then convert to Modified if selected)
 
-- Need clarity / TODO on: Berg Balance Scale, Four Square Step Test, Sessions implementation (should we drop the multi + feature and just have multiple sessions, each with max 1 measurement per measurement type?)
-
 Next week:
 
 - [ ] Build Calculations page

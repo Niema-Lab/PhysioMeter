@@ -39,7 +39,7 @@ const ASSISTIVE_DEVICE_FOUR_SQUARE_STEP_TEST_DISABLED_CASE = {
 
 const ASSISTIVE_DEVICE_MODIFIED_FOUR_SQUARE_STEP_TEST_DISABLED_CASE = {
     text: "Select an assistive device. If an assistive device other than 'None' or 'Straight Cane' is selected, the participant should perform the Four Square Step Test instead. Uncheck this box to bypass this recommendation.",
-    computation: (formState, validations, disabledValues, measurementKey, index, value) => {
+    showOverride: (formState, validations, disabledValues, measurementKey, index, value) => {
         const assistiveDevices = formState['assistiveDevices']
         const validAssistiveDevices = assistiveDevices && Array.isArray(assistiveDevices) && assistiveDevices.length > 0
             && assistiveDevices.every(device => ['Small Based Quad Cane', 'Large Based Quad Cane', 'Hemi Walker', 'Front Wheeled Walker', 'Four Wheeled Walker'].includes(device.value))

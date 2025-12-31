@@ -17,7 +17,7 @@ const SEX_OPTIONS = ['Male', 'Female']
 const ASSISTIVE_DEVICE_OPTIONS = ['None', 'Straight Cane', 'Small Based Quad Cane', 'Large Based Quad Cane', 'Hemi Walker', 'Front Wheeled Walker', 'Four Wheeled Walker']
 
 const PHYSICAL_ACTIVITY_DISABLED_CASE = {
-    text: "You've selected Measurements that require physical activity, but have not measured Vital Signs. Uncheck this box to bypass the Vital Signs requirement.",
+    text: "You've selected Measurements that require physical activity, but have not measured or invalid Vital Signs. Uncheck this box to bypass the Vital Signs requirement.",
     // when to show the checkbox to the user to override the disabled state (otherwise the disabled case is not applied) 
     showOverride: (formState, validations, disabledValues, measurementKey) => {
         const vitals = validations['vitalSigns']
@@ -28,7 +28,7 @@ const PHYSICAL_ACTIVITY_DISABLED_CASE = {
 }
 
 const ASSISTIVE_DEVICE_FOUR_SQUARE_STEP_TEST_DISABLED_CASE = {
-    text: "Based on the selected assistive device, the participant should perform the Modified Four Square Step Test instead. Uncheck this box to bypass this recommendation.",
+    text: "Select an assistive device. If an assistive device other than 'None' or 'Straight Cane' is selected, the participant should perform the Modified Four Square Step Test instead. Uncheck this box to bypass this recommendation.",
     showOverride: (formState, validations, disabledValues, measurementKey) => {
         const assistiveDevices = formState['assistiveDevices']
         const validAssistiveDevices = assistiveDevices && Array.isArray(assistiveDevices) && assistiveDevices.length > 0
@@ -38,7 +38,7 @@ const ASSISTIVE_DEVICE_FOUR_SQUARE_STEP_TEST_DISABLED_CASE = {
 }
 
 const ASSISTIVE_DEVICE_MODIFIED_FOUR_SQUARE_STEP_TEST_DISABLED_CASE = {
-    text: "Based on the selected assistive device, the participant should perform the Four Square Step Test instead. Uncheck this box to bypass this recommendation.",
+    text: "Select an assistive device. If an assistive device other than 'None' or 'Straight Cane' is selected, the participant should perform the Four Square Step Test instead. Uncheck this box to bypass this recommendation.",
     computation: (formState, validations, disabledValues, measurementKey, index, value) => {
         const assistiveDevices = formState['assistiveDevices']
         const validAssistiveDevices = assistiveDevices && Array.isArray(assistiveDevices) && assistiveDevices.length > 0

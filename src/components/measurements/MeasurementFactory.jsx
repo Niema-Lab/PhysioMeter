@@ -16,6 +16,38 @@ const MAX_SECONDS = 3600
 const SEX_OPTIONS = ['Male', 'Female']
 const ASSISTIVE_DEVICE_OPTIONS = ['None', 'Straight Cane', 'Small Based Quad Cane', 'Large Based Quad Cane', 'Hemi Walker', 'Front Wheeled Walker', 'Four Wheeled Walker']
 
+const PHYSICAL_ACTIVITY_DISABLED_CASE = {
+    text: "You've selected Measurements that require physical activity, but have not measured Vital Signs. Uncheck this box to bypass the Vital Signs requirement.",
+    // when to show the checkbox to the user to override the disabled state (otherwise the disabled case is not applied) 
+    showOverride: (formState, validations, disabledValues, measurementKey) => {
+        const vitals = validations['vitalSigns']
+        const validVitals = vitals && Array.isArray(vitals) && vitals.length > 0 && vitals.every(vital => Array.isArray(vital) && vital.every(v => v === true))
+        // display if vitals are not valid
+        return !validVitals
+    }
+}
+
+const ASSISTIVE_DEVICE_FOUR_SQUARE_STEP_TEST_DISABLED_CASE = {
+    text: "Based on the selected assistive device, the participant should perform the Modified Four Square Step Test instead. Uncheck this box to bypass this recommendation.",
+    showOverride: (formState, validations, disabledValues, measurementKey) => {
+        const assistiveDevices = formState['assistiveDevices']
+        const validAssistiveDevices = assistiveDevices && Array.isArray(assistiveDevices) && assistiveDevices.length > 0
+            && assistiveDevices.every(device => ['None', 'Straight Cane'].includes(device.value))
+        return !validAssistiveDevices
+    }
+}
+
+const ASSISTIVE_DEVICE_MODIFIED_FOUR_SQUARE_STEP_TEST_DISABLED_CASE = {
+    text: "Based on the selected assistive device, the participant should perform the Four Square Step Test instead. Uncheck this box to bypass this recommendation.",
+    computation: (formState, validations, disabledValues, measurementKey, index, value) => {
+        const assistiveDevices = formState['assistiveDevices']
+        const validAssistiveDevices = assistiveDevices && Array.isArray(assistiveDevices) && assistiveDevices.length > 0
+            && assistiveDevices.every(device => ['Small Based Quad Cane', 'Large Based Quad Cane', 'Hemi Walker', 'Front Wheeled Walker', 'Four Wheeled Walker'].includes(device.value))
+        return !validAssistiveDevices
+    }
+}
+
+
 export const MEASUREMENT_CONFIGS = {
     name: {
         type: 'text',
@@ -45,10 +77,9 @@ export const MEASUREMENT_CONFIGS = {
     bloodPressure: {
         type: 'text',
         defaultLabel: 'Blood Pressure',
-        placeholder: 'Enter blood pressure (e.g., 120/80 systolic/diastolic mmHg)',
+        placeholder: 'blood pressure (XX/YY)',
         instructions: BloodPressureText,
         validationFunction: (value) => {
-            console.log(value)
             const regex = /^(\d{1,3})\/(\d{1,3})$/
             const match = value.match(regex)
             if (!match) {
@@ -63,7 +94,7 @@ export const MEASUREMENT_CONFIGS = {
     oxygenSaturation: {
         type: 'decimal',
         defaultLabel: 'Oxygen Saturation',
-        placeholder: 'Enter oxygen saturation (%)',
+        placeholder: 'oxygen saturation (%)',
         min: 0,
         max: 100,
         unit: '%',
@@ -76,7 +107,7 @@ export const MEASUREMENT_CONFIGS = {
     restingPulseRate: {
         type: 'integer',
         defaultLabel: 'Resting Pulse Rate',
-        placeholder: 'Enter resting pulse rate (bpm)',
+        placeholder: 'resting pulse rate (bpm)',
         min: 0,
         max: 300,
         validationFunction: (value) => {
@@ -89,12 +120,13 @@ export const MEASUREMENT_CONFIGS = {
         defaultLabel: 'Vital Signs',
         fieldNames: ['restingPulseRate', 'bloodPressure', 'oxygenSaturation'],
     },
+
     fiveMeterUsualWalkingSpeed: {
         type: 'stopwatch',
         defaultLabel: '5 Meter Usual Walking Speed',
         placeholder: 'Time to walk 5 meters (seconds)',
-        physicalActivity: true,
         instructions: FiveMeterUsualWalkingSpeedText,
+        disabledCasesComputed: [PHYSICAL_ACTIVITY_DISABLED_CASE],
         numTrials: 2,
         computedFields: (value) => {
             if (!value) {
@@ -111,12 +143,13 @@ export const MEASUREMENT_CONFIGS = {
             return value > 0 && value < MAX_SECONDS
         }
     },
+
     fiveMeterFastWalkingSpeed: {
         type: 'stopwatch',
         defaultLabel: '5 Meter Fast Walking Speed',
         placeholder: 'Time to walk 5 meters (seconds)',
-        physicalActivity: true,
         instructions: FiveMeterFastWalkingSpeedText,
+        disabledCasesComputed: [PHYSICAL_ACTIVITY_DISABLED_CASE],
         numTrials: 2,
         computedFields: (value) => {
             if (!value) {
@@ -133,12 +166,13 @@ export const MEASUREMENT_CONFIGS = {
             return value > 0 && value < MAX_SECONDS
         }
     },
+
     thirtySecondSitToStand: {
         type: 'fields',
         defaultLabel: '30 Second Chair Stand',
-        physicalActivity: true,
         instructions: ThirtySecondSitToStandText,
         disabledCases: ['Participant cannot stand without using their hands'],
+        disabledCasesComputed: [PHYSICAL_ACTIVITY_DISABLED_CASE],
         fields: [
             {
                 type: 'countdown',
@@ -159,6 +193,7 @@ export const MEASUREMENT_CONFIGS = {
             },
         ],
     },
+
     assistiveDevice: {
         type: 'radio',
         defaultLabel: 'Assistive Device Used',
@@ -167,44 +202,48 @@ export const MEASUREMENT_CONFIGS = {
             return ASSISTIVE_DEVICE_OPTIONS.includes(value)
         },
     },
+
     fourSquareStepTest: {
         type: 'stopwatch',
         defaultLabel: 'Four Square Step Test',
         placeholder: 'Time to complete test (seconds)',
-        physicalActivity: true,
         instructions: FourSquareStepTestText,
+        disabledCasesComputed: [PHYSICAL_ACTIVITY_DISABLED_CASE, ASSISTIVE_DEVICE_FOUR_SQUARE_STEP_TEST_DISABLED_CASE],
         numTrials: 2,
         validationFunction: (value) => {
             return value > 0 && value < MAX_SECONDS
         }
     },
+
     modifiedFourSquareStepTest: {
         type: 'stopwatch',
         defaultLabel: 'Modified Four Square Step Test',
         placeholder: 'Time to complete test (seconds)',
-        physicalActivity: true,
         instructions: ModifiedFourSquareStepTestText,
+        disabledCasesComputed: [PHYSICAL_ACTIVITY_DISABLED_CASE, ASSISTIVE_DEVICE_MODIFIED_FOUR_SQUARE_STEP_TEST_DISABLED_CASE],
         numTrials: 2,
         validationFunction: (value) => {
             return value > 0 && value < MAX_SECONDS
         }
     },
+
     timedUpAndGo: {
         type: 'stopwatch',
         defaultLabel: 'Timed Up and Go (TUG)',
         placeholder: 'Time to complete test (seconds)',
-        physicalActivity: true,
         instructions: TimedUpAndGoText,
+        disabledCasesComputed: [PHYSICAL_ACTIVITY_DISABLED_CASE],
         numTrials: 2,
         validationFunction: (value) => {
             return value > 0 && value < MAX_SECONDS
         }
     },
+
     timedUpAndGoCognitive: {
         type: 'fields',
         defaultLabel: 'Timed Up and Go Cognitive Dual Task',
-        physicalActivity: true,
         instructions: TimedUpAndGoCognitiveText,
+        disabledCasesComputed: [PHYSICAL_ACTIVITY_DISABLED_CASE],
         fields: [
             {
                 type: 'stopwatch',

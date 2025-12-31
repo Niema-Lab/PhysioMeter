@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 
-import { Name, DoB, Sex, VitalSigns, FiveMeterUsualWalkingSpeed, FiveMeterFastWalkingSpeed, ThirtySecondSitToStand, AssistiveDevice, FourSquareStepTest, ModifiedFourSquareStepTest, TimedUpAndGo, TimedUpAndGoCognitive } from './measurements/MeasurementFactory'
+import { Navigate } from "react-router-dom"
+import { Name, DoB, Sex, VitalSigns, FiveMeterUsualWalkingSpeed, FiveMeterFastWalkingSpeed, ThirtySecondSitToStand, AssistiveDevice, FourSquareStepTest, ModifiedFourSquareStepTest, TimedUpAndGo, TimedUpAndGoCognitive, MEASUREMENT_CONFIGS } from './measurements/MeasurementFactory'
 import MultipleMeasurements from './measurements/MultipleMeasurements'
 import { getCurrentUser, openDB } from '../DB'
 import Text from './form/Text'
@@ -8,7 +9,7 @@ import Title from './form/Title'
 import Submit from './form/Submit'
 import LoadingPage from './LoadingPage'
 
-const THROTTLE_TIMEOUT = 500;
+const THROTTLE_TIMEOUT = 250;
 
 export class Measurements extends Component {
     constructor(props) {
@@ -20,20 +21,22 @@ export class Measurements extends Component {
         }, {})
 
         this.state = {
+            loaded: false,
             user: null,
             submitText: '',
             submitTextType: '',
             formState: JSON.parse(JSON.stringify(STATE_OBJECT)),
             validations: JSON.parse(JSON.stringify(STATE_OBJECT)),
             disabledValues: JSON.parse(JSON.stringify(STATE_OBJECT)),
-            saveMeasurementsThrottled: false,
-            saveMeasurementsLastCalled: 0,
         }
+
+        this.lastSaved = 0;
+        this.saveQueued = false;
     }
 
     componentDidMount = async () => {
         const user = await getCurrentUser()
-        this.setState({ user }, () => {
+        this.setState({ user, loaded: true }, () => {
             if (this.state.user?.measurements?.formState && Object.keys(this.state.user.measurements.formState).length > 0) {
                 this.setState({
                     formState: JSON.parse(JSON.stringify(this.state.user.measurements.formState)),
@@ -66,20 +69,28 @@ export class Measurements extends Component {
         })
     }
 
-    checkValidVitals = () => {
-        const vitalsValidations = this.state.validations['vitals']
-        if (vitalsValidations.length === 0) {
-            return false
-        }
-        for (const vitalValidation of vitalsValidations) {
-            if (!Array.isArray(vitalValidation)) {
-                return false
-            }
-            if (vitalValidation.some(v => !v)) {
-                return false
+    isDisabled = (measurementKey, index) => {
+        const { formState, validations, disabledValues } = this.state;
+        const disabledVals = [...disabledValues[measurementKey][index]];
+        for (let i = 0; i < MEASUREMENT_CONFIGS[measurementKey]?.disabledCasesComputed?.length ?? 0; i++) {
+            const disabledCaseComputed = MEASUREMENT_CONFIGS[measurementKey].disabledCasesComputed[i]
+            // if the disabled case is not shown, set the disabled value to false
+            if (!disabledCaseComputed.showOverride(formState, validations, disabledValues, measurementKey)) {
+                disabledVals[i] = false
             }
         }
-        return true
+        return (disabledVals.some(val => val) || false)
+    }
+
+    // if the disabled case shouldn't be shown, return null for the text
+    getDisableCaseComputedText = (measurementKey) => {
+        const { formState, validations, disabledValues } = this.state;
+        const result = []
+        for (let i = 0; i < MEASUREMENT_CONFIGS[measurementKey]?.disabledCasesComputed?.length ?? 0; i++) {
+            const disabledCaseComputed = MEASUREMENT_CONFIGS[measurementKey].disabledCasesComputed[i]
+            result.push(disabledCaseComputed.showOverride(formState, validations, disabledValues, measurementKey) ? disabledCaseComputed.text : null)
+        }
+        return result
     }
 
     passesValidation = () => {
@@ -87,12 +98,10 @@ export class Measurements extends Component {
         // for every component type component:
         for (const key in this.state.validations) {
             // for every instance of that component:
-            const validationsArray = this.state.validations[key]
+            const validationsArray = [...this.state.validations[key]]
             for (let i = 0; i < validationsArray.length; i++) {
                 // skip if disabled
-                const isDisabled = [...this.state.disabledValues[key][i]]
-                isDisabled.shift() // remove the vitals + physical activity disabled case
-                if (isDisabled.length > 0 && isDisabled.some(v => v)) {
+                if (this.isDisabled(key, i)) {
                     continue
                 }
                 const isValid = validationsArray[i]
@@ -125,27 +134,24 @@ export class Measurements extends Component {
         })
     }
 
-    saveMeasurements = async (manual = false, lastCalled = -1) => {
-        if (lastCalled !== -1 && lastCalled < this.state.saveMeasurementsLastCalled) {
-            console.info(`Throttled saveMeasurements call from ${lastCalled} ignored`)
-            return
+    saveMeasurements = async (manual = false) => {
+        if (this.saveQueued) {
+            return;
         }
 
-        if (this.state.saveMeasurementsThrottled && Date.now() - this.state.saveMeasurementsLastCalled < THROTTLE_TIMEOUT && !manual) {
-            const lastCalled = Date.now()
-            console.info(`Throttling saveMeasurements call from ${lastCalled}`)
+        const now = Date.now();
+        const timeSinceLastSave = now - this.lastSaved;
+
+        if (!manual && timeSinceLastSave < THROTTLE_TIMEOUT) {
+            this.saveQueued = true;
             setTimeout(() => {
-                this.saveMeasurements(false, lastCalled)
-            }, THROTTLE_TIMEOUT)
-            return
+                this.saveQueued = false;
+                this.saveMeasurements();
+            }, THROTTLE_TIMEOUT);
+            return;
         }
 
-        console.info(`Executing saveMeasurements call from ${manual ? 'manual' : 'throttled'} at ${Date.now()}`)
-        
-        this.setState({
-            saveMeasurementsThrottled: true,
-            saveMeasurementsLastCalled: Date.now(),
-        })
+        this.lastSaved = now;
 
         const passesValidation = this.passesValidation()
         if (!passesValidation) {
@@ -210,6 +216,9 @@ export class Measurements extends Component {
 
     render() {
         if (!this.state.user) {
+            if (this.state.loaded) {
+                return <Navigate to="/existing-patient" replace={true} />
+            }
             return <LoadingPage />
         }
 
@@ -223,16 +232,18 @@ export class Measurements extends Component {
                             return (
                                 <MultipleMeasurements
                                     key={stateKey}
+                                    measurementKey={stateKey}
                                     name={name}
+                                    measurementConfig={MEASUREMENT_CONFIGS[stateKey]}
                                     component={component}
                                     onChange={(value) => this.updateValues(stateKey, value)}
                                     measurements={this.state.formState[stateKey]}
-                                    formState={this.state.formState}
-                                    validations={this.state.validations[stateKey]}
-                                    checkValidVitals={this.checkValidVitals}
-                                    disabledValues={this.state.disabledValues[stateKey]}
+                                    validations={this.state.validations}
+                                    disabledValues={this.state.disabledValues}
                                     onValidationChange={(validations) => this.updateValidations(stateKey, validations)}
                                     onDisabledChange={(disabledValues) => this.updateDisabled(stateKey, disabledValues)}
+                                    isDisabled={this.isDisabled}
+                                    getDisableCaseComputedText={this.getDisableCaseComputedText}
                                     oneMax={this.state.user.uuid !== 'guest' ? oneMax : false}
                                 />
                             )
@@ -252,60 +263,60 @@ const MEASUREMENT_PAGE_CONFIG = [
     {
         name: 'Name',
         component: Name,
-        stateKey: 'names',
-        guestOnly: true
+        stateKey: 'name',
+        guestOnly: true,
     },
     {
         name: 'Date of Birth',
         component: DoB,
-        stateKey: 'dates',
-        oneMax: true
+        stateKey: 'dob',
+        oneMax: true,
     },
     {
         name: 'Sex',
         component: Sex,
-        stateKey: 'sexes',
-        oneMax: true
+        stateKey: 'sex',
+        oneMax: true,
     },
     {
         name: 'Vital Signs',
         component: VitalSigns,
-        stateKey: 'vitals'
+        stateKey: 'vitalSigns',
     },
     {
         name: '5 Meter Usual Walking Speed',
         component: FiveMeterUsualWalkingSpeed,
-        stateKey: 'usualSpeeds'
+        stateKey: 'fiveMeterUsualWalkingSpeed',
     },
     {
         name: '5 Meter Fast Walking Speed',
         component: FiveMeterFastWalkingSpeed,
-        stateKey: 'fastSpeeds'
+        stateKey: 'fiveMeterFastWalkingSpeed',
     },
     {
         name: '30 Second Sit to Stand',
         component: ThirtySecondSitToStand,
-        stateKey: 'sitToStands'
+        stateKey: 'thirtySecondSitToStand',
     },
     {
         name: 'Assistive Device',
         component: AssistiveDevice,
-        stateKey: 'assistiveDevices'
+        stateKey: 'assistiveDevices',
     },
     {
         name: 'Four Square Step Test',
         component: FourSquareStepTest,
-        stateKey: 'fourSquareStepTests'
+        stateKey: 'fourSquareStepTest'
     },
     {
         name: 'Modified Four Square Step Test',
         component: ModifiedFourSquareStepTest,
-        stateKey: 'modifiedFourSquareStepTests'
+        stateKey: 'modifiedFourSquareStepTest'
     },
     {
         name: 'Timed Up and Go',
         component: TimedUpAndGo,
-        stateKey: 'timedUpAndGos'
+        stateKey: 'timedUpAndGo'
     },
     {
         name: 'Timed Up and Go Cognitive',

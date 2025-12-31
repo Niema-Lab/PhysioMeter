@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { Link } from 'react-router-dom'
 
 import { Name } from './measurements/MeasurementFactory'
@@ -40,7 +40,7 @@ export class NewUser extends Component {
         const name = this.state.name.trim()
 
         try {
-            const user = await createDBUser(name, crypto.randomUUID())
+            await createDBUser(name, crypto.randomUUID())
         } catch (e) {
             this.setState({
                 submitText: `Error creating patient: ${e}`,

@@ -6,6 +6,7 @@ A React web application for physical therapy measurements, interpretations, and 
 
 Next day:
 
+- [ ] Add disabled case for Assitive Device
 - [ ] Refactor AllMeasurementsPage to be in the previous / next format (as opposed to showing all measurements at once)
 - [ ] Build navigation pane after refactor
 - [ ] Timestamp patient creation date, measurement start dates, save dates

@@ -6,7 +6,6 @@ import CountdownTimer from './custom/CountdownTimer'
 import { MEASUREMENT_CONFIGS } from './MeasurementFactory'
 
 
-const VITALS_DISABLED_CASE_TEXT = "You've selected Measurements that require physical activity, but have not measured Vital Signs. Uncheck this box to bypass the Vital Signs requirement."
 export class Measurement extends Component {
     constructor(props) {
         super(props)
@@ -30,7 +29,6 @@ export class Measurement extends Component {
 
     componentDidMount() {
         const numFields = this.state.multipleValues.length
-        console.log(this.state.multipleValues)
 
         if (numFields > 0) {
             this.props.onChange(this.state.multipleValues)
@@ -98,34 +96,19 @@ export class Measurement extends Component {
         )
     }
 
-    isDisabled = () => {
-        if (!this.props.formState) {
-            return this.props.disabled || false
-        }
-
-        const disabledValues = [...this.props.disabledValues]
-        if (!this.showVitalsDisabledCase()) {
-            disabledValues.shift()
-        }
-
-        return (disabledValues.some(val => val) || false)
-    }
-
-    showVitalsDisabledCase = () => {
-        return this.props.physicalActivity && !this.props.checkValidVitals()
-    }
-
-    renderDisabledToggles = (disabledCases) => {
-        disabledCases = disabledCases || []
-        if (disabledCases.length === 0 && !this.showVitalsDisabledCase()) {
+    renderDisabledToggles = () => {
+        const disabledCasesComputed = this.props.getDisableCaseComputedText ? this.props.getDisableCaseComputedText() : []
+        const allDisabledCases = [...disabledCasesComputed, ...(this.props.disabledCases || [])]
+        if (allDisabledCases.length === 0 || allDisabledCases.every(text => text === null)) {
             return null
         }
 
-        disabledCases = [VITALS_DISABLED_CASE_TEXT, ...disabledCases]
-
         return (
             <div className={`disabled-cases d-flex flex-column align-items-center justify-content-center mt-3 mb-4 p-3`}>
-                {disabledCases.map((caseText, index) => {
+                {allDisabledCases.map((caseText, index) => {
+                    if (!caseText) {
+                        return null
+                    }
                     const checked = this.props.disabledValues?.[index] || false
                     return (
                         <div key={caseText} className="d-flex form-check mb-3">
@@ -144,6 +127,18 @@ export class Measurement extends Component {
                 })}
             </div>
         )
+    }
+
+    isDisabled = () => {
+        if (this.props.disabled) {
+            return true
+        }
+
+        if (this.props.isDisabled) {
+            return this.props.isDisabled()
+        }
+
+        return false
     }
 
     updateDisabledValues = (index) => {
@@ -278,7 +273,6 @@ export class Measurement extends Component {
     }
 
     renderStopwatch = (parameters) => {
-        console.log(parameters.index)
         return (
             <Stopwatch
                 {...parameters}
@@ -415,7 +409,7 @@ export class Measurement extends Component {
         return (
             <div className="measurement px-3 py-3">
                 {this.renderLabelAndDelete()}
-                {this.renderDisabledToggles(this.props.disabledCases)}
+                {this.renderDisabledToggles()}
                 {content}
                 {this.renderInstructions(this.props.instructions)}
             </div>

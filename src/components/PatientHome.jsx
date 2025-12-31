@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 
 import { getCurrentUser } from '../DB'
 import Title from './form/Title'
@@ -10,16 +10,21 @@ export class PatientHome extends Component {
         super(props)
 
         this.state = {
-            user: null
+            user: null,
+            loaded: false
         }
     }
 
     componentDidMount = async () => {
-        this.setState({ user: await getCurrentUser() })
+        const user = await getCurrentUser()
+        this.setState({ user, loaded: true })
     }
 
     render() {
         if (!this.state.user) {
+            if (this.state.loaded) {
+                return <Navigate to="/existing-patient" replace={true} />
+            }
             return <LoadingPage />
         }
 

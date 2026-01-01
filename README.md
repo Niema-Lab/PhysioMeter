@@ -6,9 +6,9 @@ A React web application for physical therapy measurements, interpretations, and 
 
 Next day:
 
-- [ ] Refactor AllMeasurementsPage to be in the previous / next format (as opposed to showing all measurements at once)
-- [ ] Build navigation pane after refactor
-- [ ] Timestamp patient creation date, measurement start dates, save dates
+- [ ] Add routes to go directly to a specific measurement for a patient
+- [ ] Timestamp patient creation date, measurement start dates (implement this as when the start button gets hit and build a custom function just to modify the lastStarted Value), save dates, display these in the measurements
+- [ ] Build a summary page at the end of the measurements? 
 - [ ] Implement Four Square Step Test "does not clear apparatus" to Modified Four Square Step Test (add a confirm prompt and then convert to Modified if selected)
 
 Next week:
@@ -16,6 +16,7 @@ Next week:
 - [ ] Build Calculations page
 - [ ] Build Interpretations page
 - [ ] Build Patient Tests page
+- [ ] Implement sessions for the measurements / tests?
 
 Final chores:
 
@@ -31,3 +32,8 @@ Final chores:
 
 - [ ] Full computedValues support with counter value for all measurements (and counter + time for Stopwatch and Countdown Timer)
 - [ ] Add tabular component form (and transition Existing Patients view to use it)
+
+## Questions
+
+- [ ] When a new patient is created should I redirect automatically?
+- [ ] Should reset reset the input number?

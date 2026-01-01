@@ -1,9 +1,19 @@
 import React, { Component } from 'react'
 
 export class MultipleMeasurements extends Component {
-    addMeasurement = (measurementConfig) => {
+    handleMeasurementAction = () => {
+        if (this.props.oneMax && this.props.measurements.length === 1) {
+            this.deleteMeasurement(0)
+            return;
+        }
+
+        this.addMeasurement()
+    }
+
+    addMeasurement = () => {
+        const measurementConfig = this.props.measurementConfig;
         const measurements = [...this.props.measurements];
-        measurements.push({ label: `${this.props.name} ${measurements.length + 1}`, value: '' });
+        measurements.push({ label: `${this.props.name} ${measurements.length === 0 ? '' : measurements.length + 1}`, value: '' , lastModified: new Date().toISOString()});
         this.props.onChange(measurements);
         if (this.props.validations) {
             const validations = [...this.props.validations[this.props.measurementKey]]
@@ -17,6 +27,7 @@ export class MultipleMeasurements extends Component {
         }
     }
 
+    // Note: not currently used with current form format of only one measurement
     updateMeasurement = (index, value) => {
         const measurements = [...this.props.measurements]
         measurements[index].value = value
@@ -46,6 +57,10 @@ export class MultipleMeasurements extends Component {
     }
 
     deleteMeasurement = (index) => {
+        if (!confirm(`Are you sure you want to delete this measurement? This action cannot be undone.`)) {
+            return
+        }
+
         const measurements = [...this.props.measurements]
         measurements.splice(index, 1)
         this.props.onChange(measurements)
@@ -62,33 +77,11 @@ export class MultipleMeasurements extends Component {
     }
 
     render() {
-        const MeasurementComponent = this.props.component
         return (
             <div className="multiple-measurements">
-                <h2
-                    className={`measurement-header text-center w-100 ${this.props.oneMax && this.props.measurements.length === 1 ? 'pe-none' : 'cursor-p'}`}
-                    onClick={() => this.addMeasurement(this.props.measurementConfig)}>
-                    {this.props.name} <i className={`bi bi-plus-circle-fill ${this.props.oneMax && this.props.measurements.length === 1 ? 'text-secondary' : 'text-primary'} ms-3`}></i>
+                <h2 className={`measurement-header text-center w-100`}>
+                    {this.props.name} <i className={`bi ms-3 cursor-p ${this.props.oneMax && this.props.measurements.length === 1 ? 'text-danger bi-dash-circle-fill' : 'text-success bi-plus-circle-fill'}`} onClick={this.handleMeasurementAction}></i>
                 </h2>
-                {this.props.measurements.map((measurement, index) => {
-                    const disabledValues = this.props.disabledValues?.[this.props.measurementKey] ? this.props.disabledValues[this.props.measurementKey][index] : [];
-                    return (
-                        <MeasurementComponent
-                            key={`${this.props.measurementKey}-multiple-${index}`}
-                            value={measurement.value || ''}
-                            label={measurement.label || ''}
-                            valid={this.props.validations?.[this.props.measurementKey]?.[index] ?? true}
-                            disabledValues={disabledValues}
-                            onChange={(value) => this.updateMeasurement(index, value)}
-                            onValidationChange={(isValid) => this.updateValidation(index, isValid)}
-                            onDisabledChange={(disabledValue) => this.updatedDisabledValues(index, disabledValue)}
-                            onLabelChange={(label) => this.updateMeasurementLabel(index, label)}
-                            onDelete={() => this.deleteMeasurement(index)}
-                            isDisabled={() => this.props.isDisabled(this.props.measurementKey, index)}
-                            getDisableCaseComputedText={() => this.props.getDisableCaseComputedText(this.props.measurementKey)}
-                        />
-                    )
-                })}
             </div>
         )
     }

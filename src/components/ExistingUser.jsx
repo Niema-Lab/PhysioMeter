@@ -73,8 +73,9 @@ export class ExistingUser extends Component {
 
                     return (
                         <div className="link" key={user.uuid}>
-                            <Link to={`/patient-home?uuid=${user.uuid}`} className="text-decoration-underline">
+                            <Link to={`/patient-home?uuid=${user.uuid}`}>
                                 <h2>{user.name}</h2>
+                                <p className="text-decoration-none">Created: {new Date(user.createdAt).toLocaleString()}</p>
                             </Link>
                             <h2>
                                 <i className="bi bi-trash-fill text-danger ms-4 cursor-p" onClick={() => this.deleteUser(user)} aria-label={`Delete patient ${user.name}`}></i>

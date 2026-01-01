@@ -38,7 +38,7 @@ const ASSISTIVE_DEVICE_FOUR_SQUARE_STEP_TEST_DISABLED_CASE = {
 }
 
 const ASSISTIVE_DEVICE_MODIFIED_FOUR_SQUARE_STEP_TEST_DISABLED_CASE = {
-    text: "Select an assistive device. If an assistive device other than 'None' or 'Straight Cane' is selected, the participant should perform the Four Square Step Test instead. Uncheck this box to bypass this recommendation.",
+    text: "Select an assistive device. If 'None' or 'Straight Cane' is selected as an assistive device, the participant should perform the Four Square Step Test instead. Uncheck this box to bypass this recommendation.",
     showOverride: (formState, validations, disabledValues, measurementKey, index, value) => {
         const assistiveDevices = formState['assistiveDevices']
         const validAssistiveDevices = assistiveDevices && Array.isArray(assistiveDevices) && assistiveDevices.length > 0
@@ -177,9 +177,6 @@ export const MEASUREMENT_CONFIGS = {
             {
                 type: 'countdown',
                 duration: 30,
-                validationFunction: (value) => {
-                    return true
-                }
             },
             {
                 type: 'integer',
@@ -194,7 +191,7 @@ export const MEASUREMENT_CONFIGS = {
         ],
     },
 
-    assistiveDevice: {
+    assistiveDevices: {
         type: 'radio',
         defaultLabel: 'Assistive Device Used',
         options: ASSISTIVE_DEVICE_OPTIONS,

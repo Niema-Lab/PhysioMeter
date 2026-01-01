@@ -66,6 +66,10 @@ const createDBUser = async (name, uuid) => {
         name: name,
         uuid: uuid,
         createdAt: new Date().toISOString(),
+        lastTestModified: null,
+        lastTestSaved: null, // a valid manual save
+        lastMeasurementsModified: null,
+        lastMeasurementsSaved: null, // a valid manual save
         measurements: {},
     }
 

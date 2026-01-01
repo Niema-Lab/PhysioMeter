@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { useState } from 'react'
 import { HashRouter, Routes, Route } from 'react-router-dom'
 
 import Home from './components/Home'
@@ -8,30 +8,49 @@ import AllMeasurementsPage from './components/AllMeasurementsPage'
 import NewUser from './components/NewUser'
 import ExistingUser from './components/ExistingUser'
 
-export class App extends Component {
-  render() {
-    return (
-      <div id="app">
-        <a href="#/">
-          <div id="home-icon" className="position-fixed top-0 start-0 mt-3 p-2">
-            <h1>
-              <i className="bi bi-house-fill"></i>
-            </h1>
-          </div>
-        </a>
-        <HashRouter>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/patient-home" element={<PatientHome />} />
-            <Route path="/patient-tests" element={<PatientTests />} />
-            <Route path="/measurements" element={<AllMeasurementsPage />} />
-            <Route path="/new-patient" element={<NewUser />} />
-            <Route path="/existing-patient" element={<ExistingUser />} />
-          </Routes>
-        </HashRouter>
-      </div>
-    )
-  }
+function HomeIcon() {
+  return (
+    <div id="home-icon" className="nav-icon p-2">
+      <a href="">
+        <h1>
+          <i className="bi bi-house-fill"></i>
+        </h1>
+      </a>
+    </div>
+  )
 }
 
-export default App
+function AppContent() {
+  const [navIcons, setNavIcons] = useState([])
+  const [nav, setNav] = useState(null)
+
+  return (
+    <div id="app">
+      <div id="nav-overlay" className={`position-fixed start-0 top-0 ${nav ? "nav-overlay-active" : "pe-none"}`}>
+        <div id="nav-icons-container" className="d-flex flex-row align-items-center mt-3">
+          {[...[<HomeIcon key="home" />], ...navIcons]}
+        </div>
+        {nav}
+      </div>
+
+      <div id="app-content" style={{opacity: nav ? 0.5 : 1}}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/patient-home" element={<PatientHome />} />
+          <Route path="/patient-tests" element={<PatientTests />} />
+          <Route path="/measurements" element={<AllMeasurementsPage setNavIcons={setNavIcons} setNav={setNav} />} />
+          <Route path="/new-patient" element={<NewUser />} />
+          <Route path="/existing-patient" element={<ExistingUser />} />
+        </Routes>
+      </div>
+    </div>
+  )
+}
+
+export default function App() {
+  return (
+    <HashRouter>
+      <AppContent />
+    </HashRouter>
+  )
+}

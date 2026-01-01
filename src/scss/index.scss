@@ -42,6 +42,78 @@ input {
   h6 {
     color: black;
   }
+
+  a:has(h1, h2, h3, h4, h5, h6) {
+    h1, h2, h3, h4, h5, h6 {
+      text-decoration: underline;
+    }
+  }
+
+  a:has(p) {
+    text-decoration: none !important;
+  }
+}
+
+#app-content {
+  transition: 0.25s;
+}
+
+#nav-overlay {
+  z-index: 999;
+  width: 30vw;
+  height: 100vh;
+  transition: 0.25s;
+}
+
+@media screen and (max-width: 768px) {
+  #nav-overlay {
+    width: 100vw;
+    height: 100vh;
+  }
+}
+
+.nav-overlay-active {
+  background-color: rgba(140, 140, 140, 0.8);
+}
+
+.submit {
+  @include hoverable-section;
+
+  .submit-button {
+    font-size: var(--base-font-size);
+  }
+}
+
+.text-label {
+  min-height: 10vh;
+}
+
+.cursor-p {
+  cursor: pointer;
+}
+
+#nav-icons-container {
+  pointer-events: all;
+  z-index: 1000;
+}
+
+.nav-icon {
+  margin-left: 30px;
+  background-color: white;
+  border: 2px solid #dddddd;
+  border-radius: 5px;
+  transition: 0.5s;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $bg-hover-color;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .nav-icon {
+    margin-left: 20px;
+  }
 }
 
 .measurement-header {
@@ -135,37 +207,10 @@ input {
   }
 }
 
-.submit {
-  @include hoverable-section;
+#measurements-previous-next {
+  min-height: 20vh;
 
-  .submit-button {
+  .btn {
     font-size: var(--base-font-size);
-  }
-}
-
-.text-label {
-  min-height: 10vh;
-}
-
-.cursor-p {
-  cursor: pointer;
-}
-
-#home-icon {
-  margin-left: 30px;
-  background-color: white;
-  border: 2px solid #dddddd;
-  border-radius: 5px;
-  transition: 0.5s;
-  z-index: 1000;
-
-  &:hover {
-    background-color: $bg-hover-color;
-  }
-}
-
-@media screen and (max-width: 768px) {
-  #home-icon {
-    margin-left: 20px;
   }
 }

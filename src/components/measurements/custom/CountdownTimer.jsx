@@ -19,6 +19,10 @@ export class CountdownTimer extends Component {
         if (this.props.disabled && !prevProps.disabled && this.state.running) {
             this.reset()
         }
+        // hacky way to ensure validation passes
+        if (this.props.valid === false) {
+            this.props.onChange(null)
+        }
     }
 
     componentWillUnmount() {
@@ -60,6 +64,8 @@ export class CountdownTimer extends Component {
             this.interval = null
         }
         this.setState({ running: false })
+        const elapsed = Date.now() - this.state.startTime
+        this.props.onChange(elapsed)
     }
 
     reset = () => {

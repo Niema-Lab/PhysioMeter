@@ -82,16 +82,16 @@ export class Measurement extends Component {
 
         return (
             <div className="measurement-delete ms-4 d-flex align-items-center cursor-p">
-                <i className="bi bi-trash-fill text-danger cursor-p" onClick={this.props.onDelete} aria-label={`Delete measurement ${this.props.label || this.props.defaultLabel}`}></i>
+                <i className="bi bi-trash-fill text-danger cursor-p" onClick={this.props.onDelete} aria-label={`Delete this measurement`} title={`Delete this measurement`}></i>
             </div>
         )
     }
 
     renderLabelAndDelete = () => {
         return (
-            <div className="d-flex align-items-center mb-3">
+            <div className="d-flex align-items-center my-3">
                 {this.renderLabel()}
-                {this.renderDeleteButton()}
+                {/* {this.renderDeleteButton()} */} {/* Disabled for one measurement setup, because the title has a delete button */}
             </div>
         )
     }
@@ -113,14 +113,14 @@ export class Measurement extends Component {
                     return (
                         <div key={caseText} className="d-flex form-check mb-3">
                             <input
-                                className={`form-check-input me-2 bg-${checked ? 'danger' : 'secondary'} border-${checked ? 'danger' : 'secondary'} cursor-p`}
+                                className={`form-check-input me-2 bg-${checked ? 'warning' : 'secondary'} border-${checked ? 'warning' : 'secondary'} cursor-p`}
                                 type="checkbox"
                                 id={`disabled-case-${index}-${this.uuid}`}
                                 checked={checked}
                                 onChange={() => this.updateDisabledValues(index)}
                             />
-                            <label className={`form-check-label ${checked ? 'text-danger' : ''}`} htmlFor={`disabled-case-${index}-${this.uuid}`}>
-                                {caseText}
+                            <label className={`form-check-label text-center ${checked ? 'text-warning-emphasis' : ''}`} htmlFor={`disabled-case-${index}-${this.uuid}`}>
+                                <strong>{caseText}</strong>
                             </label>
                         </div>
                     )
@@ -347,8 +347,8 @@ export class Measurement extends Component {
                         onChange: (value) => this.multipleValuesOnChangeAndValidate(i, value, field),
                     }
                     return <div key={`field-${i}`} className="d-flex flex-column align-items-center mb-4">
-                        {this.renderContent(newParameters)}
                         {this.renderInstructions(field.instructions)}
+                        {this.renderContent(newParameters)}
                     </div>
                 })}
             </div>
@@ -408,10 +408,10 @@ export class Measurement extends Component {
 
         return (
             <div className="measurement px-3 py-3">
+                {this.renderInstructions(this.props.instructions)}
                 {this.renderLabelAndDelete()}
                 {this.renderDisabledToggles()}
                 {content}
-                {this.renderInstructions(this.props.instructions)}
             </div>
         )
     }

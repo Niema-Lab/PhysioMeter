@@ -44,7 +44,12 @@ input {
   }
 
   a:has(h1, h2, h3, h4, h5, h6) {
-    h1, h2, h3, h4, h5, h6 {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
       text-decoration: underline;
     }
   }
@@ -114,6 +119,10 @@ input {
   .nav-icon {
     margin-left: 20px;
   }
+}
+
+#measurements-nav {
+  height: 90%;
 }
 
 .measurement-header {

@@ -10,10 +10,10 @@ import Submit from './form/Submit'
 import LoadingPage from './LoadingPage'
 
 const THROTTLE_TIMEOUT = 250;
-const MEASUREMENT_HOME_PAGE = 'MEASUREMENT SELECTION';
-const MEASUREMENT_FINAL_PAGE = 'MEASUREMENT FINAL';
+export const MEASUREMENT_HOME_PAGE = 'home';
+export const MEASUREMENT_FINAL_PAGE = 'summary';
 
-export class Measurements extends Component {
+export class AllMeasurementsPage extends Component {
     constructor(props) {
         super(props)
 
@@ -31,7 +31,6 @@ export class Measurements extends Component {
             validations: JSON.parse(JSON.stringify(STATE_OBJECT)), // the form state but just the validation info
             disabledValues: JSON.parse(JSON.stringify(STATE_OBJECT)), // the form state but just the disabled cases info
             navShown: false,
-            shownMeasurement: MEASUREMENT_HOME_PAGE,
         }
 
         this.lastSaved = 0;
@@ -42,8 +41,12 @@ export class Measurements extends Component {
         const user = await getCurrentUser()
         this.setState({ user, loaded: true }, () => {
             if (this.state.user?.measurements?.formState && Object.keys(this.state.user.measurements.formState).length > 0) {
+                const formState = JSON.parse(JSON.stringify(this.state.user.measurements.formState))
+                if (this.props.shownMeasurement !== MEASUREMENT_FINAL_PAGE && (formState[this.props.shownMeasurement] === undefined || formState[this.props.shownMeasurement].length === 0)) {
+                    this.setMeasurementShown(MEASUREMENT_HOME_PAGE)
+                }
                 this.setState({
-                    formState: JSON.parse(JSON.stringify(this.state.user.measurements.formState)),
+                    formState,
                     validations: JSON.parse(JSON.stringify(this.state.user.measurements.validations)),
                     disabledValues: JSON.parse(JSON.stringify(this.state.user.measurements.disabledValues)),
                 })
@@ -52,6 +55,13 @@ export class Measurements extends Component {
 
         this.props.setNavIcons([this.renderNavIcon()])
         this.props.setNav(this.renderNav())
+    }
+
+    componentDidUpdate = (previousProps) => {
+        if (this.props.location !== previousProps.location) {
+            console.log(this.props.location);
+            console.log(previousProps.location);
+        }
     }
 
     componentWillUnmount = () => {
@@ -67,17 +77,31 @@ export class Measurements extends Component {
     }
 
     setMeasurementShown = (measurementKey) => {
-        this.setState({ shownMeasurement: measurementKey }, () => {
-            this.toggleNav(false)
-        })
+        const uuid = this.state.user?.uuid;
+        const search = uuid && uuid !== "guest" ? `?uuid=${uuid}` : "";
+
+        this.props.navigate(`/measurements/${measurementKey}${search}`, { replace: false });
+        this.toggleNav(false);
     }
 
     getMeasurementIndexByKey = (measurementKey) => {
         return measurementKey === MEASUREMENT_HOME_PAGE ? 0 : (measurementKey === MEASUREMENT_FINAL_PAGE ? MEASUREMENT_PAGE_CONFIG.length + 1 : MEASUREMENT_PAGE_CONFIG.findIndex(m => m.stateKey === measurementKey) + 1);
     }
 
+    // similar to getMeasurementIndexByKey but removes any measurements that have not been selected
+    getRelativeMeasurementIndexByKey = (measurementKey) => {
+        let filteredMeasurements = [...MEASUREMENT_PAGE_CONFIG].filter(m => this.state.formState[m.stateKey].length > 0);
+        if (measurementKey === MEASUREMENT_HOME_PAGE) {
+            return [0, filteredMeasurements.length + 1];
+        } else if (measurementKey === MEASUREMENT_FINAL_PAGE) {
+            return [filteredMeasurements.length + 1, filteredMeasurements.length + 1];
+        } else {
+            return [filteredMeasurements.findIndex(m => m.stateKey === measurementKey) + 1, filteredMeasurements.length + 1];
+        }
+    }
+
     previousMeasurement = () => {
-        const measurementIndex = this.getMeasurementIndexByKey(this.state.shownMeasurement);
+        const measurementIndex = this.getMeasurementIndexByKey(this.props.shownMeasurement);
         if (measurementIndex === 0) {
             return;
         }
@@ -94,7 +118,7 @@ export class Measurements extends Component {
     }
 
     nextMeasurement = () => {
-        const measurementIndex = this.getMeasurementIndexByKey(this.state.shownMeasurement);
+        const measurementIndex = this.getMeasurementIndexByKey(this.props.shownMeasurement);
         if (measurementIndex >= MEASUREMENT_PAGE_CONFIG.length + 1) {
             return;
         }
@@ -110,30 +134,33 @@ export class Measurements extends Component {
         }
     }
 
-    updateIndividualMeasurement = (index, value) => {
-        const measurementKey = this.state.shownMeasurement;
+    updateIndividualMeasurement = (index, value, additionalValues) => {
+        const measurementKey = this.props.shownMeasurement;
         const measurements = [...this.state.formState[measurementKey]]
         measurements[index].value = value
         measurements[index].lastModified = new Date().toISOString();
+        Object.entries(additionalValues ?? {}).map(([key, value]) => {
+            measurements[index][key] = value;
+        })
         this.updateValues(measurementKey, measurements)
     }
 
     updateIndividualValidation = (index, isValid) => {
-        const measurementKey = this.state.shownMeasurement;
+        const measurementKey = this.props.shownMeasurement;
         const validations = [...this.state.validations[measurementKey]]
         validations[index] = isValid
         this.updateValidations(measurementKey, validations)
     }
 
     updatedIndividualDisabledValues = (index, disabledValue) => {
-        const measurementKey = this.state.shownMeasurement;
+        const measurementKey = this.props.shownMeasurement;
         const disabledValues = [...this.state.disabledValues[measurementKey]]
         disabledValues[index] = disabledValue
         this.updateDisabled(measurementKey, disabledValues)
     }
 
     updateIndividualMeasurementLabel = (index, label) => {
-        const measurementKey = this.state.shownMeasurement;
+        const measurementKey = this.props.shownMeasurement;
         const measurements = [...this.state.formState[measurementKey]]
         measurements[index].label = label
         this.updateValues(measurementKey, measurements)
@@ -144,7 +171,7 @@ export class Measurements extends Component {
             return
         }
 
-        const measurementKey = this.state.shownMeasurement;
+        const measurementKey = this.props.shownMeasurement;
         const measurements = [...this.state.formState[measurementKey]]
         measurements.splice(index, 1)
         this.updateValues(measurementKey, measurements)
@@ -350,7 +377,7 @@ export class Measurements extends Component {
         }
 
         return (
-            <div id="measurements-nav" className="w-100 h-100">
+            <div id="measurements-nav" className="w-100 pb-5 overflow-auto user-select-none" style={{ height: window.innerHeight - document.getElementById('nav-icons-container').getBoundingClientRect().bottom }}>
                 <h2 className="nav-entry-link text-center mt-5 cursor-p text-decoration-underline" onClick={() => this.setMeasurementShown(MEASUREMENT_HOME_PAGE)}>Measurement Selection</h2>
                 {Object.entries(this.state.formState).map(([key, measurements]) => {
                     if (measurements.length === 0) {
@@ -360,25 +387,93 @@ export class Measurements extends Component {
                     const disabled = measurements.every((m, i) => this.isDisabled(key, i))
                     const valid = this.state.validations[key].every((v, i) => this.isDisabled(key, i) || v === true || (Array.isArray(v) && v.every(sv => sv === true)))
 
-                    return <h2 key={`nav-entry-${key}`} className={`nav-entry-link text-center mt-5 cursor-p text-decoration-underline ${disabled ? 'text-warning' : (valid ? 'text-success' : 'text-danger')}`} onClick={() => this.setMeasurementShown(key)}>{MEASUREMENT_CONFIGS[key]?.defaultLabel || key}</h2>
+                    return <h3 key={`nav-entry-${key}`} className={`nav-entry-link text-center mt-5 cursor-p text-decoration-underline ${disabled ? 'text-warning' : (valid ? 'text-success' : 'text-danger')}`} onClick={() => this.setMeasurementShown(key)}>{MEASUREMENT_CONFIGS[key]?.defaultLabel || key}</h3>
                 })}
+                <h2 className="nav-entry-link text-center mt-5 cursor-p text-decoration-underline" onClick={() => this.setMeasurementShown(MEASUREMENT_FINAL_PAGE)}>Measurement Summary</h2>
             </div>
         )
     }
 
+    exportToCSV = () => {
+        const rows = [['Measurement', 'Field', 'Value', 'Status', 'Last Measured']]
+
+        const formatDate = (isoString) => {
+            if (!isoString) return ''
+            const date = new Date(isoString)
+            return date.toLocaleString()
+        }
+
+        Object.entries(this.state.formState).forEach(([key, measurements]) => {
+            if (!measurements || measurements.length === 0) return
+
+            const config = MEASUREMENT_CONFIGS[key]
+            if (!config) return
+
+            const label = config.defaultLabel || key
+            const unit = config.unit || ''
+
+            measurements.forEach((measurement, index) => {
+                const isDisabled = this.isDisabled(key, index)
+                const value = measurement.value
+                const lastModified = formatDate(measurement.lastModified)
+
+                if (isDisabled) {
+                    rows.push([label, '', '', 'Skipped', lastModified])
+                    return
+                }
+
+                // Handle fields type
+                if (config.type === 'fields' && (config.fields || config.fieldNames)) {
+                    const fields = config.fields || config.fieldNames?.map(fn => MEASUREMENT_CONFIGS[fn])
+                    fields.forEach((field, idx) => {
+                        const fieldValue = Array.isArray(value) ? value[idx] : value
+                        const fieldLabel = field?.defaultLabel || (config.fieldNames ? MEASUREMENT_CONFIGS[config.fieldNames[idx]]?.defaultLabel : `Field ${idx + 1}`)
+                        const fieldUnit = field?.unit || MEASUREMENT_CONFIGS[config.fieldNames?.[idx]]?.unit || ''
+                        const displayValue = fieldValue != null && fieldValue !== '' ? `${fieldValue}${fieldUnit ? ` ${fieldUnit}` : ''}` : ''
+                        rows.push([label, fieldLabel, displayValue, displayValue ? 'Recorded' : 'Missing', lastModified])
+                    })
+                } else if (Array.isArray(value)) {
+                    // Handle multi-trial
+                    value.forEach((v, idx) => {
+                        const displayValue = v != null && v !== '' ? `${v}${unit ? ` ${unit}` : ''}` : ''
+                        rows.push([label, `Trial ${idx + 1}`, displayValue, displayValue ? 'Recorded' : 'Missing', lastModified])
+                    })
+                } else {
+                    // Simple value
+                    const displayValue = value != null && value !== '' ? `${value}${unit ? ` ${unit}` : ''}` : ''
+                    rows.push([label, '', displayValue, displayValue ? 'Recorded' : 'Missing', lastModified])
+                }
+            })
+        })
+
+        const csvContent = rows.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')).join('\n')
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+        const url = URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+        const patientName = this.state.user?.name || 'guest'
+        const date = new Date().toISOString().split('T')[0]
+        link.download = `measurements_${patientName}_${date}.csv`
+        link.click()
+        URL.revokeObjectURL(url)
+    }
+
     renderMeasurementPage = () => {
         const name = this.state.user.uuid !== 'guest' ? `(${this.state.user.name})` : '';
-        const measurementKey = this.state.shownMeasurement;
+        const measurementKey = this.props.shownMeasurement;
         if (measurementKey === MEASUREMENT_HOME_PAGE) {
             return this.renderMeasurementSelection()
         } else if (measurementKey === MEASUREMENT_FINAL_PAGE) {
             return (
                 <>
                     <Title>Measurements Completed! {name}</Title>
-                    <Submit label="Save Measurements" onClick={() => this.saveMeasurements(true)} />
+                    <div className="d-flex justify-content-center flex-wrap">
+                        <Submit label="Export to CSV" onClick={() => this.exportToCSV()} />
+                    </div>
                     {this.state.submitText &&
                         <Text value={this.state.submitText} type={this.state.submitTextType} />
                     }
+                    {this.renderMeasurementSummary(this.state.formState)}
                 </>
             )
         }
@@ -398,7 +493,7 @@ export class Measurements extends Component {
                                 label={measurement.label || ''}
                                 valid={this.state.validations?.[measurementKey]?.[index] ?? true}
                                 disabledValues={disabledValues}
-                                onChange={(value) => this.updateIndividualMeasurement(index, value)}
+                                onChange={(value, additionalValues) => this.updateIndividualMeasurement(index, value, additionalValues)}
                                 onValidationChange={(isValid) => this.updateIndividualValidation(index, isValid)}
                                 onDisabledChange={(disabledValue) => this.updatedIndividualDisabledValues(index, disabledValue)}
                                 onLabelChange={(label) => this.updateIndividualMeasurementLabel(index, label)}
@@ -448,6 +543,104 @@ export class Measurements extends Component {
         </>)
     }
 
+    renderMeasurementSummary = (formState) => {
+        const formatValue = (value, unit) => {
+            if (value === null || value === undefined || value === '') {
+                return <span className="text-danger">Not recorded</span>
+            }
+            return <span>{value}{unit ? ` ${unit}` : ''}</span>
+        }
+
+        const getValidationStatus = (key, index) => {
+            const validation = this.state.validations[key]?.[index]
+            if (Array.isArray(validation)) {
+                return validation.every(v => v === true)
+            }
+            return validation === true
+        }
+
+        return (
+            <div className="measurement-summary mt-4 px-3">
+                {Object.entries(formState).map(([key, measurements]) => {
+                    if (!measurements || measurements.length === 0) return null
+
+                    const config = MEASUREMENT_CONFIGS[key]
+                    if (!config) return null
+
+                    const label = config.defaultLabel || key
+                    const unit = config.unit || ''
+
+                    return measurements.map((measurement, index) => {
+                        const isDisabled = this.isDisabled(key, index)
+                        const isValid = getValidationStatus(key, index)
+                        const value = measurement.value
+
+                        const borderColor = isDisabled ? 'border-warning' : (isValid ? 'border-success' : 'border-danger')
+                        const headerBg = isDisabled ? 'bg-warning' : (isValid ? 'bg-success' : 'bg-danger')
+
+                        return (
+                            <div key={`${key}-${index}`} className={`card mb-3 ${borderColor}`} style={{ borderWidth: '2px' }}>
+                                <div className={`card-header ${headerBg} text-white d-flex justify-content-between align-items-center`}>
+                                    <h5 className="mb-0">{label}</h5>
+                                    {isDisabled && <span className="badge bg-light text-dark">Skipped</span>}
+                                    {!isDisabled && !isValid && <span className="badge bg-light text-danger">Incomplete</span>}
+                                </div>
+                                {!isDisabled && (
+                                    <div className="card-body">
+                                        {/* Handle fields type (composite measurements like vitalSigns, thirtySecondSitToStand) */}
+                                        {config.type === 'fields' && (config.fields || config.fieldNames) ? (
+                                            <div className="d-flex flex-wrap justify-content-evenly gap-3">
+                                                {(config.fields || config.fieldNames?.map(fn => MEASUREMENT_CONFIGS[fn])).map((field, idx) => {
+                                                    const fieldValue = Array.isArray(value) ? value[idx] : value
+                                                    const fieldLabel = field?.defaultLabel || (config.fieldNames ? MEASUREMENT_CONFIGS[config.fieldNames[idx]]?.defaultLabel : `Field ${idx + 1}`)
+                                                    const fieldUnit = field?.unit || MEASUREMENT_CONFIGS[config.fieldNames?.[idx]]?.unit || ''
+                                                    const fieldValidation = Array.isArray(this.state.validations[key]?.[index]) ? this.state.validations[key][index][idx] : true
+                                                    return (
+                                                        <div key={idx} className="d-flex flex-column text-center">
+                                                            <small className="text-muted">{fieldLabel}</small>
+                                                            <span className={`fs-5 ${fieldValidation ? '' : 'text-danger'}`}>
+                                                                {formatValue(fieldValue, fieldUnit)}
+                                                            </span>
+                                                        </div>
+                                                    )
+                                                })}
+                                            </div>
+                                        ) : Array.isArray(value) ? (
+                                            /* Handle multi-trial measurements (stopwatch with numTrials) */
+                                            <div className="d-flex flex-wrap justify-content-evenly gap-3">
+                                                {value.map((v, idx) => {
+                                                    const trialValid = v !== null && v !== undefined && v !== ''
+                                                    return (
+                                                        <div key={idx} className="d-flex flex-column text-center">
+                                                            <small className="text-muted">Trial {idx + 1}</small>
+                                                            <span className={`fs-5 ${trialValid ? '' : 'text-danger'}`}>
+                                                                {formatValue(v, unit)}
+                                                            </span>
+                                                        </div>
+                                                    )
+                                                })}
+                                            </div>
+                                        ) : (
+                                            /* Simple single value */
+                                            <h4 className={`mb-0 ${isValid ? '' : 'text-danger'} text-center`}>
+                                                {formatValue(value, unit)}
+                                            </h4>
+                                        )}
+                                    </div>
+                                )}
+                                {measurement.lastModified && (
+                                    <div className="card-footer text-muted small">
+                                        Last measured: {new Date(measurement.lastModified).toLocaleString()}
+                                    </div>
+                                )}
+                            </div>
+                        )
+                    })
+                })}
+            </div>
+        )
+    }
+
     render() {
         if (!this.state.user) {
             if (this.state.loaded) {
@@ -456,17 +649,21 @@ export class Measurements extends Component {
             return <LoadingPage />
         }
 
-        const measurementIndex = this.getMeasurementIndexByKey(this.state.shownMeasurement);
+        const measurementIndex = this.getMeasurementIndexByKey(this.props.shownMeasurement);
+        const [relativeMeasurementIndex, relativeMeasurementLength] = this.getRelativeMeasurementIndexByKey(this.props.shownMeasurement);
+
+        const dontShowBack = measurementIndex === 0;
+        const dontShowNext = relativeMeasurementLength === 1 || this.props.shownMeasurement === MEASUREMENT_FINAL_PAGE;
 
         return (
-            <div id="measurements">
+            <div id="measurements" className={`${this.state.navShown ? 'user-select-none pe-none' : ''}`}>
                 {this.renderMeasurementPage()}
-                <div id="measurements-previous-next" className={`d-flex ${measurementIndex === 0 ? 'justify-content-center' : 'justify-content-between'} align-items-center px-5`}>
-                    <button className={`btn btn-secondary ${measurementIndex === 0 ? 'd-none' : ''}`} onClick={() => this.previousMeasurement()}>
-                        {this.state.shownMeasurement === MEASUREMENT_FINAL_PAGE ? 'Back to Measurement Selection' : 'Back to Measurements'}
+                <div id="measurements-previous-next" className={`d-flex ${dontShowBack || dontShowNext ? 'justify-content-center' : 'justify-content-between'} align-items-center px-5`}>
+                    <button className={`btn btn-secondary ${dontShowBack ? 'd-none' : ''}`} onClick={() => this.previousMeasurement()}>
+                        {relativeMeasurementIndex === 1 ? 'Back to Measurement Selection' : this.props.shownMeasurement === MEASUREMENT_FINAL_PAGE ? 'Back to Measurements' : 'Previous Measurement'}
                     </button>
-                    <button className="btn btn-primary" onClick={() => this.nextMeasurement()}>
-                        {this.state.shownMeasurement === MEASUREMENT_HOME_PAGE ? 'Proceed to Measurements' : 'Next Measurement'}
+                    <button className={`btn btn-primary ${dontShowNext ? 'd-none' : ''}`} onClick={() => this.nextMeasurement()}>
+                        {relativeMeasurementIndex === relativeMeasurementLength - 1 ? 'Finish' : this.props.shownMeasurement === MEASUREMENT_HOME_PAGE ? 'Proceed to Measurements' : 'Next Measurement'}
                     </button>
                 </div>
             </div>
@@ -474,7 +671,7 @@ export class Measurements extends Component {
     }
 }
 
-const MEASUREMENT_PAGE_CONFIG = [
+export const MEASUREMENT_PAGE_CONFIG = [
     {
         name: 'Name',
         component: Name,
@@ -536,8 +733,8 @@ const MEASUREMENT_PAGE_CONFIG = [
     {
         name: 'Timed Up and Go Cognitive',
         component: TimedUpAndGoCognitive,
-        stateKey: 'timedUpAndGosCognitive'
+        stateKey: 'timedUpAndGoCognitive'
     },
 ]
 
-export default Measurements
+export default AllMeasurementsPage

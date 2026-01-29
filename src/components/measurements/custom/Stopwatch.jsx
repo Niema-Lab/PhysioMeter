@@ -35,6 +35,8 @@ export class Stopwatch extends Component {
             const elapsed = Date.now() - this.state.startTime
             this.setState({ elapsed })
         }, 10)
+        // TODO: not implemented for now, currently not timestamping start time
+        // this.props.onStart(new Date().toISOString())
     }
 
     stop = () => {

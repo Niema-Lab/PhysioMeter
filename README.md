@@ -6,9 +6,6 @@ A React web application for physical therapy measurements, interpretations, and 
 
 Next day:
 
-- [ ] Add routes to go directly to a specific measurement for a patient
-- [ ] Timestamp patient creation date, measurement start dates (implement this as when the start button gets hit and build a custom function just to modify the lastStarted Value), save dates, display these in the measurements
-- [ ] Build a summary page at the end of the measurements? 
 - [ ] Implement Four Square Step Test "does not clear apparatus" to Modified Four Square Step Test (add a confirm prompt and then convert to Modified if selected)
 
 Next week:

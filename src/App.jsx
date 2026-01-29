@@ -1,22 +1,22 @@
 import { useState } from 'react'
-import { HashRouter, Routes, Route } from 'react-router-dom'
+import { HashRouter, Routes, Route, useLocation, useNavigate } from 'react-router-dom'
 
 import Home from './components/Home'
 import PatientHome from './components/PatientHome'
 import PatientTests from './components/PatientTests'
-import AllMeasurementsPage from './components/AllMeasurementsPage'
+import { AllMeasurementsPage, MEASUREMENT_PAGE_CONFIG, MEASUREMENT_HOME_PAGE, MEASUREMENT_FINAL_PAGE } from './components/AllMeasurementsPage'
 import NewUser from './components/NewUser'
 import ExistingUser from './components/ExistingUser'
 
 function HomeIcon() {
   return (
-    <div id="home-icon" className="nav-icon p-2">
-      <a href="">
+    <a href="">
+      <div id="home-icon" className="nav-icon p-2">
         <h1>
           <i className="bi bi-house-fill"></i>
         </h1>
-      </a>
-    </div>
+      </div>
+    </a>
   )
 }
 
@@ -33,12 +33,21 @@ function AppContent() {
         {nav}
       </div>
 
-      <div id="app-content" style={{opacity: nav ? 0.5 : 1}}>
+      <div id="app-content" style={{ opacity: nav ? 0.5 : 1 }}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/patient-home" element={<PatientHome />} />
           <Route path="/patient-tests" element={<PatientTests />} />
-          <Route path="/measurements" element={<AllMeasurementsPage setNavIcons={setNavIcons} setNav={setNav} />} />
+          <Route path="/measurements/home" element={<AllMeasurementsPage setNavIcons={setNavIcons} setNav={setNav} shownMeasurement={MEASUREMENT_HOME_PAGE} location={useLocation()} navigate={useNavigate()} />} />
+          <Route path="/measurements/summary" element={<AllMeasurementsPage setNavIcons={setNavIcons} setNav={setNav} shownMeasurement={MEASUREMENT_FINAL_PAGE} location={useLocation()} navigate={useNavigate()} />} />
+          {MEASUREMENT_PAGE_CONFIG.map(({ stateKey }) => (
+            <Route
+              key={stateKey}
+              path={`/measurements/${stateKey}`}
+              element={<AllMeasurementsPage setNavIcons={setNavIcons} setNav={setNav} shownMeasurement={stateKey} location={useLocation()} navigate={useNavigate()} />}
+            />
+          ))}
+          <Route path="/measurements/final" element={<AllMeasurementsPage setNavIcons={setNavIcons} setNav={setNav} shownMeasurement={MEASUREMENT_FINAL_PAGE} location={useLocation()} navigate={useNavigate()} />} />
           <Route path="/new-patient" element={<NewUser />} />
           <Route path="/existing-patient" element={<ExistingUser />} />
         </Routes>

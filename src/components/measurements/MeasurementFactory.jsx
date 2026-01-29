@@ -28,7 +28,7 @@ const PHYSICAL_ACTIVITY_DISABLED_CASE = {
 }
 
 const ASSISTIVE_DEVICE_FOUR_SQUARE_STEP_TEST_DISABLED_CASE = {
-    text: "Select an assistive device. If an assistive device other than 'None' or 'Straight Cane' is selected, the participant should perform the Modified Four Square Step Test instead. Uncheck this box to bypass this recommendation.",
+    text: "Select an assistive device. If an assistive device is selected, but is not 'None' or 'Straight Cane', the participant should perform the Modified Four Square Step Test instead. Uncheck this box to bypass this recommendation.",
     showOverride: (formState, validations, disabledValues, measurementKey) => {
         const assistiveDevices = formState['assistiveDevices']
         const validAssistiveDevices = assistiveDevices && Array.isArray(assistiveDevices) && assistiveDevices.length > 0
@@ -38,7 +38,7 @@ const ASSISTIVE_DEVICE_FOUR_SQUARE_STEP_TEST_DISABLED_CASE = {
 }
 
 const ASSISTIVE_DEVICE_MODIFIED_FOUR_SQUARE_STEP_TEST_DISABLED_CASE = {
-    text: "Select an assistive device. If 'None' or 'Straight Cane' is selected as an assistive device, the participant should perform the Four Square Step Test instead. Uncheck this box to bypass this recommendation.",
+    text: "Select an assistive device. If an assistive device is selected, but is 'None' or 'Straight Cane', the participant should perform the Four Square Step Test instead. Uncheck this box to bypass this recommendation.",
     showOverride: (formState, validations, disabledValues, measurementKey, index, value) => {
         const assistiveDevices = formState['assistiveDevices']
         const validAssistiveDevices = assistiveDevices && Array.isArray(assistiveDevices) && assistiveDevices.length > 0
@@ -266,6 +266,12 @@ export const MEASUREMENT_CONFIGS = {
 
 const createMeasurement = (configKey) => {
     const config = MEASUREMENT_CONFIGS[configKey]
+
+    if (!config) {
+        console.error(`Measurement configuration for key "${configKey}" not found.`)
+        return null
+    }
+
     return class extends Component {
         render() {
             return <Measurement {...config} {...this.props} />
@@ -283,7 +289,7 @@ export const VitalSigns = createMeasurement('vitalSigns')
 export const FiveMeterUsualWalkingSpeed = createMeasurement('fiveMeterUsualWalkingSpeed')
 export const FiveMeterFastWalkingSpeed = createMeasurement('fiveMeterFastWalkingSpeed')
 export const ThirtySecondSitToStand = createMeasurement('thirtySecondSitToStand')
-export const AssistiveDevice = createMeasurement('assistiveDevice')
+export const AssistiveDevice = createMeasurement('assistiveDevices')
 export const FourSquareStepTest = createMeasurement('fourSquareStepTest')
 export const ModifiedFourSquareStepTest = createMeasurement('modifiedFourSquareStepTest')
 export const TimedUpAndGo = createMeasurement('timedUpAndGo')

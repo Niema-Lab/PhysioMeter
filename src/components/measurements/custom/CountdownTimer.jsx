@@ -56,6 +56,8 @@ export class CountdownTimer extends Component {
                 this.stop()
             }
         }, 10)
+        // TODO: not implemented for now, currently not timestamping start time
+        // this.props.onStart(new Date().toISOString())
     }
 
     stop = () => {

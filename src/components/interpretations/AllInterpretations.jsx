@@ -10,8 +10,6 @@ function AllInterpretations({ formState, validations, disabledValues, patientNam
         return <Interpretation key={key} label={config.label} messages={messages} />
     }).filter(Boolean)
 
-    if (interpretations.length === 0) return null
-
     const exportInterpretations = () => {
         const date = new Date().toISOString().split('T')[0]
         const rows = generateInterpretationsCSVRows(formState, validations, disabledValues)
@@ -19,11 +17,16 @@ function AllInterpretations({ formState, validations, disabledValues, patientNam
     }
 
     return (
-        <div className="interpretations-summary mt-4 px-3">
-            {interpretations}
-            <div className="d-flex justify-content-center">
-                <Submit label="Export Interpretations to CSV" onClick={exportInterpretations} />
-            </div>
+        <div className="interpretations-summary">
+            <h3 className="text-center mt-5 mb-3">Interpretations</h3>
+            {interpretations.length === 0 ? (
+                <p className="text-center text-muted">No interpretations available.</p>
+            ) : (<>
+                <div className="mt-4 px-3">{interpretations}</div>
+                <div className="d-flex justify-content-center">
+                    <Submit label="Export Interpretations to CSV" onClick={exportInterpretations} />
+                </div>
+            </>)}
         </div>
     )
 }

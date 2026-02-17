@@ -9,11 +9,6 @@ import { downloadCSV, generateMeasurementsCSVRows, generateCalculationsCSVRows, 
 function SummaryPage({ name, patientName, submitText, submitTextType, formState, validations, disabledValues, isDisabled }) {
     const date = new Date().toISOString().split('T')[0]
 
-    const exportMeasurements = () => {
-        const rows = generateMeasurementsCSVRows(formState, isDisabled)
-        downloadCSV(rows, `measurements_${patientName}_${date}.csv`)
-    }
-
     const exportAll = () => {
         const measRows = generateMeasurementsCSVRows(formState, isDisabled)
         downloadCSV(measRows, `measurements_${patientName}_${date}.csv`)
@@ -38,23 +33,18 @@ function SummaryPage({ name, patientName, submitText, submitTextType, formState,
             {submitText &&
                 <Text value={submitText} type={submitTextType} />
             }
-            <h3 className="text-center mt-5 mb-3">Measurements</h3>
             <MeasurementSummary
                 formState={formState}
                 validations={validations}
                 isDisabled={isDisabled}
+                patientName={patientName}
             />
-            <div className="d-flex justify-content-center">
-                <Submit label="Export Measurements to CSV" onClick={exportMeasurements} />
-            </div>
-            <h3 className="text-center mt-5 mb-3">Calculations</h3>
             <AllCalculations
                 formState={formState}
                 validations={validations}
                 disabledValues={disabledValues}
                 patientName={patientName}
             />
-            <h3 className="text-center mt-5 mb-3">Interpretations</h3>
             <AllInterpretations
                 formState={formState}
                 validations={validations}

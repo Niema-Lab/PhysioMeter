@@ -10,8 +10,6 @@ function AllCalculations({ formState, validations, disabledValues, patientName }
         return <Calculation key={key} label={config.label} value={value} unit={config.unit} />
     }).filter(Boolean)
 
-    if (calculations.length === 0) return null
-
     const exportCalculations = () => {
         const date = new Date().toISOString().split('T')[0]
         const rows = generateCalculationsCSVRows(formState, validations, disabledValues)
@@ -19,11 +17,16 @@ function AllCalculations({ formState, validations, disabledValues, patientName }
     }
 
     return (
-        <div className="calculations-summary mt-4 px-3">
-            {calculations}
-            <div className="d-flex justify-content-center">
-                <Submit label="Export Calculations to CSV" onClick={exportCalculations} />
-            </div>
+        <div className="calculations-summary">
+            <h3 className="text-center mt-5 mb-3">Calculations</h3>
+            {calculations.length === 0 ? (
+                <p className="text-center text-muted">No calculations available.</p>
+            ) : (<>
+                <div className="mt-4 px-3">{calculations}</div>
+                <div className="d-flex justify-content-center">
+                    <Submit label="Export Calculations to CSV" onClick={exportCalculations} />
+                </div>
+            </>)}
         </div>
     )
 }

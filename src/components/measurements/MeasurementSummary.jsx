@@ -1,6 +1,18 @@
 import { MEASUREMENT_CONFIGS } from './MeasurementFactory'
+import Submit from '../form/Submit'
+import { downloadCSV, generateMeasurementsCSVRows } from '../../utils/csvExport'
 
-function MeasurementSummary({ formState, validations, isDisabled }) {
+function MeasurementSummary({ formState, validations, isDisabled, patientName }) {
+    const hasData = Object.entries(formState).some(([key, measurements]) =>
+        measurements && measurements.length > 0 && MEASUREMENT_CONFIGS[key]
+    )
+
+    const exportMeasurements = () => {
+        const date = new Date().toISOString().split('T')[0]
+        const rows = generateMeasurementsCSVRows(formState, isDisabled)
+        downloadCSV(rows, `measurements_${patientName || 'guest'}_${date}.csv`)
+    }
+
     const formatValue = (value, unit) => {
         if (value === null || value === undefined || value === '') {
             return <span className="text-danger">Not recorded</span>
@@ -17,7 +29,12 @@ function MeasurementSummary({ formState, validations, isDisabled }) {
     }
 
     return (
-        <div className="measurement-summary mt-4 px-3">
+        <div className="measurement-summary">
+            <h3 className="text-center mt-5 mb-3">Measurements</h3>
+            {!hasData ? (
+                <p className="text-center text-muted">No measurements recorded.</p>
+            ) : (<>
+            <div className="mt-4 px-3">
             {Object.entries(formState).map(([key, measurements]) => {
                 if (!measurements || measurements.length === 0) return null
 
@@ -94,6 +111,11 @@ function MeasurementSummary({ formState, validations, isDisabled }) {
                     )
                 })
             })}
+            </div>
+            <div className="d-flex justify-content-center">
+                <Submit label="Export Measurements to CSV" onClick={exportMeasurements} />
+            </div>
+            </>)}
         </div>
     )
 }

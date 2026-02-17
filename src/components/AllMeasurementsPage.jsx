@@ -3,6 +3,8 @@ import React, { Component } from 'react'
 import { Navigate } from "react-router-dom"
 import { Name, DoB, Sex, VitalSigns, FiveMeterUsualWalkingSpeed, FiveMeterFastWalkingSpeed, ThirtySecondSitToStand, AssistiveDevice, FourSquareStepTest, ModifiedFourSquareStepTest, TimedUpAndGo, TimedUpAndGoCognitive, MEASUREMENT_CONFIGS } from './measurements/MeasurementFactory'
 import MultipleMeasurements from './measurements/MultipleMeasurements'
+import MeasurementSummary from './measurements/MeasurementSummary'
+import AllCalculations from './calculations/AllCalculations'
 import { getCurrentUser, openDB } from '../DB'
 import Text from './form/Text'
 import Title from './form/Title'
@@ -137,11 +139,16 @@ export class AllMeasurementsPage extends Component {
     updateIndividualMeasurement = (index, value, additionalValues) => {
         const measurementKey = this.props.shownMeasurement;
         const measurements = [...this.state.formState[measurementKey]]
+        const originalMeasurement = JSON.stringify(measurements[index])
         measurements[index].value = value
-        measurements[index].lastModified = new Date().toISOString();
         Object.entries(additionalValues ?? {}).map(([key, value]) => {
             measurements[index][key] = value;
         })
+        const updatedMeasurement = JSON.stringify(measurements[index])
+        if (originalMeasurement !== updatedMeasurement) {
+            measurements[index].lastModified = new Date().toISOString();
+        }
+
         this.updateValues(measurementKey, measurements)
     }
 
@@ -389,7 +396,7 @@ export class AllMeasurementsPage extends Component {
 
                     return <h3 key={`nav-entry-${key}`} className={`nav-entry-link text-center mt-5 cursor-p text-decoration-underline ${disabled ? 'text-warning' : (valid ? 'text-success' : 'text-danger')}`} onClick={() => this.setMeasurementShown(key)}>{MEASUREMENT_CONFIGS[key]?.defaultLabel || key}</h3>
                 })}
-                <h2 className="nav-entry-link text-center mt-5 cursor-p text-decoration-underline" onClick={() => this.setMeasurementShown(MEASUREMENT_FINAL_PAGE)}>Measurement Summary</h2>
+                <h2 className="nav-entry-link text-center mt-5 cursor-p text-decoration-underline" onClick={() => this.setMeasurementShown(MEASUREMENT_FINAL_PAGE)}>Summary</h2>
             </div>
         )
     }
@@ -473,7 +480,18 @@ export class AllMeasurementsPage extends Component {
                     {this.state.submitText &&
                         <Text value={this.state.submitText} type={this.state.submitTextType} />
                     }
-                    {this.renderMeasurementSummary(this.state.formState)}
+                    <h3 className="text-center mt-5 mb-3">Measurements</h3>
+                    <MeasurementSummary
+                        formState={this.state.formState}
+                        validations={this.state.validations}
+                        isDisabled={this.isDisabled}
+                    />
+                    <h3 className="text-center mt-5 mb-3">Calculations</h3>
+                    <AllCalculations
+                        formState={this.state.formState}
+                        validations={this.state.validations}
+                        disabledValues={this.state.disabledValues}
+                    />
                 </>
             )
         }
@@ -541,104 +559,6 @@ export class AllMeasurementsPage extends Component {
                 </div>
             </div>
         </>)
-    }
-
-    renderMeasurementSummary = (formState) => {
-        const formatValue = (value, unit) => {
-            if (value === null || value === undefined || value === '') {
-                return <span className="text-danger">Not recorded</span>
-            }
-            return <span>{value}{unit ? ` ${unit}` : ''}</span>
-        }
-
-        const getValidationStatus = (key, index) => {
-            const validation = this.state.validations[key]?.[index]
-            if (Array.isArray(validation)) {
-                return validation.every(v => v === true)
-            }
-            return validation === true
-        }
-
-        return (
-            <div className="measurement-summary mt-4 px-3">
-                {Object.entries(formState).map(([key, measurements]) => {
-                    if (!measurements || measurements.length === 0) return null
-
-                    const config = MEASUREMENT_CONFIGS[key]
-                    if (!config) return null
-
-                    const label = config.defaultLabel || key
-                    const unit = config.unit || ''
-
-                    return measurements.map((measurement, index) => {
-                        const isDisabled = this.isDisabled(key, index)
-                        const isValid = getValidationStatus(key, index)
-                        const value = measurement.value
-
-                        const borderColor = isDisabled ? 'border-warning' : (isValid ? 'border-success' : 'border-danger')
-                        const headerBg = isDisabled ? 'bg-warning' : (isValid ? 'bg-success' : 'bg-danger')
-
-                        return (
-                            <div key={`${key}-${index}`} className={`card mb-3 ${borderColor}`} style={{ borderWidth: '2px' }}>
-                                <div className={`card-header ${headerBg} text-white d-flex justify-content-between align-items-center`}>
-                                    <h5 className="mb-0">{label}</h5>
-                                    {isDisabled && <span className="badge bg-light text-dark">Skipped</span>}
-                                    {!isDisabled && !isValid && <span className="badge bg-light text-danger">Incomplete</span>}
-                                </div>
-                                {!isDisabled && (
-                                    <div className="card-body">
-                                        {/* Handle fields type (composite measurements like vitalSigns, thirtySecondSitToStand) */}
-                                        {config.type === 'fields' && (config.fields || config.fieldNames) ? (
-                                            <div className="d-flex flex-wrap justify-content-evenly gap-3">
-                                                {(config.fields || config.fieldNames?.map(fn => MEASUREMENT_CONFIGS[fn])).map((field, idx) => {
-                                                    const fieldValue = Array.isArray(value) ? value[idx] : value
-                                                    const fieldLabel = field?.defaultLabel || (config.fieldNames ? MEASUREMENT_CONFIGS[config.fieldNames[idx]]?.defaultLabel : `Field ${idx + 1}`)
-                                                    const fieldUnit = field?.unit || MEASUREMENT_CONFIGS[config.fieldNames?.[idx]]?.unit || ''
-                                                    const fieldValidation = Array.isArray(this.state.validations[key]?.[index]) ? this.state.validations[key][index][idx] : true
-                                                    return (
-                                                        <div key={idx} className="d-flex flex-column text-center">
-                                                            <small className="text-muted">{fieldLabel}</small>
-                                                            <span className={`fs-5 ${fieldValidation ? '' : 'text-danger'}`}>
-                                                                {formatValue(fieldValue, fieldUnit)}
-                                                            </span>
-                                                        </div>
-                                                    )
-                                                })}
-                                            </div>
-                                        ) : Array.isArray(value) ? (
-                                            /* Handle multi-trial measurements (stopwatch with numTrials) */
-                                            <div className="d-flex flex-wrap justify-content-evenly gap-3">
-                                                {value.map((v, idx) => {
-                                                    const trialValid = v !== null && v !== undefined && v !== ''
-                                                    return (
-                                                        <div key={idx} className="d-flex flex-column text-center">
-                                                            <small className="text-muted">Trial {idx + 1}</small>
-                                                            <span className={`fs-5 ${trialValid ? '' : 'text-danger'}`}>
-                                                                {formatValue(v, unit)}
-                                                            </span>
-                                                        </div>
-                                                    )
-                                                })}
-                                            </div>
-                                        ) : (
-                                            /* Simple single value */
-                                            <h4 className={`mb-0 ${isValid ? '' : 'text-danger'} text-center`}>
-                                                {formatValue(value, unit)}
-                                            </h4>
-                                        )}
-                                    </div>
-                                )}
-                                {measurement.lastModified && (
-                                    <div className="card-footer text-muted small">
-                                        Last measured: {new Date(measurement.lastModified).toLocaleString()}
-                                    </div>
-                                )}
-                            </div>
-                        )
-                    })
-                })}
-            </div>
-        )
     }
 
     render() {

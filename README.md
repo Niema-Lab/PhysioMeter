@@ -14,6 +14,7 @@ Next week:
 - [ ] Build Interpretations page
 - [ ] Build Patient Tests page
 - [ ] Implement sessions for the measurements / tests?
+- [ ] Implement multiple tabs open for one / multiple patients?
 
 Final chores:
 

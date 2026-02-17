@@ -9,10 +9,13 @@ $bg-hover-color: #cccccc;
   }
 }
 
-@mixin hoverable-section($min-height: 20vh) {
+@mixin section($min-height: 20vh) {
   width: 100%;
   min-height: $min-height;
   transition: 0.5s;
+}
+
+@mixin hoverable {
 
   &:hover {
     background-color: $bg-hover-color;
@@ -24,7 +27,7 @@ input {
 }
 
 .link {
-  @include hoverable-section;
+  @include section;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -82,7 +85,7 @@ input {
 }
 
 .submit {
-  @include hoverable-section;
+  @include section;
 
   .submit-button {
     font-size: var(--base-font-size);
@@ -126,7 +129,8 @@ input {
 }
 
 .measurement-header {
-  @include hoverable-section;
+  @include hoverable;
+  @include section;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -135,7 +139,7 @@ input {
 }
 
 .measurement {
-  @include hoverable-section;
+  @include section;
   display: flex;
   flex-direction: column;
   align-items: center;

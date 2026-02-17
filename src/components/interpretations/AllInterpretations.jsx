@@ -1,0 +1,31 @@
+import { INTERPRETATION_SECTION_CONFIGS } from './InterpretationFactory'
+import Interpretation from './Interpretation'
+import Submit from '../form/Submit'
+import { downloadCSV, generateInterpretationsCSVRows } from '../../utils/csvExport'
+
+function AllInterpretations({ formState, validations, disabledValues, patientName }) {
+    const interpretations = Object.entries(INTERPRETATION_SECTION_CONFIGS).map(([key, config]) => {
+        const messages = config.messageFunction(formState, validations, disabledValues)
+        if (messages === null || messages.length === 0) return null
+        return <Interpretation key={key} label={config.label} messages={messages} />
+    }).filter(Boolean)
+
+    if (interpretations.length === 0) return null
+
+    const exportInterpretations = () => {
+        const date = new Date().toISOString().split('T')[0]
+        const rows = generateInterpretationsCSVRows(formState, validations, disabledValues)
+        downloadCSV(rows, `interpretations_${patientName || 'guest'}_${date}.csv`)
+    }
+
+    return (
+        <div className="interpretations-summary mt-4 px-3">
+            {interpretations}
+            <div className="d-flex justify-content-center">
+                <Submit label="Export Interpretations to CSV" onClick={exportInterpretations} />
+            </div>
+        </div>
+    )
+}
+
+export default AllInterpretations

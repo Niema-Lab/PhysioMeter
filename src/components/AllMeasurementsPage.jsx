@@ -3,12 +3,9 @@ import React, { Component } from 'react'
 import { Navigate } from "react-router-dom"
 import { Name, DoB, Sex, VitalSigns, FiveMeterUsualWalkingSpeed, FiveMeterFastWalkingSpeed, ThirtySecondSitToStand, AssistiveDevice, FourSquareStepTest, ModifiedFourSquareStepTest, TimedUpAndGo, TimedUpAndGoCognitive, MEASUREMENT_CONFIGS } from './measurements/MeasurementFactory'
 import MultipleMeasurements from './measurements/MultipleMeasurements'
-import MeasurementSummary from './measurements/MeasurementSummary'
-import AllCalculations from './calculations/AllCalculations'
+import SummaryPage from './SummaryPage'
 import { getCurrentUser, openDB } from '../DB'
-import Text from './form/Text'
 import Title from './form/Title'
-import Submit from './form/Submit'
 import LoadingPage from './LoadingPage'
 
 const THROTTLE_TIMEOUT = 250;
@@ -401,70 +398,6 @@ export class AllMeasurementsPage extends Component {
         )
     }
 
-    exportToCSV = () => {
-        const rows = [['Measurement', 'Field', 'Value', 'Status', 'Last Measured']]
-
-        const formatDate = (isoString) => {
-            if (!isoString) return ''
-            const date = new Date(isoString)
-            return date.toLocaleString()
-        }
-
-        Object.entries(this.state.formState).forEach(([key, measurements]) => {
-            if (!measurements || measurements.length === 0) return
-
-            const config = MEASUREMENT_CONFIGS[key]
-            if (!config) return
-
-            const label = config.defaultLabel || key
-            const unit = config.unit || ''
-
-            measurements.forEach((measurement, index) => {
-                const isDisabled = this.isDisabled(key, index)
-                const value = measurement.value
-                const lastModified = formatDate(measurement.lastModified)
-
-                if (isDisabled) {
-                    rows.push([label, '', '', 'Skipped', lastModified])
-                    return
-                }
-
-                // Handle fields type
-                if (config.type === 'fields' && (config.fields || config.fieldNames)) {
-                    const fields = config.fields || config.fieldNames?.map(fn => MEASUREMENT_CONFIGS[fn])
-                    fields.forEach((field, idx) => {
-                        const fieldValue = Array.isArray(value) ? value[idx] : value
-                        const fieldLabel = field?.defaultLabel || (config.fieldNames ? MEASUREMENT_CONFIGS[config.fieldNames[idx]]?.defaultLabel : `Field ${idx + 1}`)
-                        const fieldUnit = field?.unit || MEASUREMENT_CONFIGS[config.fieldNames?.[idx]]?.unit || ''
-                        const displayValue = fieldValue != null && fieldValue !== '' ? `${fieldValue}${fieldUnit ? ` ${fieldUnit}` : ''}` : ''
-                        rows.push([label, fieldLabel, displayValue, displayValue ? 'Recorded' : 'Missing', lastModified])
-                    })
-                } else if (Array.isArray(value)) {
-                    // Handle multi-trial
-                    value.forEach((v, idx) => {
-                        const displayValue = v != null && v !== '' ? `${v}${unit ? ` ${unit}` : ''}` : ''
-                        rows.push([label, `Trial ${idx + 1}`, displayValue, displayValue ? 'Recorded' : 'Missing', lastModified])
-                    })
-                } else {
-                    // Simple value
-                    const displayValue = value != null && value !== '' ? `${value}${unit ? ` ${unit}` : ''}` : ''
-                    rows.push([label, '', displayValue, displayValue ? 'Recorded' : 'Missing', lastModified])
-                }
-            })
-        })
-
-        const csvContent = rows.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')).join('\n')
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
-        const url = URL.createObjectURL(blob)
-        const link = document.createElement('a')
-        link.href = url
-        const patientName = this.state.user?.name || 'guest'
-        const date = new Date().toISOString().split('T')[0]
-        link.download = `measurements_${patientName}_${date}.csv`
-        link.click()
-        URL.revokeObjectURL(url)
-    }
-
     renderMeasurementPage = () => {
         const name = this.state.user.uuid !== 'guest' ? `(${this.state.user.name})` : '';
         const measurementKey = this.props.shownMeasurement;
@@ -472,27 +405,16 @@ export class AllMeasurementsPage extends Component {
             return this.renderMeasurementSelection()
         } else if (measurementKey === MEASUREMENT_FINAL_PAGE) {
             return (
-                <>
-                    <Title>Measurements Completed! {name}</Title>
-                    <div className="d-flex justify-content-center flex-wrap">
-                        <Submit label="Export to CSV" onClick={() => this.exportToCSV()} />
-                    </div>
-                    {this.state.submitText &&
-                        <Text value={this.state.submitText} type={this.state.submitTextType} />
-                    }
-                    <h3 className="text-center mt-5 mb-3">Measurements</h3>
-                    <MeasurementSummary
-                        formState={this.state.formState}
-                        validations={this.state.validations}
-                        isDisabled={this.isDisabled}
-                    />
-                    <h3 className="text-center mt-5 mb-3">Calculations</h3>
-                    <AllCalculations
-                        formState={this.state.formState}
-                        validations={this.state.validations}
-                        disabledValues={this.state.disabledValues}
-                    />
-                </>
+                <SummaryPage
+                    name={name}
+                    patientName={this.state.user?.name || 'guest'}
+                    submitText={this.state.submitText}
+                    submitTextType={this.state.submitTextType}
+                    formState={this.state.formState}
+                    validations={this.state.validations}
+                    disabledValues={this.state.disabledValues}
+                    isDisabled={this.isDisabled}
+                />
             )
         }
 

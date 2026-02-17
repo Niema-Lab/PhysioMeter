@@ -83,4 +83,9 @@ export const CALCULATION_SECTION_CONFIGS = {
         unit: 's',
         valueFunction: (formState) => computeTrialMean(formState, 'timedUpAndGo')
     },
+    timedUpAndGoCognitiveMean: {
+        label: 'Timed Up and Go Cognitive Dual Task - Mean',
+        unit: 's',
+        valueFunction: (formState) => computeFieldMean(formState, 'timedUpAndGoCognitive', 0)
+    },
 }

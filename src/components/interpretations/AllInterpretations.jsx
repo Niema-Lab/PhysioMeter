@@ -1,6 +1,7 @@
 import { INTERPRETATION_SECTION_CONFIGS } from './InterpretationFactory'
 import Interpretation from './Interpretation'
 import Submit from '../form/Submit'
+import Title from '../form/Title'
 import { downloadCSV, generateInterpretationsCSVRows } from '../../utils/csvExport'
 
 function AllInterpretations({ formState, validations, disabledValues, patientName }) {
@@ -18,7 +19,7 @@ function AllInterpretations({ formState, validations, disabledValues, patientNam
 
     return (
         <div className="interpretations-summary">
-            <h3 className="text-center mt-5 mb-3">Interpretations</h3>
+            <Title>Interpretations</Title>
             {interpretations.length === 0 ? (
                 <p className="text-center text-muted">No interpretations available.</p>
             ) : (<>

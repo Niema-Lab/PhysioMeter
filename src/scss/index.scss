@@ -28,6 +28,7 @@ input {
 
 .link {
   @include section;
+  @include hoverable;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -85,10 +86,10 @@ input {
 }
 
 .submit {
-  @include section;
+  @include section(10vh);
 
   .submit-button {
-    font-size: var(--base-font-size);
+    font-size: calc(0.8 * var(--base-font-size));
   }
 }
 
@@ -221,9 +222,7 @@ input {
 }
 
 #measurements-previous-next {
-  min-height: 20vh;
-
   .btn {
-    font-size: var(--base-font-size);
+    font-size: calc(0.8 * var(--base-font-size));
   }
 }

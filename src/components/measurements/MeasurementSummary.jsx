@@ -1,5 +1,6 @@
 import { MEASUREMENT_CONFIGS } from './MeasurementFactory'
 import Submit from '../form/Submit'
+import Title from '../form/Title'
 import { downloadCSV, generateMeasurementsCSVRows } from '../../utils/csvExport'
 
 function MeasurementSummary({ formState, validations, isDisabled, patientName }) {
@@ -30,7 +31,7 @@ function MeasurementSummary({ formState, validations, isDisabled, patientName })
 
     return (
         <div className="measurement-summary">
-            <h3 className="text-center mt-5 mb-3">Measurements</h3>
+            <Title>Measurements</Title>
             {!hasData ? (
                 <p className="text-center text-muted">No measurements recorded.</p>
             ) : (<>

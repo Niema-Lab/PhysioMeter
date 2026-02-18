@@ -79,6 +79,7 @@ export class AllMeasurementsPage extends Component {
         const uuid = this.state.user?.uuid;
         const search = uuid && uuid !== "guest" ? `?uuid=${uuid}` : "";
 
+        window.scrollTo(0, 0);
         this.props.navigate(`/measurements/${measurementKey}${search}`, { replace: false });
         this.toggleNav(false);
     }
@@ -500,11 +501,11 @@ export class AllMeasurementsPage extends Component {
         return (
             <div id="measurements" className={`${this.state.navShown ? 'user-select-none pe-none' : ''}`}>
                 {this.renderMeasurementPage()}
-                <div id="measurements-previous-next" className={`d-flex ${dontShowBack || dontShowNext ? 'justify-content-center' : 'justify-content-between'} align-items-center px-5`}>
-                    <button className={`btn btn-secondary ${dontShowBack ? 'd-none' : ''}`} onClick={() => this.previousMeasurement()}>
+                <div id="measurements-previous-next" className={`d-flex ${dontShowBack || dontShowNext ? 'justify-content-center' : 'justify-content-between'}`}>
+                    <button className={`btn btn-secondary m-4 ${dontShowBack ? 'd-none' : ''}`} onClick={() => this.previousMeasurement()}>
                         {relativeMeasurementIndex === 1 ? 'Back to Measurement Selection' : this.props.shownMeasurement === MEASUREMENT_FINAL_PAGE ? 'Back to Measurements' : 'Previous Measurement'}
                     </button>
-                    <button className={`btn btn-primary ${dontShowNext ? 'd-none' : ''}`} onClick={() => this.nextMeasurement()}>
+                    <button className={`btn btn-primary m-4 ${dontShowNext ? 'd-none' : ''}`} onClick={() => this.nextMeasurement()}>
                         {relativeMeasurementIndex === relativeMeasurementLength - 1 ? 'Finish' : this.props.shownMeasurement === MEASUREMENT_HOME_PAGE ? 'Proceed to Measurements' : 'Next Measurement'}
                     </button>
                 </div>

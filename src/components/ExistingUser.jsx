@@ -11,6 +11,9 @@ export class ExistingUser extends Component {
 
         this.state = {
             users: [],
+            search: '',
+            sortKey: 'name',
+            sortAsc: true,
             submitText: '',
             submitTextType: ''
         }
@@ -57,33 +60,84 @@ export class ExistingUser extends Component {
         }
     }
 
+    toggleSort = (key) => {
+        this.setState(prev => ({
+            sortKey: key,
+            sortAsc: prev.sortKey === key ? !prev.sortAsc : true
+        }))
+    }
+
+    getFilteredUsers = () => {
+        const { users, search, sortKey, sortAsc } = this.state
+        return users
+            .filter(u => u.uuid !== 'guest')
+            .filter(u => u.name.toLowerCase().includes(search.toLowerCase()))
+            .sort((a, b) => {
+                const valA = sortKey === 'createdAt' ? (a.createdAt || 0) : (a[sortKey] || '').toLowerCase()
+                const valB = sortKey === 'createdAt' ? (b.createdAt || 0) : (b[sortKey] || '').toLowerCase()
+                if (valA < valB) return sortAsc ? -1 : 1
+                if (valA > valB) return sortAsc ? 1 : -1
+                return 0
+            })
+    }
+
+    sortIcon = (key) => {
+        if (this.state.sortKey !== key) return <i className="bi bi-chevron-expand ms-1"></i>
+        return this.state.sortAsc
+            ? <i className="bi bi-chevron-up ms-1"></i>
+            : <i className="bi bi-chevron-down ms-1"></i>
+    }
+
     render() {
+        const filtered = this.getFilteredUsers()
+
         return (
             <div id="existing-patient">
                 <Title>Select Existing Patient</Title>
                 <Link to="/new-patient" className="link text-decoration-underline"><h2>Create New Patient</h2></Link>
-                <Title>Existing Patients</Title>
+                <Title>Existing Patients ({this.state.users.length - 1})</Title>
                 {this.state.submitText && (
                     <Text value={this.state.submitText} type={this.state.submitTextType} />
                 )}
-                {this.state.users.map((user) => {
-                    if (user.uuid === 'guest') {
-                        return null
-                    }
-
-                    return (
-                        <div className="link" key={user.uuid}>
-                            <Link to={`/patient-home?uuid=${user.uuid}`}>
-                                <h2>{user.name}</h2>
-                                <p className="text-decoration-none">Created: {new Date(user.createdAt).toLocaleString()}</p>
-                            </Link>
-                            <h2>
-                                <i className="bi bi-trash-fill text-danger ms-4 cursor-p" onClick={() => this.deleteUser(user)} aria-label={`Delete patient ${user.name}`}></i>
-                            </h2>
-                        </div>
-                    )
-                })}
-            </div>
+                <div id="existing-patient-section" className="mx-5">
+                    <input
+                        type="text"
+                        className="form-control mb-3"
+                        placeholder="Search patients..."
+                        value={this.state.search}
+                        onChange={e => this.setState({ search: e.target.value })}
+                    />
+                    <table className="table table-bordered table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th className="cursor-p" onClick={() => this.toggleSort('name')}>
+                                    Name {this.sortIcon('name')}
+                                </th>
+                                <th className="cursor-p" onClick={() => this.toggleSort('createdAt')}>
+                                    Created {this.sortIcon('createdAt')}
+                                </th>
+                                <th>Delete Patient</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {filtered.map(user => (
+                                <tr key={user.uuid}>
+                                    <td>
+                                        <Link to={`/patient-home?uuid=${user.uuid}`}>{user.name}</Link>
+                                    </td>
+                                    <td>{new Date(user.createdAt).toLocaleString()}</td>
+                                    <td>
+                                        <i className="bi bi-trash-fill text-danger cursor-p" onClick={() => this.deleteUser(user)} aria-label={`Delete patient ${user.name}`}></i>
+                                    </td>
+                                </tr>
+                            ))}
+                            {filtered.length === 0 && (
+                                <tr><td colSpan="3" className="text-center text-muted">No patients found.</td></tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+            </div >
         )
     }
 }

@@ -1,6 +1,7 @@
 import { CALCULATION_SECTION_CONFIGS } from './CalculationFactory'
 import Calculation from './Calculation'
 import Submit from '../form/Submit'
+import Title from '../form/Title'
 import { downloadCSV, generateCalculationsCSVRows } from '../../utils/csvExport'
 
 function AllCalculations({ formState, validations, disabledValues, patientName }) {
@@ -18,7 +19,7 @@ function AllCalculations({ formState, validations, disabledValues, patientName }
 
     return (
         <div className="calculations-summary">
-            <h3 className="text-center mt-5 mb-3">Calculations</h3>
+            <Title>Calculations</Title>
             {calculations.length === 0 ? (
                 <p className="text-center text-muted">No calculations available.</p>
             ) : (<>

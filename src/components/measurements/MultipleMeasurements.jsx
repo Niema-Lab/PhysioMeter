@@ -80,7 +80,7 @@ export class MultipleMeasurements extends Component {
         return (
             <div className="multiple-measurements">
                 <h2 className={`measurement-header text-center w-100`}>
-                    {this.props.name} <i className={`bi ms-3 cursor-p ${this.props.oneMax && this.props.measurements.length === 1 ? 'text-danger bi-dash-circle-fill' : 'text-success bi-plus-circle-fill'}`} onClick={this.handleMeasurementAction}></i>
+                    {this.props.name} <i className={`bi ms-3 cursor-p ${this.props.oneMax && this.props.measurements.length === 1 ? 'text-success bi-check-square-fill' : 'text-danger bi-square'}`} onClick={this.handleMeasurementAction} title={`${this.props.oneMax && this.props.measurements.length === 1 ? 'Remove measurement' : 'Add measurement'}`}></i>
                 </h2>
             </div>
         )

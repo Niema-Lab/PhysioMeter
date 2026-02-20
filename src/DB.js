@@ -1,18 +1,25 @@
 import { PT_TEST_CONFIG } from './components/physical-therapy-tests/PhysicalTherapyTestFactory'
 
+// NOTE: every time the DB schema is updated, this must be incremented. NOTE THAT THIS WILL DELETE ALL EXISTING USERS IN THE DB.
+const CURRENT_DB_VERSION = 2
+
 let dbPromise = null
 
 const openDB = () => {
     if (!dbPromise) {
         dbPromise = new Promise((resolve, reject) => {
-            const request = indexedDB.open('PTAppDB', 1)
+            const request = indexedDB.open('PTAppDB', CURRENT_DB_VERSION)
 
             request.onupgradeneeded = (event) => {
-                const db = event.target.result
-                if (!db.objectStoreNames.contains('users')) {
-                    db.createObjectStore('users', { keyPath: 'uuid' })
+                const db = event.target.result;
+
+                // TODO: in the future, have a better DB migration strategy instead of deleting all the users
+                if (db.objectStoreNames.contains('users')) {
+                    db.deleteObjectStore('users');
                 }
-            }
+
+                db.createObjectStore('users', { keyPath: 'uuid' });
+            };
 
             request.onsuccess = () => resolve(request.result)
             request.onerror = () => reject(request.error)

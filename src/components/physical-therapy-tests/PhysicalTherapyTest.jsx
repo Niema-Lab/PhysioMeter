@@ -486,7 +486,7 @@ export class PhysicalTherapyTest extends Component {
                                 onValidationChange={(validations) => this.updateValidations(stateKey, validations)}
                                 onDisabledChange={(disabledValues) => this.updateDisabled(stateKey, disabledValues)}
                                 isDisabled={this.isDisabled}
-                                buttonHidden={!this.props.permittedMeasurements || this.props.permittedMeasurements.includes(stateKey)}
+                                buttonHidden={this.props.permittedMeasurements && this.props.permittedMeasurements.includes(stateKey)}
                                 buttonDisabledAndChecked={this.props.permittedMeasurements ? true : false} // if permittedMeasurements is provided, the measurements cannot be selected (is a preset)
                                 getDisableCaseComputedText={this.getDisableCaseComputedText}
                                 // oneMax={this.state.user.uuid !== 'guest' ? oneMax : false}

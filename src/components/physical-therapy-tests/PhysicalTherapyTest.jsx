@@ -1,22 +1,22 @@
 import React, { Component } from 'react'
 
 import { Navigate } from "react-router-dom"
-import { Name, DoB, Sex, VitalSigns, FiveMeterUsualWalkingSpeed, FiveMeterFastWalkingSpeed, ThirtySecondSitToStand, AssistiveDevice, FourSquareStepTest, ModifiedFourSquareStepTest, TimedUpAndGo, TimedUpAndGoCognitive, MEASUREMENT_CONFIGS } from './measurements/MeasurementFactory'
-import MultipleMeasurements from './measurements/MultipleMeasurements'
-import SummaryPage from './SummaryPage'
-import { getCurrentUser, openDB } from '../DB'
-import Title from './form/Title'
-import LoadingPage from './LoadingPage'
+import { Name, DoB, Sex, VitalSigns, FiveMeterUsualWalkingSpeed, FiveMeterFastWalkingSpeed, ThirtySecondSitToStand, AssistiveDevice, FourSquareStepTest, ModifiedFourSquareStepTest, TimedUpAndGo, TimedUpAndGoCognitive, MEASUREMENT_CONFIGS } from '../measurements/MeasurementFactory'
+import MultipleMeasurements from '../measurements/MultipleMeasurements'
+import SummaryPage from '../SummaryPage'
+import { getCurrentUser, getCurrentTestUUID, openDB } from '../../DB'
+import Title from '../form/Title'
+import LoadingPage from '../LoadingPage'
 
 const THROTTLE_TIMEOUT = 250;
-export const MEASUREMENT_HOME_PAGE = 'home';
-export const MEASUREMENT_FINAL_PAGE = 'summary';
+export const PT_TEST_HOME_PAGE = 'home';
+export const PT_TEST_FINAL_PAGE = 'summary';
 
-export class AllMeasurementsPage extends Component {
+export class PhysicalTherapyTest extends Component {
     constructor(props) {
         super(props)
 
-        const STATE_OBJECT = MEASUREMENT_PAGE_CONFIG.reduce((acc, curr) => {
+        const STATE_OBJECT = PT_TEST_MEASUREMENT_CONFIG.reduce((acc, curr) => {
             acc[curr.stateKey] = []
             return acc
         }, {})
@@ -38,29 +38,24 @@ export class AllMeasurementsPage extends Component {
 
     componentDidMount = async () => {
         const user = await getCurrentUser()
-        this.setState({ user, loaded: true }, () => {
-            if (this.state.user?.measurements?.formState && Object.keys(this.state.user.measurements.formState).length > 0) {
-                const formState = JSON.parse(JSON.stringify(this.state.user.measurements.formState))
-                if (this.props.shownMeasurement !== MEASUREMENT_FINAL_PAGE && (formState[this.props.shownMeasurement] === undefined || formState[this.props.shownMeasurement].length === 0)) {
-                    this.setMeasurementShown(MEASUREMENT_HOME_PAGE)
+        const testUUID = getCurrentTestUUID();
+        this.setState({ user, testUUID, loaded: true }, () => {
+            const measurementData = user.tests[this.props.testKey].find(test => test.uuid === this.state.testUUID)?.data;
+            if (measurementData?.formState && Object.keys(measurementData.formState).length > 0) {
+                const formState = JSON.parse(JSON.stringify(measurementData.formState))
+                if (this.props.shownMeasurement !== PT_TEST_FINAL_PAGE && (formState[this.props.shownMeasurement] === undefined || formState[this.props.shownMeasurement].length === 0)) {
+                    this.setMeasurementShown(PT_TEST_HOME_PAGE)
                 }
                 this.setState({
                     formState,
-                    validations: JSON.parse(JSON.stringify(this.state.user.measurements.validations)),
-                    disabledValues: JSON.parse(JSON.stringify(this.state.user.measurements.disabledValues)),
+                    validations: JSON.parse(JSON.stringify(measurementData.validations)),
+                    disabledValues: JSON.parse(JSON.stringify(measurementData.disabledValues)),
                 })
             }
         })
 
         this.props.setNavIcons([this.renderNavIcon()])
         this.props.setNav(this.renderNav())
-    }
-
-    componentDidUpdate = (previousProps) => {
-        if (this.props.location !== previousProps.location) {
-            console.log(this.props.location);
-            console.log(previousProps.location);
-        }
     }
 
     componentWillUnmount = () => {
@@ -77,23 +72,26 @@ export class AllMeasurementsPage extends Component {
 
     setMeasurementShown = (measurementKey) => {
         const uuid = this.state.user?.uuid;
-        const search = uuid && uuid !== "guest" ? `?uuid=${uuid}` : "";
+        let params = "?testUUID=" + this.state.testUUID;
+        if (uuid && uuid !== "guest") {
+            params += `&uuid=${uuid}`;
+        }
 
         window.scrollTo(0, 0);
-        this.props.navigate(`/measurements/${measurementKey}${search}`, { replace: false });
+        this.props.navigate(`/${this.props.testKey}/${measurementKey}${params}`, { replace: false });
         this.toggleNav(false);
     }
 
     getMeasurementIndexByKey = (measurementKey) => {
-        return measurementKey === MEASUREMENT_HOME_PAGE ? 0 : (measurementKey === MEASUREMENT_FINAL_PAGE ? MEASUREMENT_PAGE_CONFIG.length + 1 : MEASUREMENT_PAGE_CONFIG.findIndex(m => m.stateKey === measurementKey) + 1);
+        return measurementKey === PT_TEST_HOME_PAGE ? 0 : (measurementKey === PT_TEST_FINAL_PAGE ? PT_TEST_MEASUREMENT_CONFIG.length + 1 : PT_TEST_MEASUREMENT_CONFIG.findIndex(m => m.stateKey === measurementKey) + 1);
     }
 
     // similar to getMeasurementIndexByKey but removes any measurements that have not been selected
     getRelativeMeasurementIndexByKey = (measurementKey) => {
-        let filteredMeasurements = [...MEASUREMENT_PAGE_CONFIG].filter(m => this.state.formState[m.stateKey].length > 0);
-        if (measurementKey === MEASUREMENT_HOME_PAGE) {
+        let filteredMeasurements = [...PT_TEST_MEASUREMENT_CONFIG].filter(m => this.state.formState[m.stateKey].length > 0);
+        if (measurementKey === PT_TEST_HOME_PAGE) {
             return [0, filteredMeasurements.length + 1];
-        } else if (measurementKey === MEASUREMENT_FINAL_PAGE) {
+        } else if (measurementKey === PT_TEST_FINAL_PAGE) {
             return [filteredMeasurements.length + 1, filteredMeasurements.length + 1];
         } else {
             return [filteredMeasurements.findIndex(m => m.stateKey === measurementKey) + 1, filteredMeasurements.length + 1];
@@ -106,12 +104,12 @@ export class AllMeasurementsPage extends Component {
             return;
         }
 
-        let filteredMeasurements = [...MEASUREMENT_PAGE_CONFIG];
+        let filteredMeasurements = [...PT_TEST_MEASUREMENT_CONFIG];
         filteredMeasurements = filteredMeasurements.splice(0, measurementIndex - 1);
         filteredMeasurements = filteredMeasurements.filter(m => this.state.formState[m.stateKey].length > 0);
 
         if (filteredMeasurements.length === 0) {
-            this.setMeasurementShown(MEASUREMENT_HOME_PAGE);
+            this.setMeasurementShown(PT_TEST_HOME_PAGE);
         } else {
             this.setMeasurementShown(filteredMeasurements[filteredMeasurements.length - 1].stateKey);
         }
@@ -119,16 +117,16 @@ export class AllMeasurementsPage extends Component {
 
     nextMeasurement = () => {
         const measurementIndex = this.getMeasurementIndexByKey(this.props.shownMeasurement);
-        if (measurementIndex >= MEASUREMENT_PAGE_CONFIG.length + 1) {
+        if (measurementIndex >= PT_TEST_MEASUREMENT_CONFIG.length + 1) {
             return;
         }
 
-        let filteredMeasurements = [...MEASUREMENT_PAGE_CONFIG];
+        let filteredMeasurements = [...PT_TEST_MEASUREMENT_CONFIG];
         filteredMeasurements.splice(0, measurementIndex);
         filteredMeasurements = filteredMeasurements.filter(m => this.state.formState[m.stateKey].length > 0);
 
         if (filteredMeasurements.length === 0) {
-            this.setMeasurementShown(MEASUREMENT_FINAL_PAGE);
+            this.setMeasurementShown(PT_TEST_FINAL_PAGE);
         } else {
             this.setMeasurementShown(filteredMeasurements[0].stateKey);
         }
@@ -189,7 +187,7 @@ export class AllMeasurementsPage extends Component {
         disabledValues.splice(index, 1)
         this.updateDisabled(measurementKey, disabledValues)
 
-        this.setMeasurementShown(MEASUREMENT_HOME_PAGE)
+        this.setMeasurementShown(PT_TEST_HOME_PAGE)
     }
 
     updateValues = (key, value) => {
@@ -199,7 +197,7 @@ export class AllMeasurementsPage extends Component {
                 [key]: value
             }
         }), () => {
-            this.saveMeasurements()
+            this.savePTTest()
         })
     }
 
@@ -210,7 +208,7 @@ export class AllMeasurementsPage extends Component {
                 [key]: validations
             }
         }), () => {
-            this.saveMeasurements()
+            this.savePTTest()
         })
     }
 
@@ -275,11 +273,11 @@ export class AllMeasurementsPage extends Component {
                 [key]: disabledValue
             }
         }), () => {
-            this.saveMeasurements()
+            this.savePTTest()
         })
     }
 
-    saveMeasurements = async (manual = false) => {
+    savePTTest = async (manual = false) => {
         if (this.saveQueued) {
             return;
         }
@@ -291,7 +289,7 @@ export class AllMeasurementsPage extends Component {
             this.saveQueued = true;
             setTimeout(() => {
                 this.saveQueued = false;
-                this.saveMeasurements();
+                this.savePTTest();
             }, THROTTLE_TIMEOUT);
             return;
         }
@@ -321,18 +319,19 @@ export class AllMeasurementsPage extends Component {
 
         getUserRequest.onsuccess = () => {
             const user = getUserRequest.result
+            const measurementData = user.tests[this.props.testKey].find(test => test.uuid === this.state.testUUID)
 
-            user.measurements = {
+            measurementData.data = {
                 formState: JSON.parse(JSON.stringify(this.state.formState)),
                 validations: JSON.parse(JSON.stringify(this.state.validations)),
                 disabledValues: JSON.parse(JSON.stringify(this.state.disabledValues)),
             }
 
             const nowISO = new Date().toISOString();
-            user.lastMeasurementsModified = nowISO;
+            measurementData.lastModified = nowISO;
 
             if (manual && passesValidation) {
-                user.lastMeasurementsSaved = nowISO;
+                measurementData.lastSaved = nowISO;
             }
 
             const updateRequest = store.put(user)
@@ -368,7 +367,7 @@ export class AllMeasurementsPage extends Component {
 
     renderNavIcon = () => {
         return (
-            <div id="measurements-nav-icon" key="measurements-nav" className="nav-icon p-2" onClick={() => this.toggleNav()}>
+            <div id="pt-test-nav-icon" key="pt-test-nav" className="nav-icon p-2" onClick={() => this.toggleNav()}>
                 <h1>
                     <i className={`bi bi-${this.state.navShown ? 'x' : 'list'}`}></i>
                 </h1>
@@ -382,8 +381,8 @@ export class AllMeasurementsPage extends Component {
         }
 
         return (
-            <div id="measurements-nav" className="w-100 pb-5 overflow-auto user-select-none" style={{ height: window.innerHeight - document.getElementById('nav-icons-container').getBoundingClientRect().bottom }}>
-                <h2 className="nav-entry-link text-center mt-5 cursor-p text-decoration-underline" onClick={() => this.setMeasurementShown(MEASUREMENT_HOME_PAGE)}>Measurement Selection</h2>
+            <div id="pt-test-nav" className="w-100 pb-5 overflow-auto user-select-none" style={{ height: window.innerHeight - document.getElementById('nav-icons-container').getBoundingClientRect().bottom }}>
+                <h2 className="nav-entry-link text-center mt-5 cursor-p text-decoration-underline" onClick={() => this.setMeasurementShown(PT_TEST_HOME_PAGE)}>Measurement Selection</h2>
                 {Object.entries(this.state.formState).map(([key, measurements]) => {
                     if (measurements.length === 0) {
                         return null
@@ -394,7 +393,7 @@ export class AllMeasurementsPage extends Component {
 
                     return <h3 key={`nav-entry-${key}`} className={`nav-entry-link text-center mt-5 cursor-p text-decoration-underline ${disabled ? 'text-warning' : (valid ? 'text-success' : 'text-danger')}`} onClick={() => this.setMeasurementShown(key)}>{MEASUREMENT_CONFIGS[key]?.defaultLabel || key}</h3>
                 })}
-                <h2 className="nav-entry-link text-center mt-5 cursor-p text-decoration-underline" onClick={() => this.setMeasurementShown(MEASUREMENT_FINAL_PAGE)}>Summary</h2>
+                <h2 className="nav-entry-link text-center mt-5 cursor-p text-decoration-underline" onClick={() => this.setMeasurementShown(PT_TEST_FINAL_PAGE)}>Summary</h2>
             </div>
         )
     }
@@ -402,9 +401,9 @@ export class AllMeasurementsPage extends Component {
     renderMeasurementPage = () => {
         const name = this.state.user.uuid !== 'guest' ? `(${this.state.user.name})` : '';
         const measurementKey = this.props.shownMeasurement;
-        if (measurementKey === MEASUREMENT_HOME_PAGE) {
-            return this.renderMeasurementSelection()
-        } else if (measurementKey === MEASUREMENT_FINAL_PAGE) {
+        if (measurementKey === PT_TEST_HOME_PAGE) {
+            return this.renderPTTestHomePage()
+        } else if (measurementKey === PT_TEST_FINAL_PAGE) {
             return (
                 <SummaryPage
                     name={name}
@@ -419,7 +418,7 @@ export class AllMeasurementsPage extends Component {
             )
         }
 
-        const MeasurementComponent = MEASUREMENT_PAGE_CONFIG.find(m => m.stateKey === measurementKey)?.component;
+        const MeasurementComponent = PT_TEST_MEASUREMENT_CONFIG.find(m => m.stateKey === measurementKey)?.component;
 
         return (
             <>
@@ -449,14 +448,29 @@ export class AllMeasurementsPage extends Component {
         )
     }
 
+    renderPTTestHomePage = () => {
+        const measurementData = this.state.user.tests[this.props.testKey].find(test => test.uuid === this.state.testUUID);
+        return (
+            <>
+                <Title>{measurementData?.name} ({this.state.user?.name})</Title>
+                {this.props.homePageComponent && React.createElement(this.props.homePageComponent)}
+                {this.props.permittedMeasurements &&
+                    <div className="d-flex flex-column align-items-center mt-5 mb-3 w-100">
+                        <h4 className="text-center w-75">This is a preset test, so the measurements have already been selected and cannot be modified. Please review the measurements and scroll to the bottom to proceed to the measurements.</h4>
+                    </div>
+                }
+                {this.renderMeasurementSelection()}
+            </>
+        )
+    }
+
     renderMeasurementSelection = () => {
         const name = this.state.user.uuid !== 'guest' ? `(${this.state.user.name})` : '';
 
         return (<>
-            <Title>Measurement Selection {name}</Title>
             <div className="measurements-list d-flex flex-column align-items-center">
                 <div className="utility-item w-100">
-                    {MEASUREMENT_PAGE_CONFIG.map(({ name, component, stateKey, guestOnly, oneMax }) => {
+                    {PT_TEST_MEASUREMENT_CONFIG.map(({ name, component, stateKey, guestOnly, oneMax }) => {
                         if (guestOnly && this.state.user.uuid !== 'guest') return null
                         return (
                             <MultipleMeasurements
@@ -472,6 +486,8 @@ export class AllMeasurementsPage extends Component {
                                 onValidationChange={(validations) => this.updateValidations(stateKey, validations)}
                                 onDisabledChange={(disabledValues) => this.updateDisabled(stateKey, disabledValues)}
                                 isDisabled={this.isDisabled}
+                                buttonHidden={!this.props.permittedMeasurements || this.props.permittedMeasurements.includes(stateKey)}
+                                buttonDisabledAndChecked={this.props.permittedMeasurements ? true : false} // if permittedMeasurements is provided, the measurements cannot be selected (is a preset)
                                 getDisableCaseComputedText={this.getDisableCaseComputedText}
                                 // oneMax={this.state.user.uuid !== 'guest' ? oneMax : false}
                                 // for now, only one measurement of each type is allowed
@@ -485,7 +501,7 @@ export class AllMeasurementsPage extends Component {
     }
 
     render() {
-        if (!this.state.user) {
+        if (!this.state.user || !this.state.testUUID) {
             if (this.state.loaded) {
                 return <Navigate to="/existing-patient" replace={true} />
             }
@@ -496,17 +512,17 @@ export class AllMeasurementsPage extends Component {
         const [relativeMeasurementIndex, relativeMeasurementLength] = this.getRelativeMeasurementIndexByKey(this.props.shownMeasurement);
 
         const dontShowBack = measurementIndex === 0;
-        const dontShowNext = relativeMeasurementLength === 1 || this.props.shownMeasurement === MEASUREMENT_FINAL_PAGE;
+        const dontShowNext = relativeMeasurementLength === 1 || this.props.shownMeasurement === PT_TEST_FINAL_PAGE;
 
         return (
-            <div id="measurements" className={`${this.state.navShown ? 'user-select-none pe-none' : ''}`}>
+            <div id="pt-test" className={`${this.state.navShown ? 'user-select-none pe-none' : ''}`}>
                 {this.renderMeasurementPage()}
-                <div id="measurements-previous-next" className={`d-flex ${dontShowBack || dontShowNext ? 'justify-content-center' : 'justify-content-between'}`}>
+                <div id="pt-test-previous-next" className={`d-flex ${dontShowBack || dontShowNext ? 'justify-content-center' : 'justify-content-between'}`}>
                     <button className={`btn btn-secondary m-4 ${dontShowBack ? 'd-none' : ''}`} onClick={() => this.previousMeasurement()}>
-                        {relativeMeasurementIndex === 1 ? 'Back to Measurement Selection' : this.props.shownMeasurement === MEASUREMENT_FINAL_PAGE ? 'Back to Measurements' : 'Previous Measurement'}
+                        {relativeMeasurementIndex === 1 ? 'Back to Measurement Selection' : this.props.shownMeasurement === PT_TEST_FINAL_PAGE ? 'Back to Measurements' : 'Previous Measurement'}
                     </button>
                     <button className={`btn btn-primary m-4 ${dontShowNext ? 'd-none' : ''}`} onClick={() => this.nextMeasurement()}>
-                        {relativeMeasurementIndex === relativeMeasurementLength - 1 ? 'Finish' : this.props.shownMeasurement === MEASUREMENT_HOME_PAGE ? 'Proceed to Measurements' : 'Next Measurement'}
+                        {relativeMeasurementIndex === relativeMeasurementLength - 1 ? 'Finish' : this.props.shownMeasurement === PT_TEST_HOME_PAGE ? 'Proceed to Measurements' : 'Next Measurement'}
                     </button>
                 </div>
             </div>
@@ -514,7 +530,7 @@ export class AllMeasurementsPage extends Component {
     }
 }
 
-export const MEASUREMENT_PAGE_CONFIG = [
+export const PT_TEST_MEASUREMENT_CONFIG = [
     {
         name: 'Name',
         component: Name,
@@ -580,4 +596,4 @@ export const MEASUREMENT_PAGE_CONFIG = [
     },
 ]
 
-export default AllMeasurementsPage
+export default PhysicalTherapyTest

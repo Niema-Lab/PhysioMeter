@@ -1,9 +1,15 @@
 import React, { Component } from 'react'
 
 export class MultipleMeasurements extends Component {
+    componentDidMount() {
+        if (!this.props.buttonHidden && this.props.buttonDisabledAndChecked && !this.props.measurements?.length) {
+            this.addMeasurement()
+        }
+    }
+
     handleMeasurementAction = () => {
         if (this.props.oneMax && this.props.measurements.length === 1) {
-            this.deleteMeasurement(0)
+            this.deleteMeasurement(0) // only one measurement allowed, so delete existing measurement if it exists
             return;
         }
 
@@ -13,7 +19,7 @@ export class MultipleMeasurements extends Component {
     addMeasurement = () => {
         const measurementConfig = this.props.measurementConfig;
         const measurements = [...this.props.measurements];
-        measurements.push({ label: `${this.props.name} ${measurements.length === 0 ? '' : measurements.length + 1}`, value: '' , lastModified: new Date().toISOString()});
+        measurements.push({ label: `${this.props.name} ${measurements.length === 0 ? '' : measurements.length + 1}`, value: '', lastModified: new Date().toISOString() });
         this.props.onChange(measurements);
         if (this.props.validations) {
             const validations = [...this.props.validations[this.props.measurementKey]]
@@ -77,10 +83,19 @@ export class MultipleMeasurements extends Component {
     }
 
     render() {
+        if (this.props.buttonHidden) {
+            return;
+        }
         return (
-            <div className="multiple-measurements">
+            <div className={`multiple-measurements ${this.props.buttonDisabledAndChecked ? 'disabled' : ''}`}>
                 <h2 className={`measurement-header text-center w-100`}>
-                    {this.props.name} <i className={`bi ms-3 cursor-p ${this.props.oneMax && this.props.measurements.length === 1 ? 'text-success bi-check-square-fill' : 'text-danger bi-square'}`} onClick={this.handleMeasurementAction} title={`${this.props.oneMax && this.props.measurements.length === 1 ? 'Remove measurement' : 'Add measurement'}`}></i>
+                    {this.props.name}
+                    <i
+                        className={`bi ms-3 cursor-p ${this.props.oneMax && this.props.measurements.length === 1 ? 'text-success bi-check-square-fill' : 'text-danger bi-square'} ${this.props.buttonDisabled && 'pe-none'}`}
+                        onClick={this.handleMeasurementAction}
+                        title={`${this.props.oneMax && this.props.measurements.length === 1 ? 'Remove measurement' : 'Add measurement'}`}
+                    >
+                    </i>
                 </h2>
             </div>
         )

@@ -25,6 +25,7 @@ Final chores:
   - [ ] Custom measurement components
   - [ ] Measurements component
 - [ ] Dark mode?
+- [ ] 404 Page and proper checking of url params (uuid, testUUID)
 
 ## Potential future features
 

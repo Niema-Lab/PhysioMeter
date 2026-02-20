@@ -93,9 +93,9 @@ export class ExistingUser extends Component {
 
         return (
             <div id="existing-patient">
-                <Title>Select Existing Patient</Title>
+                <Title>Existing Patients</Title>
                 <Link to="/new-patient" className="link text-decoration-underline"><h2>Create New Patient</h2></Link>
-                <Title>Existing Patients ({this.state.users.length - 1})</Title>
+                <Title>Select Existing Patient ({this.state.users.length - 1})</Title>
                 {this.state.submitText && (
                     <Text value={this.state.submitText} type={this.state.submitTextType} />
                 )}
@@ -111,22 +111,24 @@ export class ExistingUser extends Component {
                         <thead>
                             <tr>
                                 <th className="cursor-p" onClick={() => this.toggleSort('name')}>
-                                    Name {this.sortIcon('name')}
+                                    <h5>Name {this.sortIcon('name')}</h5>
                                 </th>
                                 <th className="cursor-p" onClick={() => this.toggleSort('createdAt')}>
-                                    Created {this.sortIcon('createdAt')}
+                                    <h5>Created {this.sortIcon('createdAt')}</h5>
                                 </th>
-                                <th>Delete Patient</th>
+                                <th>
+                                    <h5>Delete Patient</h5>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
                             {filtered.map(user => (
                                 <tr key={user.uuid}>
                                     <td>
-                                        <Link to={`/patient-home?uuid=${user.uuid}`}>{user.name}</Link>
+                                        <h5 className="m-0"><Link to={`/patient-home?uuid=${user.uuid}`}>{user.name}</Link></h5>
                                     </td>
-                                    <td>{new Date(user.createdAt).toLocaleString()}</td>
-                                    <td>
+                                    <td style={{verticalAlign: 'middle'}}>{new Date(user.createdAt).toLocaleString()}</td>
+                                    <td style={{verticalAlign: 'middle'}}>
                                         <i className="bi bi-trash-fill text-danger cursor-p" onClick={() => this.deleteUser(user)} aria-label={`Delete patient ${user.name}`}></i>
                                     </td>
                                 </tr>

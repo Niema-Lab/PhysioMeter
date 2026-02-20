@@ -63,6 +63,10 @@ input {
   }
 }
 
+.disabled {
+  opacity: 0.5;
+}
+
 #app-content {
   transition: 0.25s;
 }
@@ -125,7 +129,7 @@ input {
   }
 }
 
-#measurements-nav {
+#pt-test-nav {
   height: 90%;
 }
 
@@ -221,7 +225,7 @@ input {
   }
 }
 
-#measurements-previous-next {
+#pt-test-previous-next {
   .btn {
     font-size: calc(0.8 * var(--base-font-size));
   }

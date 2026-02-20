@@ -62,7 +62,7 @@ export const MEASUREMENT_CONFIGS = {
         defaultLabel: 'Date of Birth',
         placeholder: 'mm/dd/yyyy',
         validationFunction: (value) => {
-            return Boolean(Date.parse(value))
+            return Boolean(Date.parse(value)) && new Date(value) < new Date(Date.now() - 365 * 24 * 60 * 60 * 1000)
         }
     },
     sex: {

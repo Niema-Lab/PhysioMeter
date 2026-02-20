@@ -124,11 +124,11 @@ export class ExistingUser extends Component {
                         <tbody>
                             {filtered.map(user => (
                                 <tr key={user.uuid}>
-                                    <td>
+                                    <td className="align-middle">
                                         <h5 className="m-0"><Link to={`/patient-home?uuid=${user.uuid}`}>{user.name}</Link></h5>
                                     </td>
-                                    <td style={{verticalAlign: 'middle'}}>{new Date(user.createdAt).toLocaleString()}</td>
-                                    <td style={{verticalAlign: 'middle'}}>
+                                    <td className="align-middle">{new Date(user.createdAt).toLocaleString()}</td>
+                                    <td className="align-middle">
                                         <i className="bi bi-trash-fill text-danger cursor-p" onClick={() => this.deleteUser(user)} aria-label={`Delete patient ${user.name}`}></i>
                                     </td>
                                 </tr>

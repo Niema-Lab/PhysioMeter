@@ -10,11 +10,10 @@ Next day:
 
 Next week:
 
-- [ ] Build Calculations page
-- [ ] Build Interpretations page
-- [ ] Build Patient Tests page
 - [ ] Implement sessions for the measurements / tests?
 - [ ] Implement multiple tabs open for one / multiple patients?
+- [ ] 404 Page and proper checking of url params (uuid, testUUID)
+- [ ] Import data feature?
 
 Final chores:
 
@@ -25,7 +24,6 @@ Final chores:
   - [ ] Custom measurement components
   - [ ] Measurements component
 - [ ] Dark mode?
-- [ ] 404 Page and proper checking of url params (uuid, testUUID)
 
 ## Potential future features
 

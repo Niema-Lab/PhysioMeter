@@ -3,11 +3,11 @@ import Submit from '../form/Submit'
 import Title from '../form/Title'
 import { downloadCSV, generateMeasurementsCSVRows } from '../../utils/csvExport'
 
-function MeasurementSummary({ formState, validations, isDisabled, patientName }) {
-    const hasData = Object.entries(formState).some(([key, measurements]) =>
-        measurements && measurements.length > 0 && MEASUREMENT_CONFIGS[key]
-    )
+export const hasData = (formState) => Object.entries(formState).some(([key, measurements]) =>
+    measurements && measurements.length > 0 && MEASUREMENT_CONFIGS[key]
+)
 
+function MeasurementSummary({ formState, validations, isDisabled, patientName }) {
     const exportMeasurements = () => {
         const date = new Date().toISOString().split('T')[0]
         const rows = generateMeasurementsCSVRows(formState, isDisabled)
@@ -32,7 +32,7 @@ function MeasurementSummary({ formState, validations, isDisabled, patientName })
     return (
         <div className="measurement-summary">
             <Title>Measurements</Title>
-            {!hasData ? (
+            {!hasData(formState) ? (
                 <p className="text-center text-muted">No measurements recorded.</p>
             ) : (<>
             <div className="mt-4 px-3">

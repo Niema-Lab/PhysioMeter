@@ -21,9 +21,23 @@ const createTest = (key) => {
 
 export const PT_TEST_CONFIG = [
     {
+        testKey: 'utilities',
+        defaultTestName: 'Utilities',
+        permittedMeasurements: null, // all measurements selected,
+        homePageComponent: function UtilitiesHomePage() {
+            return (
+
+                <div className="d-flex flex-column align-items-center mt-5 mb-3 w-100">
+                    <h4 className="text-center text-danger w-75">This is the Utilites page, so NO information is saved. If you close or reload the page, all data will be lost.</h4>
+                </div>
+            )
+        }
+    },
+    {
+        // similar to utilites, but for patients
         testKey: 'measurements',
-        defaultTestName: 'All Measurements',
-        permittedMeasurements: null, // all measurements permitted
+        defaultTestName: 'Measurements',
+        permittedMeasurements: null, // all measurements selected
     },
     {
         testKey: 'annualMobilityScreening',

@@ -49,20 +49,10 @@ const getCurrentUser = async () => {
     const uuid = urlParams.get('uuid')
 
     if (!uuid) {
-        return await getGuestUser()
+        return null;
     }
 
     return await getUser(uuid)
-}
-
-const getGuestUser = async () => {
-    const guestUser = await getUser('guest');
-
-    if (!guestUser) {
-        return await createDBUser('Guest', 'guest')
-    }
-
-    return guestUser
 }
 
 const getCurrentTestUUID = () => {
@@ -140,4 +130,4 @@ const createDBUser = async (name, uuid) => {
     })
 }
 
-export { openDB, createDBUser, getCurrentUser, getGuestUser, getCurrentTestUUID }
+export { openDB, createDBUser, getCurrentUser, getCurrentTestUUID }

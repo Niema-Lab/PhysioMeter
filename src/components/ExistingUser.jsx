@@ -70,7 +70,6 @@ export class ExistingUser extends Component {
     getFilteredUsers = () => {
         const { users, search, sortKey, sortAsc } = this.state
         return users
-            .filter(u => u.uuid !== 'guest')
             .filter(u => u.name.toLowerCase().includes(search.toLowerCase()))
             .sort((a, b) => {
                 const valA = sortKey === 'createdAt' ? (a.createdAt || 0) : (a[sortKey] || '').toLowerCase()
@@ -95,7 +94,7 @@ export class ExistingUser extends Component {
             <div id="existing-patient">
                 <Title>Existing Patients</Title>
                 <Link to="/new-patient" className="link text-decoration-underline"><h2>Create New Patient</h2></Link>
-                <Title>Select Existing Patient ({this.state.users.length - 1})</Title>
+                <Title>Select Existing Patient ({this.state.users.length})</Title>
                 {this.state.submitText && (
                     <Text value={this.state.submitText} type={this.state.submitTextType} />
                 )}

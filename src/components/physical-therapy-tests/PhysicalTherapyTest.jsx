@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import { Navigate } from "react-router-dom"
 import { Name, DoB, Sex, VitalSigns, FiveMeterUsualWalkingSpeed, FiveMeterFastWalkingSpeed, ThirtySecondSitToStand, AssistiveDevice, FourSquareStepTest, ModifiedFourSquareStepTest, TimedUpAndGo, TimedUpAndGoCognitive, MEASUREMENT_CONFIGS } from '../measurements/MeasurementFactory'
 import MultipleMeasurements from '../measurements/MultipleMeasurements'
+import { hasData } from '../measurements/MeasurementSummary'
 import SummaryPage from '../SummaryPage'
 import { getCurrentUser, getCurrentTestUUID, openDB } from '../../DB'
 import Title from '../form/Title'
@@ -40,6 +41,9 @@ export class PhysicalTherapyTest extends Component {
         const user = await getCurrentUser()
         const testUUID = getCurrentTestUUID();
         this.setState({ user, testUUID, loaded: true }, () => {
+            if (!this.state.user || !this.state.testUUID) { // utilities page
+                return;
+            }
             const measurementData = user.tests[this.props.testKey].find(test => test.uuid === this.state.testUUID)?.data;
             if (measurementData?.formState && Object.keys(measurementData.formState).length > 0) {
                 const formState = JSON.parse(JSON.stringify(measurementData.formState))
@@ -72,9 +76,10 @@ export class PhysicalTherapyTest extends Component {
 
     setMeasurementShown = (measurementKey) => {
         const uuid = this.state.user?.uuid;
-        let params = "?testUUID=" + this.state.testUUID;
-        if (uuid && uuid !== "guest") {
-            params += `&uuid=${uuid}`;
+        let params = "";
+        // no params if it's the utilities page (no user)
+        if (uuid) {
+            params = `?testUUID=${this.state.testUUID}&uuid=${uuid}`;
         }
 
         window.scrollTo(0, 0);
@@ -278,6 +283,10 @@ export class PhysicalTherapyTest extends Component {
     }
 
     savePTTest = async (manual = false) => {
+        if (!this.state.user) {
+            return;
+        }
+
         if (this.saveQueued) {
             return;
         }
@@ -382,7 +391,7 @@ export class PhysicalTherapyTest extends Component {
 
         return (
             <div id="pt-test-nav" className="w-100 pb-5 overflow-auto user-select-none" style={{ height: window.innerHeight - document.getElementById('nav-icons-container').getBoundingClientRect().bottom }}>
-                <h2 className="nav-entry-link text-center mt-5 cursor-p text-decoration-underline" onClick={() => this.setMeasurementShown(PT_TEST_HOME_PAGE)}>Measurement Selection</h2>
+                <h2 className="nav-entry-link text-center mt-5 cursor-p text-decoration-underline" onClick={() => this.setMeasurementShown(PT_TEST_HOME_PAGE)}>Overview</h2>
                 {Object.entries(this.state.formState).map(([key, measurements]) => {
                     if (measurements.length === 0) {
                         return null
@@ -399,15 +408,19 @@ export class PhysicalTherapyTest extends Component {
     }
 
     renderMeasurementPage = () => {
-        const name = this.state.user.uuid !== 'guest' ? `(${this.state.user.name})` : '';
+        const name = this.state.user ? `(${this.state.user.name})` : '';
         const measurementKey = this.props.shownMeasurement;
         if (measurementKey === PT_TEST_HOME_PAGE) {
             return this.renderPTTestHomePage()
         } else if (measurementKey === PT_TEST_FINAL_PAGE) {
+            if (!hasData(this.state.formState)) {
+                return <Navigate to={`/${this.props.testKey}/home`} replace />
+            }
+
             return (
                 <SummaryPage
                     name={name}
-                    patientName={this.state.user?.name || 'guest'}
+                    patientName={this.state?.user?.name || 'guest'}
                     submitText={this.state.submitText}
                     submitTextType={this.state.submitTextType}
                     formState={this.state.formState}
@@ -416,6 +429,11 @@ export class PhysicalTherapyTest extends Component {
                     isDisabled={this.isDisabled}
                 />
             )
+        }
+
+        const currentValues = this.state.formState[measurementKey];
+        if (!currentValues || currentValues.length === 0) {
+            return <Navigate to={`/${this.props.testKey}/home`} replace />
         }
 
         const MeasurementComponent = PT_TEST_MEASUREMENT_CONFIG.find(m => m.stateKey === measurementKey)?.component;
@@ -449,29 +467,23 @@ export class PhysicalTherapyTest extends Component {
     }
 
     renderPTTestHomePage = () => {
-        const measurementData = this.state.user.tests[this.props.testKey].find(test => test.uuid === this.state.testUUID);
+        const measurementData = this.state.user && this.state.user.tests[this.props.testKey].find(test => test.uuid === this.state.testUUID);
+        const titleName = measurementData?.name ? `{measurementData.name} (${this.state.user.name})` : 'Utilities';
         return (
             <>
-                <Title>{measurementData?.name} ({this.state.user?.name})</Title>
-                {this.props.homePageComponent && React.createElement(this.props.homePageComponent)}
-                {this.props.permittedMeasurements &&
-                    <div className="d-flex flex-column align-items-center mt-5 mb-3 w-100">
-                        <h4 className="text-center w-75">This is a preset test, so the measurements have already been selected and cannot be modified. Please review the measurements and scroll to the bottom to proceed to the measurements.</h4>
-                    </div>
-                }
+                <Title>{titleName}</Title>
+                {this.props.homePageComponent && this.props.homePageComponent()}
                 {this.renderMeasurementSelection()}
             </>
         )
     }
 
     renderMeasurementSelection = () => {
-        const name = this.state.user.uuid !== 'guest' ? `(${this.state.user.name})` : '';
-
         return (<>
             <div className="measurements-list d-flex flex-column align-items-center">
                 <div className="utility-item w-100">
                     {PT_TEST_MEASUREMENT_CONFIG.map(({ name, component, stateKey, guestOnly, oneMax }) => {
-                        if (guestOnly && this.state.user.uuid !== 'guest') return null
+                        if (guestOnly && this.state.user) return null
                         return (
                             <MultipleMeasurements
                                 key={stateKey}
@@ -487,7 +499,7 @@ export class PhysicalTherapyTest extends Component {
                                 onDisabledChange={(disabledValues) => this.updateDisabled(stateKey, disabledValues)}
                                 isDisabled={this.isDisabled}
                                 buttonHidden={this.props.permittedMeasurements && this.props.permittedMeasurements.includes(stateKey)}
-                                buttonDisabledAndChecked={this.props.permittedMeasurements ? true : false} // if permittedMeasurements is provided, the measurements cannot be selected (is a preset)
+                                buttonDisabledAndChecked={true} // currently, measurements can never be modified (even in the Utilities page, they're all selected)
                                 getDisableCaseComputedText={this.getDisableCaseComputedText}
                                 // oneMax={this.state.user.uuid !== 'guest' ? oneMax : false}
                                 // for now, only one measurement of each type is allowed
@@ -501,10 +513,7 @@ export class PhysicalTherapyTest extends Component {
     }
 
     render() {
-        if (!this.state.user || !this.state.testUUID) {
-            if (this.state.loaded) {
-                return <Navigate to="/existing-patient" replace={true} />
-            }
+        if (!this.state.loaded) {
             return <LoadingPage />
         }
 

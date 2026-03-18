@@ -21,7 +21,7 @@ function getAge(formState) {
     return CALCULATION_SECTION_CONFIGS.age.valueFunction(formState)
 }
 
-function getVitalSigns(formState) {
+export function getVitalSigns(formState) {
     const vitals = formState.vitalSigns?.[0]?.value
     if (!vitals || !Array.isArray(vitals)) return null
 
@@ -42,6 +42,21 @@ function getVitalSigns(formState) {
         diastolic,
         oxygenSaturation: oxygenSaturation !== null && oxygenSaturation !== undefined && oxygenSaturation !== '' ? parseFloat(oxygenSaturation) : null,
     }
+}
+
+export function isIneligibleForPhysicalActivity(formState) {
+    const vitals = getVitalSigns(formState)
+    if (!vitals) return false
+
+    const { restingPulseRate, systolic, diastolic, oxygenSaturation } = vitals
+    if (restingPulseRate === null || systolic === null || diastolic === null || oxygenSaturation === null) return false
+
+    return (
+        restingPulseRate > 100 ||
+        oxygenSaturation < 90 ||
+        systolic > 180 || diastolic > 110 ||
+        systolic < 90 || diastolic < 60
+    )
 }
 
 function getWalkingSpeedMps(formState, calculationKey) {
@@ -206,16 +221,9 @@ export const INTERPRETATION_SECTION_CONFIGS = {
             if (!vitals) return null
 
             const { restingPulseRate, systolic, diastolic, oxygenSaturation } = vitals
-
             if (restingPulseRate === null || systolic === null || diastolic === null || oxygenSaturation === null) return null
 
-            const ineligible =
-                restingPulseRate > 100 ||
-                oxygenSaturation < 90 ||
-                systolic > 180 || diastolic > 110 ||
-                systolic < 90 || diastolic < 60
-
-            if (ineligible) {
+            if (isIneligibleForPhysicalActivity(formState)) {
                 return [{ text: 'This patient is ineligible for physical activity.', type: 'danger' }]
             }
             return [{ text: 'This patient is eligible for physical activity.', type: 'success' }]

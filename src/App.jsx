@@ -5,6 +5,7 @@ import { HashRouter, Routes, Route, useLocation, useNavigate } from 'react-route
 import Home from './components/Home'
 import PatientHome from './components/PatientHome'
 import PatientTests from './components/PatientTests'
+import Presets from './components/Presets'
 import { PT_TEST_MEASUREMENT_CONFIG, PT_TEST_HOME_PAGE, PT_TEST_FINAL_PAGE } from './components/physical-therapy-tests/PhysicalTherapyTest'
 import { PT_TEST_CONFIG } from './components/physical-therapy-tests/PhysicalTherapyTestFactory'
 import NewUser from './components/NewUser'
@@ -40,6 +41,7 @@ function AppContent() {
           <Route path="/" element={<Home />} />
           <Route path="/patient-home" element={<PatientHome />} />
           <Route path="/patient-tests" element={<PatientTests />} />
+          <Route path="/presets" element={<Presets />} />
           {PT_TEST_CONFIG.map(({ testKey, component, permittedMeasurements }) => {
             const permittedMeasurementConfigs = permittedMeasurements ? PT_TEST_MEASUREMENT_CONFIG.filter(m => permittedMeasurements.includes(m.name)) : PT_TEST_MEASUREMENT_CONFIG;
             return (

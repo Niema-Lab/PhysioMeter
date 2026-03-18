@@ -1,11 +1,9 @@
-import MeasurementSummary from './measurements/MeasurementSummary'
-import AllCalculations from './calculations/AllCalculations'
-import AllInterpretations from './interpretations/AllInterpretations'
+import GroupedSummary from './GroupedSummary'
 import Text from './form/Text'
 import Title from './form/Title'
 import Submit from './form/Submit'
-import { downloadCSV, generateMeasurementsCSVRows, generateCalculationsCSVRows, generateInterpretationsCSVRows } from '../utils/csvExport'
 import { hasData } from './measurements/MeasurementSummary'
+import { downloadCSV, generateMeasurementsCSVRows, generateCalculationsCSVRows, generateInterpretationsCSVRows } from '../utils/csvExport'
 
 function SummaryPage({ name, patientName, submitText, submitTextType, formState, validations, disabledValues, isDisabled }) {
     const date = new Date().toISOString().split('T')[0]
@@ -36,22 +34,11 @@ function SummaryPage({ name, patientName, submitText, submitTextType, formState,
             {submitText &&
                 <Text value={submitText} type={submitTextType} />
             }
-            <MeasurementSummary
+            <GroupedSummary
                 formState={formState}
                 validations={validations}
+                disabledValues={disabledValues}
                 isDisabled={isDisabled}
-                patientName={patientName}
-            />
-            <AllCalculations
-                formState={formState}
-                validations={validations}
-                disabledValues={disabledValues}
-                patientName={patientName}
-            />
-            <AllInterpretations
-                formState={formState}
-                validations={validations}
-                disabledValues={disabledValues}
                 patientName={patientName}
             />
         </>

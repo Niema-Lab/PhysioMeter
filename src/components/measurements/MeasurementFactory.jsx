@@ -9,6 +9,7 @@ import FourSquareStepTestText from './instructions/FourSquareStepTest.md?raw'
 import ModifiedFourSquareStepTestText from './instructions/ModifiedFourSquareStepTest.md?raw'
 import TimedUpAndGoText from './instructions/TimedUpAndGo.md?raw'
 import TimedUpAndGoCognitiveText from './instructions/TimedUpAndGoCognitive.md?raw'
+import { isIneligibleForPhysicalActivity } from '../interpretations/InterpretationFactory'
 
 const MAX_LENGTH = 1000
 const MAX_SECONDS = 3600
@@ -17,13 +18,13 @@ const SEX_OPTIONS = ['Male', 'Female']
 const ASSISTIVE_DEVICE_OPTIONS = ['None', 'Straight Cane', 'Small Based Quad Cane', 'Large Based Quad Cane', 'Hemi Walker', 'Front Wheeled Walker', 'Four Wheeled Walker']
 
 const PHYSICAL_ACTIVITY_DISABLED_CASE = {
-    text: "You've selected Measurements that require physical activity, but have not measured or invalid Vital Signs. Uncheck this box to bypass the Vital Signs requirement.",
+    text: "This patient is ineligible for physical activity. Uncheck this box to bypass the Vital Signs requirement.",
     // when to show the checkbox to the user to override the disabled state (otherwise the disabled case is not applied) 
     showOverride: (formState, validations, disabledValues, measurementKey) => {
         const vitals = validations['vitalSigns']
         const validVitals = vitals && Array.isArray(vitals) && vitals.length > 0 && vitals.every(vital => Array.isArray(vital) && vital.every(v => v === true))
-        // display if vitals are not valid
-        return !validVitals
+        // show if vitals are not valid (missing/incomplete) or if vitals indicate ineligibility
+        return !validVitals || isIneligibleForPhysicalActivity(formState)
     }
 }
 
@@ -209,7 +210,15 @@ export const MEASUREMENT_CONFIGS = {
         numTrials: 2,
         validationFunction: (value) => {
             return value > 0 && value < MAX_SECONDS
-        }
+        },
+        // actionButton: Renders a navigation button on this measurement's page.
+        // targetMeasurement: the stateKey of the measurement to navigate to
+        // bypassDisabledCaseIndices: indices of disabledCasesComputed on the target to set to false (bypass)
+        actionButton: {
+            text: 'Patient does not clear apparatus, navigate to modified 4 square step protocol',
+            targetMeasurement: 'modifiedFourSquareStepTest',
+            bypassDisabledCaseIndices: [1], // index 1 = assistive device disabled case on modified FSST
+        },
     },
 
     modifiedFourSquareStepTest: {
@@ -262,6 +271,20 @@ export const MEASUREMENT_CONFIGS = {
             },
         ],
     },
+}
+
+// Creates a new measurement instance (entry, validation, disabledValues) for a given measurement key.
+// Used by MultipleMeasurements.addMeasurement and PhysicalTherapyTest.handleActionButton.
+export function createMeasurementInstance(measurementKey, existingCount = 0) {
+    const config = MEASUREMENT_CONFIGS[measurementKey]
+    const label = `${config?.defaultLabel || measurementKey} ${existingCount === 0 ? '' : existingCount + 1}`
+    const entry = { label, value: '', lastModified: new Date().toISOString() }
+    const validation = false
+    const disabledEntry = [
+        ...(new Array(config?.disabledCasesComputed?.length ?? 0).fill(true)),
+        ...(new Array(config?.disabledCases?.length ?? 0).fill(false)),
+    ]
+    return { entry, validation, disabledEntry }
 }
 
 const createMeasurement = (configKey) => {

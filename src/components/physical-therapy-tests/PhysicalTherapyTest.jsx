@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 
 import { Navigate } from "react-router-dom"
-import { Name, DoB, Sex, VitalSigns, FiveMeterUsualWalkingSpeed, FiveMeterFastWalkingSpeed, ThirtySecondSitToStand, AssistiveDevice, FourSquareStepTest, ModifiedFourSquareStepTest, TimedUpAndGo, TimedUpAndGoCognitive, MEASUREMENT_CONFIGS } from '../measurements/MeasurementFactory'
+import { Name, DoB, Sex, VitalSigns, FiveMeterUsualWalkingSpeed, FiveMeterFastWalkingSpeed, ThirtySecondSitToStand, AssistiveDevice, FourSquareStepTest, ModifiedFourSquareStepTest, TimedUpAndGo, TimedUpAndGoCognitive, MEASUREMENT_CONFIGS, createMeasurementInstance } from '../measurements/MeasurementFactory'
 import MultipleMeasurements from '../measurements/MultipleMeasurements'
 import { hasData } from '../measurements/MeasurementSummary'
+import InlineMeasurementInterpretations from '../interpretations/InlineMeasurementInterpretations'
 import SummaryPage from '../SummaryPage'
 import { getCurrentUser, getCurrentTestUUID, openDB } from '../../DB'
 import Title from '../form/Title'
@@ -40,23 +41,29 @@ export class PhysicalTherapyTest extends Component {
     componentDidMount = async () => {
         const user = await getCurrentUser()
         const testUUID = getCurrentTestUUID();
-        this.setState({ user, testUUID, loaded: true }, () => {
-            if (!this.state.user || !this.state.testUUID) { // utilities page
-                return;
-            }
-            const measurementData = user.tests[this.props.testKey].find(test => test.uuid === this.state.testUUID)?.data;
+
+        if (!user || !testUUID) {
+            // utilities page — no data to load
+            this.setState({ user, testUUID, loaded: true })
+        } else {
+            const measurementData = user.tests[this.props.testKey]?.find(test => test.uuid === testUUID)?.data;
             if (measurementData?.formState && Object.keys(measurementData.formState).length > 0) {
                 const formState = JSON.parse(JSON.stringify(measurementData.formState))
                 if (this.props.shownMeasurement !== PT_TEST_FINAL_PAGE && (formState[this.props.shownMeasurement] === undefined || formState[this.props.shownMeasurement].length === 0)) {
                     this.setMeasurementShown(PT_TEST_HOME_PAGE)
                 }
                 this.setState({
+                    user,
+                    testUUID,
+                    loaded: true,
                     formState,
                     validations: JSON.parse(JSON.stringify(measurementData.validations)),
                     disabledValues: JSON.parse(JSON.stringify(measurementData.disabledValues)),
                 })
+            } else {
+                this.setState({ user, testUUID, loaded: true })
             }
-        })
+        }
 
         this.props.setNavIcons([this.renderNavIcon()])
         this.props.setNav(this.renderNav())
@@ -193,6 +200,47 @@ export class PhysicalTherapyTest extends Component {
         this.updateDisabled(measurementKey, disabledValues)
 
         this.setMeasurementShown(PT_TEST_HOME_PAGE)
+    }
+
+    // Generic handler for actionButton configs on measurements (e.g., "does not clear apparatus" to Modified FSST).
+    // Reads actionButton config from MEASUREMENT_CONFIGS, creates target measurement if needed,
+    // bypasses specified disabled cases, and navigates to the target.
+    handleActionButton = (sourceMeasurementKey) => {
+        const actionButton = MEASUREMENT_CONFIGS[sourceMeasurementKey]?.actionButton
+        if (!actionButton) return
+
+        const { targetMeasurement, bypassDisabledCaseIndices = [] } = actionButton
+
+        const applyBypasses = (disabledEntries) => {
+            if (bypassDisabledCaseIndices.length === 0) return disabledEntries
+            return disabledEntries.map(entry => {
+                if (!entry) return entry
+                const updated = [...entry]
+                for (const idx of bypassDisabledCaseIndices) {
+                    if (idx < updated.length) updated[idx] = false
+                }
+                return updated
+            })
+        }
+
+        // Create target measurement instance if it doesn't exist
+        if (!this.state.formState[targetMeasurement] || this.state.formState[targetMeasurement].length === 0) {
+            const { entry, validation, disabledEntry } = createMeasurementInstance(targetMeasurement)
+            const disabledValues = applyBypasses([disabledEntry])
+
+            this.setState(prevState => ({
+                formState: { ...prevState.formState, [targetMeasurement]: [entry] },
+                validations: { ...prevState.validations, [targetMeasurement]: [validation] },
+                disabledValues: { ...prevState.disabledValues, [targetMeasurement]: disabledValues },
+            }), () => {
+                this.savePTTest()
+                this.setMeasurementShown(targetMeasurement)
+            })
+        } else {
+            const disabledValues = applyBypasses([...this.state.disabledValues[targetMeasurement]])
+            this.updateDisabled(targetMeasurement, disabledValues)
+            this.setMeasurementShown(targetMeasurement)
+        }
     }
 
     updateValues = (key, value) => {
@@ -438,6 +486,8 @@ export class PhysicalTherapyTest extends Component {
 
         const MeasurementComponent = PT_TEST_MEASUREMENT_CONFIG.find(m => m.stateKey === measurementKey)?.component;
 
+        const actionButton = MEASUREMENT_CONFIGS[measurementKey]?.actionButton
+
         return (
             <>
                 <Title>{MEASUREMENT_CONFIGS[measurementKey]?.defaultLabel || measurementKey} {name}</Title>
@@ -462,13 +512,24 @@ export class PhysicalTherapyTest extends Component {
                         )
                     })
                 }
+                {actionButton && (
+                    <div className="d-flex justify-content-center my-3">
+                        <button className="btn btn-warning" onClick={() => this.handleActionButton(measurementKey)}>
+                            {actionButton.text}
+                        </button>
+                    </div>
+                )}
+                <InlineMeasurementInterpretations
+                    measurementKey={measurementKey}
+                    formState={this.state.formState}
+                />
             </>
         )
     }
 
     renderPTTestHomePage = () => {
         const measurementData = this.state.user && this.state.user.tests[this.props.testKey].find(test => test.uuid === this.state.testUUID);
-        const titleName = measurementData?.name ? `{measurementData.name} (${this.state.user.name})` : 'Utilities';
+        const titleName = measurementData?.name ? `${measurementData.name} (${this.state.user.name})` : 'Utilities';
         return (
             <>
                 <Title>{titleName}</Title>

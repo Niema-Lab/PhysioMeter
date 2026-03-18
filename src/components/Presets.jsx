@@ -1,0 +1,34 @@
+import { PT_TEST_CONFIG } from './physical-therapy-tests/PhysicalTherapyTestFactory'
+import Title from './form/Title'
+
+function Presets() {
+    const presets = PT_TEST_CONFIG.filter(c => c.testKey !== 'utilities' && c.testKey !== 'measurements')
+
+    return (
+        <div id="presets">
+            <Title>Available Preset Protocols</Title>
+            <div className="d-flex flex-column align-items-center">
+                {presets.map(preset => (
+                    <div key={preset.testKey} className="card mb-3 w-75">
+                        <div className="card-body text-center">
+                            <h4>{preset.defaultTestName}</h4>
+                            {preset.permittedMeasurements && (
+                                <p>
+                                    Includes: {preset.permittedMeasurements.join(', ')}
+                                </p>
+                            )}
+                            <p className="fw-bold">
+                                To use this preset, go to a patient and select "Patient Tests".
+                            </p>
+                        </div>
+                    </div>
+                ))}
+                {presets.length === 0 && (
+                    <p className="text-muted">No preset protocols available.</p>
+                )}
+            </div>
+        </div>
+    )
+}
+
+export default Presets

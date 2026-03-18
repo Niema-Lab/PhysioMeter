@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { createMeasurementInstance } from './MeasurementFactory'
 
 export class MultipleMeasurements extends Component {
     componentDidMount() {
@@ -17,18 +18,15 @@ export class MultipleMeasurements extends Component {
     }
 
     addMeasurement = () => {
-        const measurementConfig = this.props.measurementConfig;
-        const measurements = [...this.props.measurements];
-        measurements.push({ label: `${this.props.name} ${measurements.length === 0 ? '' : measurements.length + 1}`, value: '', lastModified: new Date().toISOString() });
+        const { entry, validation, disabledEntry } = createMeasurementInstance(this.props.measurementKey, this.props.measurements.length)
+        const measurements = [...this.props.measurements, entry];
         this.props.onChange(measurements);
         if (this.props.validations) {
-            const validations = [...this.props.validations[this.props.measurementKey]]
-            validations.push(false);
+            const validations = [...this.props.validations[this.props.measurementKey], validation]
             this.props.onValidationChange(validations);
         }
         if (this.props.disabledValues) {
-            const disabledValues = [...this.props.disabledValues[this.props.measurementKey]];
-            disabledValues.push([...(new Array(measurementConfig?.disabledCasesComputed?.length ?? 0).fill(true)), ...(new Array(measurementConfig?.disabledCases?.length ?? 0).fill(false))]);
+            const disabledValues = [...this.props.disabledValues[this.props.measurementKey], disabledEntry]
             this.props.onDisabledChange(disabledValues);
         }
     }

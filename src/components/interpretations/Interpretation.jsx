@@ -1,8 +1,8 @@
 function Interpretation({ label, messages }) {
     return (
-        <div className="card mb-3 border-secondary" style={{ borderWidth: '2px' }}>
-            <div className="card-header bg-secondary text-white">
-                <h5 className="mb-0">{label}</h5>
+        <div className="card mb-3 border-primary" style={{ borderWidth: '2px' }}>
+            <div className="card-header bg-primary text-white">
+                <h5 className="mb-0">Interpretation: {label}</h5>
             </div>
             <div className="card-body p-2">
                 {messages.map((msg, i) => (

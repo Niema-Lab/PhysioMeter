@@ -44,9 +44,14 @@ export class PhysicalTherapyTest extends Component {
         const user = await getCurrentUser()
         const sessionUUID = getCurrentSessionUUID();
 
+        const updateNav = () => {
+            this.props.setNavIcons([this.renderPatientIcon(), this.renderNavIcon()])
+            this.props.setNav(this.renderNav())
+        }
+
         if (!user || !sessionUUID) {
             // utilities page — no data to load
-            this.setState({ user, sessionUUID, loaded: true })
+            this.setState({ user, sessionUUID, loaded: true }, updateNav)
         } else {
             const session = user.sessions?.find(s => s.uuid === sessionUUID);
             const measurementData = session?.data;
@@ -61,17 +66,15 @@ export class PhysicalTherapyTest extends Component {
                     validations: JSON.parse(JSON.stringify(measurementData.validations)),
                     disabledValues: JSON.parse(JSON.stringify(measurementData.disabledValues)),
                 }, () => {
+                    updateNav()
                     if (needsRedirectToHome) {
                         this.setMeasurementShown(PT_TEST_HOME_PAGE)
                     }
                 })
             } else {
-                this.setState({ user, sessionUUID, loaded: true })
+                this.setState({ user, sessionUUID, loaded: true }, updateNav)
             }
         }
-
-        this.props.setNavIcons([this.renderPatientIcon(), this.renderNavIcon()])
-        this.props.setNav(this.renderNav())
     }
 
     componentWillUnmount = () => {

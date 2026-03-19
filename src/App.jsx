@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState } from 'react'
-import { HashRouter, Routes, Route, useLocation, useNavigate } from 'react-router-dom'
+import { HashRouter, Routes, Route, useLocation, useNavigate, Link } from 'react-router-dom'
 
 import Home from './components/Home'
 import PatientPage from './components/PatientPage'
@@ -11,12 +11,15 @@ import { PT_TEST_MEASUREMENT_CONFIG, PT_TEST_HOME_PAGE, PT_TEST_FINAL_PAGE } fro
 import { PT_TEST_CONFIG } from './components/physical-therapy-tests/PhysicalTherapyTestFactory'
 import NewUser from './components/NewUser'
 import ExistingUser from './components/ExistingUser'
+import NotFound from './components/NotFound'
 
 function HomeIcon() {
   return (
     <div id="home-icon" className="nav-icon p-2">
       <h1>
-        <i className="bi bi-house-fill text-primary"></i>
+        <Link to="/">
+          <i className="bi bi-house-fill text-primary"></i>
+        </Link>
       </h1>
     </div>
   )
@@ -61,6 +64,7 @@ function AppContent() {
           })}
           <Route path="/new-patient" element={<NewUser />} />
           <Route path="/existing-patient" element={<ExistingUser />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
     </div>

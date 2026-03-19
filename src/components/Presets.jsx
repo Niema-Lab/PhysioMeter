@@ -18,7 +18,7 @@ function Presets() {
                                 </p>
                             )}
                             <p className="fw-bold">
-                                To use this preset, go to a patient and select "Patient Tests".
+                                To use this preset, go to a patient page and create a new session.
                             </p>
                         </div>
                     </div>

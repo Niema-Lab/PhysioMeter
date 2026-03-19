@@ -3,8 +3,9 @@ import { useState } from 'react'
 import { HashRouter, Routes, Route, useLocation, useNavigate } from 'react-router-dom'
 
 import Home from './components/Home'
-import PatientHome from './components/PatientHome'
-import PatientTests from './components/PatientTests'
+import PatientPage from './components/PatientPage'
+import PatientEdit from './components/PatientEdit'
+import NewSession from './components/NewSession'
 import Presets from './components/Presets'
 import { PT_TEST_MEASUREMENT_CONFIG, PT_TEST_HOME_PAGE, PT_TEST_FINAL_PAGE } from './components/physical-therapy-tests/PhysicalTherapyTest'
 import { PT_TEST_CONFIG } from './components/physical-therapy-tests/PhysicalTherapyTestFactory'
@@ -13,13 +14,11 @@ import ExistingUser from './components/ExistingUser'
 
 function HomeIcon() {
   return (
-    <a href="">
-      <div id="home-icon" className="nav-icon p-2">
-        <h1>
-          <i className="bi bi-house-fill"></i>
-        </h1>
-      </div>
-    </a>
+    <div id="home-icon" className="nav-icon p-2">
+      <h1>
+        <i className="bi bi-house-fill text-primary"></i>
+      </h1>
+    </div>
   )
 }
 
@@ -39,8 +38,9 @@ function AppContent() {
       <div id="app-content" style={{ opacity: nav ? 0.5 : 1 }}>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/patient-home" element={<PatientHome />} />
-          <Route path="/patient-tests" element={<PatientTests />} />
+          <Route path="/patient" element={<PatientPage />} />
+          <Route path="/patient/edit" element={<PatientEdit />} />
+          <Route path="/new-session" element={<NewSession />} />
           <Route path="/presets" element={<Presets />} />
           {PT_TEST_CONFIG.map(({ testKey, component, permittedMeasurements }) => {
             const permittedMeasurementConfigs = permittedMeasurements ? PT_TEST_MEASUREMENT_CONFIG.filter(m => permittedMeasurements.includes(m.name)) : PT_TEST_MEASUREMENT_CONFIG;

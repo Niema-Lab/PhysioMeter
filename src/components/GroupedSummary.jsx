@@ -114,12 +114,12 @@ function GroupedSummary({ formState, validations, disabledValues, isDisabled, pa
         <div className="grouped-summary">
             <Title>Results</Title>
             <div className="mt-4 px-3">
-                {MEASUREMENT_GROUP_MAP.map(({ stateKey, calculationKeys, interpretationKeys }) => {
+                {MEASUREMENT_GROUP_MAP.map(({ stateKey, calculationKeys, interpretationKeys, patientLevel }) => {
                     const measurements = formState[stateKey]
                     if (!measurements || measurements.length === 0) return null
 
                     const config = MEASUREMENT_CONFIGS[stateKey]
-                    if (!config) return null
+                    if (!config && !patientLevel) return null
 
                     const label = config.defaultLabel || stateKey
 
@@ -144,17 +144,31 @@ function GroupedSummary({ formState, validations, disabledValues, isDisabled, pa
                     return (
                         <div key={stateKey} className="measurement-group mb-4">
                             <h4 className="text-center mb-3">{label}</h4>
-                            {measurements.map((measurement, index) => (
-                                <MeasurementCard
-                                    key={`${stateKey}-${index}`}
-                                    measurementKey={stateKey}
-                                    measurement={measurement}
-                                    index={index}
-                                    config={config}
-                                    validations={validations}
-                                    isDisabled={isDisabled}
-                                />
-                            ))}
+                            {/* Patient-level attributes (dob, sex) are injected via merge — show value as read-only instead of MeasurementCard */}
+                            {patientLevel ? (
+                                measurements.map((measurement, index) => (
+                                    <div key={`${stateKey}-${index}`} className="card mb-3 border-info" style={{ borderWidth: '2px' }}>
+                                        <div className="card-header bg-info text-white">
+                                            <h5 className="mb-0">{label} (Patient Info)</h5>
+                                        </div>
+                                        <div className="card-body">
+                                            <h4 className="mb-0 text-center">{measurement.value || <span className="text-muted">Not set</span>}</h4>
+                                        </div>
+                                    </div>
+                                ))
+                            ) :
+                                measurements.map((measurement, index) => (
+                                    <MeasurementCard
+                                        key={`${stateKey}-${index}`}
+                                        measurementKey={stateKey}
+                                        measurement={measurement}
+                                        index={index}
+                                        config={config}
+                                        validations={validations}
+                                        isDisabled={isDisabled}
+                                    />
+                                ))
+                            }
                             {groupCalculations.map(calc => (
                                 <Calculation key={calc.key} label={calc.label} value={calc.value} unit={calc.unit} />
                             ))}

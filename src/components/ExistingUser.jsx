@@ -124,7 +124,7 @@ export class ExistingUser extends Component {
                             {filtered.map(user => (
                                 <tr key={user.uuid}>
                                     <td className="align-middle">
-                                        <h5 className="m-0"><Link to={`/patient-home?uuid=${user.uuid}`}>{user.name}</Link></h5>
+                                        <h5 className="m-0"><Link to={`/patient?uuid=${user.uuid}`}>{user.name}</Link></h5>
                                     </td>
                                     <td className="align-middle">{new Date(user.createdAt).toLocaleString()}</td>
                                     <td className="align-middle">

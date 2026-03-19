@@ -1,7 +1,7 @@
 import { PT_TEST_CONFIG } from './components/physical-therapy-tests/PhysicalTherapyTestFactory'
 
 // NOTE: every time the DB schema is updated, this must be incremented. NOTE THAT THIS WILL DELETE ALL EXISTING USERS IN THE DB.
-const CURRENT_DB_VERSION = 2
+const CURRENT_DB_VERSION = 3
 
 let dbPromise = null
 
@@ -55,72 +55,50 @@ const getCurrentUser = async () => {
     return await getUser(uuid)
 }
 
-const getCurrentTestUUID = () => {
+const getCurrentSessionUUID = () => {
     const urlParams = new URLSearchParams(window.location.hash.split('?')[1])
-    return urlParams.get('testUUID')
+    return urlParams.get('sessionUUID')
 }
 
-const addEmptyTest = (user, config_key) => {
-    const config = PT_TEST_CONFIG.find(c => c.testKey === config_key)
-    if (!config) {
-        throw new Error(`Invalid test config key: ${config_key}`)
-    }
-    const testKey = config.testKey;
+// Schema for patient (stored in 'users' object store):
+// {
+//     uuid: string,
+//     name: string,              // required
+//     dateOfBirth: string|null,  // optional, ISO date string (YYYY-MM-DD)
+//     sex: string|null,          // optional, 'Male' or 'Female'
+//     createdAt: string,         // ISO 8601 timestamp
+//     sessions: [
+//         {
+//             uuid: string,
+//             sessionTimestamp: string,  // ISO 8601, user-selectable (defaults to creation time)
+//             createdAt: string,         // ISO 8601
+//             testKey: string,           // e.g. 'annualMobilityScreening' or 'measurements'
+//             testName: string,          // e.g. 'Annual Mobility Screening'
+//             lastModified: string,      // ISO 8601
+//             lastSaved: string|null,    // ISO 8601, null until manually saved
+//             data: {
+//                 formState: object,
+//                 validations: object,
+//                 disabledValues: object
+//             }
+//         }
+//     ]
+// }
 
-    if (!user.tests[testKey]) {
-        user.tests[testKey] = [];
-    }
-
-    const testUUID = crypto.randomUUID()
-    user.tests[testKey].push({
-        uuid: testUUID,
-        name: config.defaultTestName,
-        createdAt: new Date().toISOString(),
-        lastModified: new Date().toISOString(),
-        lastSaved: null,
-        data: {
-            formState: {},
-            validations: {},
-            disabledValues: {}
-        }
-    })
-}
-
-
-const createDBUser = async (name, uuid) => {
+const createDBUser = async (name, uuid, { dateOfBirth, sex } = {}) => {
     const db = await openDB()
 
     const tx = db.transaction('users', 'readwrite')
     const store = tx.objectStore('users')
 
     const newUser = {
-        name: name,
         uuid: uuid,
+        name: name,
+        dateOfBirth: dateOfBirth || null,
+        sex: sex || null,
         createdAt: new Date().toISOString(),
-        // schema for tests:
-        // tests: {
-        //     // testKey can be: 'measurements' or a preset test (e.g., 'annualMobilityScreening')
-        //     'testKey': {
-        //         [
-        //             uuid: 'test-uuid',
-        //             name: 'Test Name',
-        //             createdAt: '2024-01-01T00:00:00.000Z',
-        //             lastModified: '2024-01-01T00:00:00.000Z',
-        //             lastSaved: '2024-01-01T00:00:00.000Z', // a valid manual save
-        //             data: {
-        //                 formState,
-        //                 validations,
-        //                 disabledValues
-        //             }
-        //         ]
-        //     }
-        // }
-        tests: {},
+        sessions: [],
     }
-
-    // TODO: if in the future, we have the ability for multiple tests, we might want to move this initialization logic out of the createDBUser function and into the specific test creation flow instead
-    addEmptyTest(newUser, 'measurements')
-    addEmptyTest(newUser, 'annualMobilityScreening')
 
     store.put(newUser)
 
@@ -130,4 +108,102 @@ const createDBUser = async (name, uuid) => {
     })
 }
 
-export { openDB, createDBUser, getCurrentUser, getCurrentTestUUID }
+const updatePatient = async (uuid, updates) => {
+    const db = await openDB()
+
+    const tx = db.transaction('users', 'readwrite')
+    const store = tx.objectStore('users')
+
+    return new Promise((resolve, reject) => {
+        const getRequest = store.get(uuid)
+        getRequest.onsuccess = () => {
+            const patient = getRequest.result
+            if (!patient) {
+                reject(new Error(`Patient with uuid ${uuid} not found`))
+                return
+            }
+
+            if (updates.name !== undefined) patient.name = updates.name
+            if (updates.dateOfBirth !== undefined) patient.dateOfBirth = updates.dateOfBirth
+            if (updates.sex !== undefined) patient.sex = updates.sex
+
+            const putRequest = store.put(patient)
+            putRequest.onsuccess = () => resolve(patient)
+            putRequest.onerror = (e) => reject(e.target.error)
+        }
+        getRequest.onerror = (e) => reject(e.target.error)
+    })
+}
+
+const createSession = async (patientUUID, testKey, sessionTimestamp) => {
+    const config = PT_TEST_CONFIG.find(c => c.testKey === testKey)
+    if (!config) {
+        throw new Error(`Invalid test key: ${testKey}`)
+    }
+
+    const db = await openDB()
+
+    const tx = db.transaction('users', 'readwrite')
+    const store = tx.objectStore('users')
+
+    const sessionUUID = crypto.randomUUID()
+    const now = new Date().toISOString()
+
+    return new Promise((resolve, reject) => {
+        const getRequest = store.get(patientUUID)
+        getRequest.onsuccess = () => {
+            const patient = getRequest.result
+            if (!patient) {
+                reject(new Error(`Patient with uuid ${patientUUID} not found`))
+                return
+            }
+
+            patient.sessions.push({
+                uuid: sessionUUID,
+                sessionTimestamp: sessionTimestamp || now,
+                createdAt: now,
+                testKey: config.testKey,
+                testName: config.defaultTestName,
+                lastModified: now,
+                lastSaved: null,
+                data: {
+                    formState: {},
+                    validations: {},
+                    disabledValues: {}
+                }
+            })
+
+            const putRequest = store.put(patient)
+            putRequest.onsuccess = () => resolve(sessionUUID)
+            putRequest.onerror = (e) => reject(e.target.error)
+        }
+        getRequest.onerror = (e) => reject(e.target.error)
+    })
+}
+
+const deleteSession = async (patientUUID, sessionUUID) => {
+    const db = await openDB()
+
+    const tx = db.transaction('users', 'readwrite')
+    const store = tx.objectStore('users')
+
+    return new Promise((resolve, reject) => {
+        const getRequest = store.get(patientUUID)
+        getRequest.onsuccess = () => {
+            const patient = getRequest.result
+            if (!patient) {
+                reject(new Error(`Patient with uuid ${patientUUID} not found`))
+                return
+            }
+
+            patient.sessions = patient.sessions.filter(s => s.uuid !== sessionUUID)
+
+            const putRequest = store.put(patient)
+            putRequest.onsuccess = () => resolve(patient)
+            putRequest.onerror = (e) => reject(e.target.error)
+        }
+        getRequest.onerror = (e) => reject(e.target.error)
+    })
+}
+
+export { openDB, createDBUser, getCurrentUser, getCurrentSessionUUID, updatePatient, createSession, deleteSession }

@@ -9,9 +9,12 @@
 // Every calculation and interpretation must appear in exactly one measurement's group.
 
 export const MEASUREMENT_GROUP_MAP = [
-    { stateKey: 'name', calculationKeys: [], interpretationKeys: [] },
-    { stateKey: 'dob', calculationKeys: ['age'], interpretationKeys: [] },
-    { stateKey: 'sex', calculationKeys: [], interpretationKeys: [] },
+    // name is now a patient-level attribute only (not in formState for sessions)
+    // dob and sex are patient-level attributes, but their calculations/interpretations
+    // still need to appear in the summary. patientLevel: true tells GroupedSummary to
+    // skip rendering a measurement card but still show calculations/interpretations.
+    { stateKey: 'dob', calculationKeys: ['age'], interpretationKeys: [], patientLevel: true },
+    { stateKey: 'sex', calculationKeys: [], interpretationKeys: [], patientLevel: true },
     { stateKey: 'vitalSigns', calculationKeys: [], interpretationKeys: ['vitalSigns', 'annualMobilityScreening'] },
     { stateKey: 'fiveMeterUsualWalkingSpeed', calculationKeys: ['fiveMeterUsualWalkingSpeedMean'], interpretationKeys: ['usualWalkingSpeed'] },
     { stateKey: 'fiveMeterFastWalkingSpeed', calculationKeys: ['fiveMeterFastWalkingSpeedMean'], interpretationKeys: ['fastWalkingSpeed'] },

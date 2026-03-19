@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 
 import { Navigate } from "react-router-dom"
-import { Name, DoB, Sex, VitalSigns, FiveMeterUsualWalkingSpeed, FiveMeterFastWalkingSpeed, ThirtySecondSitToStand, AssistiveDevice, FourSquareStepTest, ModifiedFourSquareStepTest, TimedUpAndGo, TimedUpAndGoCognitive, MEASUREMENT_CONFIGS, createMeasurementInstance } from '../measurements/MeasurementFactory'
+import { VitalSigns, FiveMeterUsualWalkingSpeed, FiveMeterFastWalkingSpeed, ThirtySecondSitToStand, AssistiveDevice, FourSquareStepTest, ModifiedFourSquareStepTest, TimedUpAndGo, TimedUpAndGoCognitive, MEASUREMENT_CONFIGS, createMeasurementInstance } from '../measurements/MeasurementFactory'
 import MultipleMeasurements from '../measurements/MultipleMeasurements'
 import { hasData } from '../measurements/MeasurementSummary'
 import InlineMeasurementInterpretations from '../interpretations/InlineMeasurementInterpretations'
 import SummaryPage from '../SummaryPage'
-import { getCurrentUser, getCurrentTestUUID, openDB } from '../../DB'
+import { getCurrentUser, getCurrentSessionUUID, openDB } from '../../DB'
+import { mergePatientDataIntoFormState } from '../../utils/formStateMerge'
 import Title from '../form/Title'
 import LoadingPage from '../LoadingPage'
 
@@ -26,6 +27,7 @@ export class PhysicalTherapyTest extends Component {
         this.state = {
             loaded: false,
             user: null,
+            sessionUUID: null,
             submitText: '',
             submitTextType: '',
             formState: JSON.parse(JSON.stringify(STATE_OBJECT)), // the form state but just the labels, values, lastModified, lastStarted (for timer-based measurements)
@@ -40,32 +42,35 @@ export class PhysicalTherapyTest extends Component {
 
     componentDidMount = async () => {
         const user = await getCurrentUser()
-        const testUUID = getCurrentTestUUID();
+        const sessionUUID = getCurrentSessionUUID();
 
-        if (!user || !testUUID) {
+        if (!user || !sessionUUID) {
             // utilities page — no data to load
-            this.setState({ user, testUUID, loaded: true })
+            this.setState({ user, sessionUUID, loaded: true })
         } else {
-            const measurementData = user.tests[this.props.testKey]?.find(test => test.uuid === testUUID)?.data;
+            const session = user.sessions?.find(s => s.uuid === sessionUUID);
+            const measurementData = session?.data;
             if (measurementData?.formState && Object.keys(measurementData.formState).length > 0) {
                 const formState = JSON.parse(JSON.stringify(measurementData.formState))
-                if (this.props.shownMeasurement !== PT_TEST_FINAL_PAGE && (formState[this.props.shownMeasurement] === undefined || formState[this.props.shownMeasurement].length === 0)) {
-                    this.setMeasurementShown(PT_TEST_HOME_PAGE)
-                }
+                const needsRedirectToHome = this.props.shownMeasurement !== PT_TEST_FINAL_PAGE && (formState[this.props.shownMeasurement] === undefined || formState[this.props.shownMeasurement].length === 0)
                 this.setState({
                     user,
-                    testUUID,
+                    sessionUUID,
                     loaded: true,
                     formState,
                     validations: JSON.parse(JSON.stringify(measurementData.validations)),
                     disabledValues: JSON.parse(JSON.stringify(measurementData.disabledValues)),
+                }, () => {
+                    if (needsRedirectToHome) {
+                        this.setMeasurementShown(PT_TEST_HOME_PAGE)
+                    }
                 })
             } else {
-                this.setState({ user, testUUID, loaded: true })
+                this.setState({ user, sessionUUID, loaded: true })
             }
         }
 
-        this.props.setNavIcons([this.renderNavIcon()])
+        this.props.setNavIcons([this.renderPatientIcon(), this.renderNavIcon()])
         this.props.setNav(this.renderNav())
     }
 
@@ -74,9 +79,15 @@ export class PhysicalTherapyTest extends Component {
         this.props.setNav(null)
     }
 
+    // Returns formState with patient-level data (name, dob, sex) merged in.
+    // Used for calculations and interpretations that depend on patient attributes.
+    getMergedFormState = () => {
+        return mergePatientDataIntoFormState(this.state.user, this.state.formState)
+    }
+
     toggleNav = (forcedState = undefined) => {
         this.setState(prevState => ({ navShown: forcedState !== undefined ? forcedState : !prevState.navShown }), () => {
-            this.props.setNavIcons([this.renderNavIcon()])
+            this.props.setNavIcons([this.renderPatientIcon(), this.renderNavIcon()])
             this.props.setNav(this.renderNav())
         })
     }
@@ -86,7 +97,7 @@ export class PhysicalTherapyTest extends Component {
         let params = "";
         // no params if it's the utilities page (no user)
         if (uuid) {
-            params = `?testUUID=${this.state.testUUID}&uuid=${uuid}`;
+            params = `?sessionUUID=${this.state.sessionUUID}&uuid=${uuid}`;
         }
 
         window.scrollTo(0, 0);
@@ -267,6 +278,7 @@ export class PhysicalTherapyTest extends Component {
 
     isDisabled = (measurementKey, index) => {
         const { formState, validations, disabledValues } = this.state;
+        if (!disabledValues[measurementKey] || !disabledValues[measurementKey][index]) return false;
         const disabledVals = [...disabledValues[measurementKey][index]];
         for (let i = 0; i < MEASUREMENT_CONFIGS[measurementKey]?.disabledCasesComputed?.length ?? 0; i++) {
             const disabledCaseComputed = MEASUREMENT_CONFIGS[measurementKey].disabledCasesComputed[i]
@@ -376,19 +388,19 @@ export class PhysicalTherapyTest extends Component {
 
         getUserRequest.onsuccess = () => {
             const user = getUserRequest.result
-            const measurementData = user.tests[this.props.testKey].find(test => test.uuid === this.state.testUUID)
+            const session = user.sessions.find(s => s.uuid === this.state.sessionUUID)
 
-            measurementData.data = {
+            session.data = {
                 formState: JSON.parse(JSON.stringify(this.state.formState)),
                 validations: JSON.parse(JSON.stringify(this.state.validations)),
                 disabledValues: JSON.parse(JSON.stringify(this.state.disabledValues)),
             }
 
             const nowISO = new Date().toISOString();
-            measurementData.lastModified = nowISO;
+            session.lastModified = nowISO;
 
             if (manual && passesValidation) {
-                measurementData.lastSaved = nowISO;
+                session.lastSaved = nowISO;
             }
 
             const updateRequest = store.put(user)
@@ -422,6 +434,17 @@ export class PhysicalTherapyTest extends Component {
         }
     }
 
+    renderPatientIcon = () => {
+        if (!this.state.user) return null;
+        return (
+            <div id="pt-test-patient-icon" key="pt-test-patient" className="nav-icon p-2" onClick={() => this.props.navigate(`/patient?uuid=${this.state.user.uuid}`)}>
+                <h1>
+                    <i className="bi bi-person-fill text-success"></i>
+                </h1>
+            </div>
+        )
+    }
+
     renderNavIcon = () => {
         return (
             <div id="pt-test-nav-icon" key="pt-test-nav" className="nav-icon p-2" onClick={() => this.toggleNav()}>
@@ -445,7 +468,7 @@ export class PhysicalTherapyTest extends Component {
                         return null
                     }
 
-                    const disabled = measurements.every((m, i) => this.isDisabled(key, i))
+                    const disabled = measurements.every((_, i) => this.isDisabled(key, i))
                     const valid = this.state.validations[key].every((v, i) => this.isDisabled(key, i) || v === true || (Array.isArray(v) && v.every(sv => sv === true)))
 
                     return <h3 key={`nav-entry-${key}`} className={`nav-entry-link text-center mt-5 cursor-p text-decoration-underline ${disabled ? 'text-warning' : (valid ? 'text-success' : 'text-danger')}`} onClick={() => this.setMeasurementShown(key)}>{MEASUREMENT_CONFIGS[key]?.defaultLabel || key}</h3>
@@ -455,6 +478,11 @@ export class PhysicalTherapyTest extends Component {
         )
     }
 
+    getQueryParams = () => {
+        if (!this.state.user) return '';
+        return `?uuid=${this.state.user.uuid}&sessionUUID=${this.state.sessionUUID}`;
+    }
+
     renderMeasurementPage = () => {
         const name = this.state.user ? `(${this.state.user.name})` : '';
         const measurementKey = this.props.shownMeasurement;
@@ -462,7 +490,7 @@ export class PhysicalTherapyTest extends Component {
             return this.renderPTTestHomePage()
         } else if (measurementKey === PT_TEST_FINAL_PAGE) {
             if (!hasData(this.state.formState)) {
-                return <Navigate to={`/${this.props.testKey}/home`} replace />
+                return <Navigate to={`/${this.props.testKey}/home${this.getQueryParams()}`} replace />
             }
 
             return (
@@ -471,7 +499,7 @@ export class PhysicalTherapyTest extends Component {
                     patientName={this.state?.user?.name || 'guest'}
                     submitText={this.state.submitText}
                     submitTextType={this.state.submitTextType}
-                    formState={this.state.formState}
+                    formState={this.getMergedFormState()}
                     validations={this.state.validations}
                     disabledValues={this.state.disabledValues}
                     isDisabled={this.isDisabled}
@@ -481,7 +509,7 @@ export class PhysicalTherapyTest extends Component {
 
         const currentValues = this.state.formState[measurementKey];
         if (!currentValues || currentValues.length === 0) {
-            return <Navigate to={`/${this.props.testKey}/home`} replace />
+            return <Navigate to={`/${this.props.testKey}/home${this.getQueryParams()}`} replace />
         }
 
         const MeasurementComponent = PT_TEST_MEASUREMENT_CONFIG.find(m => m.stateKey === measurementKey)?.component;
@@ -521,15 +549,15 @@ export class PhysicalTherapyTest extends Component {
                 )}
                 <InlineMeasurementInterpretations
                     measurementKey={measurementKey}
-                    formState={this.state.formState}
+                    formState={this.getMergedFormState()}
                 />
             </>
         )
     }
 
     renderPTTestHomePage = () => {
-        const measurementData = this.state.user && this.state.user.tests[this.props.testKey].find(test => test.uuid === this.state.testUUID);
-        const titleName = measurementData?.name ? `${measurementData.name} (${this.state.user.name})` : 'Utilities';
+        const session = this.state.user && this.state.user.sessions?.find(s => s.uuid === this.state.sessionUUID);
+        const titleName = session?.testName ? `${session.testName} (${this.state.user.name})` : 'Utilities';
         return (
             <>
                 <Title>{titleName}</Title>
@@ -543,8 +571,7 @@ export class PhysicalTherapyTest extends Component {
         return (<>
             <div className="measurements-list d-flex flex-column align-items-center">
                 <div className="utility-item w-100">
-                    {PT_TEST_MEASUREMENT_CONFIG.map(({ name, component, stateKey, guestOnly, oneMax }) => {
-                        if (guestOnly && this.state.user) return null
+                    {PT_TEST_MEASUREMENT_CONFIG.map(({ name, component, stateKey }) => {
                         return (
                             <MultipleMeasurements
                                 key={stateKey}
@@ -559,10 +586,9 @@ export class PhysicalTherapyTest extends Component {
                                 onValidationChange={(validations) => this.updateValidations(stateKey, validations)}
                                 onDisabledChange={(disabledValues) => this.updateDisabled(stateKey, disabledValues)}
                                 isDisabled={this.isDisabled}
-                                buttonHidden={this.props.permittedMeasurements && this.props.permittedMeasurements.includes(stateKey)}
+                                buttonHidden={this.props.permittedMeasurements && !this.props.permittedMeasurements.includes(name)}
                                 buttonDisabledAndChecked={true} // currently, measurements can never be modified (even in the Utilities page, they're all selected)
                                 getDisableCaseComputedText={this.getDisableCaseComputedText}
-                                // oneMax={this.state.user.uuid !== 'guest' ? oneMax : false}
                                 // for now, only one measurement of each type is allowed
                                 oneMax={true}
                             />
@@ -601,24 +627,6 @@ export class PhysicalTherapyTest extends Component {
 }
 
 export const PT_TEST_MEASUREMENT_CONFIG = [
-    {
-        name: 'Name',
-        component: Name,
-        stateKey: 'name',
-        guestOnly: true,
-    },
-    {
-        name: 'Date of Birth',
-        component: DoB,
-        stateKey: 'dob',
-        oneMax: true,
-    },
-    {
-        name: 'Sex',
-        component: Sex,
-        stateKey: 'sex',
-        oneMax: true,
-    },
     {
         name: 'Vital Signs',
         component: VitalSigns,

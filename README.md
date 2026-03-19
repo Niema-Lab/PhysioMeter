@@ -47,9 +47,7 @@ When adding new components, update these files:
 
 Next week:
 
-- [ ] Implement sessions for the measurements / tests?
 - [ ] Implement multiple tabs open for one / multiple patients?
-- [ ] 404 Page and proper checking of url params (uuid, testUUID)
 - [ ] Import data feature?
 
 Final chores:
@@ -61,9 +59,3 @@ Final chores:
 ## Potential future features
 
 - [ ] Full computedValues support with counter value for all measurements (and counter + time for Stopwatch and Countdown Timer)
-- [ ] Add tabular component form (and transition Existing Patients view to use it)
-
-## Questions
-
-- [ ] When a new patient is created should I redirect automatically?
-- [ ] Should reset reset the input number?

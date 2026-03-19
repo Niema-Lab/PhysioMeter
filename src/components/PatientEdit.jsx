@@ -141,7 +141,7 @@ export class PatientEdit extends Component {
 
                     <div className="d-flex gap-3 justify-content-center">
                         <Submit onClick={this.handleSave} label="Save" />
-                        <Link to={`/patient?uuid=${this.state.patient.uuid}`} className="btn btn-secondary btn-lg">Cancel</Link>
+                        <Submit onClick={() => this.setState({ redirectTo: `/patient?uuid=${this.state.patient.uuid}` })} label="Cancel" color="secondary" />
                     </div>
                     {this.state.submitText && (
                         <Text value={this.state.submitText} type={this.state.submitTextType} />

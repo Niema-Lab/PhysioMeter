@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { MAX_SECONDS } from '../MeasurementFactory'
 
 export class Stopwatch extends Component {
     constructor(props) {
@@ -100,6 +101,7 @@ export class Stopwatch extends Component {
                             onChange={(e) => onChange(parseFloat(e.target.value))}
                             placeholder={placeholder || 'Seconds'}
                             min="0"
+                            max={MAX_SECONDS}
                             disabled={disabled}
                         />
                         <span className="input-group-text">sec</span>

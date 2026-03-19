@@ -590,7 +590,7 @@ export class PhysicalTherapyTest extends Component {
                                 onDisabledChange={(disabledValues) => this.updateDisabled(stateKey, disabledValues)}
                                 isDisabled={this.isDisabled}
                                 buttonHidden={this.props.permittedMeasurements && !this.props.permittedMeasurements.includes(name)}
-                                buttonDisabledAndChecked={true} // currently, measurements can never be modified (even in the Utilities page, they're all selected)
+                                buttonDisabledAndChecked={!!this.props.permittedMeasurements}
                                 getDisableCaseComputedText={this.getDisableCaseComputedText}
                                 // for now, only one measurement of each type is allowed
                                 oneMax={true}

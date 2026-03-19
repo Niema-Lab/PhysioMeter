@@ -1,5 +1,6 @@
 import { Component } from 'react'
 import Measurement from './Measurement'
+import { isValidDobForMeasurement } from '../../utils/dateValidation'
 import BloodPressureText from './instructions/BloodPressure.md?raw'
 import OxygenSaturationText from './instructions/OxygenSaturation.md?raw'
 import FiveMeterUsualWalkingSpeedText from './instructions/FiveMeterUsualWalkingSpeed.md?raw'
@@ -11,8 +12,8 @@ import TimedUpAndGoText from './instructions/TimedUpAndGo.md?raw'
 import TimedUpAndGoCognitiveText from './instructions/TimedUpAndGoCognitive.md?raw'
 import { isIneligibleForPhysicalActivity } from '../interpretations/InterpretationFactory'
 
-const MAX_LENGTH = 1000
-const MAX_SECONDS = 3600
+export const MAX_LENGTH = 1000
+export const MAX_SECONDS = 3600
 
 const SEX_OPTIONS = ['Male', 'Female']
 const ASSISTIVE_DEVICE_OPTIONS = ['None', 'Straight Cane', 'Small Based Quad Cane', 'Large Based Quad Cane', 'Hemi Walker', 'Front Wheeled Walker', 'Four Wheeled Walker']
@@ -62,9 +63,7 @@ export const MEASUREMENT_CONFIGS = {
         type: 'date',
         defaultLabel: 'Date of Birth',
         placeholder: 'mm/dd/yyyy',
-        validationFunction: (value) => {
-            return Boolean(Date.parse(value)) && new Date(value) < new Date(Date.now() - 365 * 24 * 60 * 60 * 1000)
-        }
+        validationFunction: isValidDobForMeasurement
     },
     sex: {
         type: 'radio',

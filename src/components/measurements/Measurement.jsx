@@ -3,7 +3,7 @@ import Markdown from 'react-markdown'
 
 import Stopwatch from './custom/Stopwatch'
 import CountdownTimer from './custom/CountdownTimer'
-import { MEASUREMENT_CONFIGS } from './MeasurementFactory'
+import { MEASUREMENT_CONFIGS, MAX_LENGTH } from './MeasurementFactory'
 
 
 export class Measurement extends Component {
@@ -55,6 +55,7 @@ export class Measurement extends Component {
                             value={label}
                             onChange={(e) => onLabelChange(e.target.value)}
                             placeholder="Enter label"
+                            maxLength={MAX_LENGTH}
                         />
                     </div>
                 ) : (

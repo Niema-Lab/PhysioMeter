@@ -7,6 +7,7 @@ import Title from './form/Title'
 import Text from './form/Text'
 import Submit from './form/Submit'
 import LoadingPage from './LoadingPage'
+import { validateDate } from '../utils/dateValidation'
 
 // Test options available for sessions (exclude utilities which is guest-only)
 const SESSION_TEST_OPTIONS = PT_TEST_CONFIG.filter(c => c.testKey !== 'utilities')
@@ -25,6 +26,8 @@ export class NewSession extends Component {
             loaded: false,
             sessionTimestamp: defaultTimestamp,
             selectedTestKey: SESSION_TEST_OPTIONS[0]?.testKey || '',
+            dateError: false,
+            dateErrorMessage: '',
             submitText: '',
             submitTextType: '',
             redirectTo: null,
@@ -36,11 +39,20 @@ export class NewSession extends Component {
         this.setState({ patient, loaded: true })
     }
 
+    onTimestampChange = (sessionTimestamp) => {
+        const result = validateDate(sessionTimestamp)
+        this.setState({ sessionTimestamp, ...result })
+    }
+
     handleSubmit = async () => {
         if (!this.state.selectedTestKey) {
             this.setState({ submitText: 'Please select a test type.', submitTextType: 'error' })
             return
         }
+
+        const result = validateDate(this.state.sessionTimestamp)
+        this.setState(result)
+        if (result.dateError) return
 
         const timestamp = this.state.sessionTimestamp
             ? new Date(this.state.sessionTimestamp).toISOString()
@@ -84,11 +96,14 @@ export class NewSession extends Component {
                         <label className="form-label"><h5>Session Date & Time</h5></label>
                         <input
                             type="datetime-local"
-                            className="form-control"
+                            className={`form-control ${this.state.dateError ? 'is-invalid' : ''}`}
                             value={this.state.sessionTimestamp}
-                            onChange={(e) => this.setState({ sessionTimestamp: e.target.value })}
+                            onChange={(e) => this.onTimestampChange(e.target.value)}
                         />
-                        <small className="text-muted">Defaults to now. Can be set to a past or future date/time.</small>
+                        {this.state.dateError
+                            ? <div className="invalid-feedback">{this.state.dateErrorMessage}</div>
+                            : <small className="text-muted">Defaults to now. Can be set to a past or future date/time.</small>
+                        }
                     </div>
 
                     <div className="mb-4 w-75" style={{ maxWidth: '500px' }}>

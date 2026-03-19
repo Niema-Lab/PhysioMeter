@@ -1,53 +1,35 @@
-import { Component } from 'react'
+import { Component, createRef } from 'react'
 import { Link, Navigate } from 'react-router-dom'
 
-import Submit from './form/Submit'
 import Title from './form/Title'
 import Text from './form/Text'
+import Submit from './form/Submit'
+import PatientForm from './form/PatientForm'
 import { createDBUser } from '../DB'
-
-const SEX_OPTIONS = ['Male', 'Female']
 
 export class NewUser extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            name: '',
-            dateOfBirth: '',
-            sex: '',
-            nameValid: true,
             submitText: '',
             submitTextType: '',
             redirectTo: null,
         }
-    }
 
-    validate = () => {
-        let valid = true
-
-        if (!this.state.name || this.state.name.trim() === '') {
-            this.setState({ nameValid: false })
-            valid = false
-        } else {
-            this.setState({ nameValid: true })
-        }
-
-        return valid
+        this.formRef = createRef()
     }
 
     createUser = async () => {
-        if (!this.validate()) {
-            return
-        }
+        if (!this.formRef.current.validate()) return
 
-        const name = this.state.name.trim()
+        const { name, dateOfBirth, sex } = this.formRef.current.getValues()
         const uuid = crypto.randomUUID()
 
         try {
             await createDBUser(name, uuid, {
-                dateOfBirth: this.state.dateOfBirth || undefined,
-                sex: this.state.sex || undefined,
+                dateOfBirth: dateOfBirth || undefined,
+                sex: sex || undefined,
             })
         } catch (e) {
             this.setState({
@@ -58,7 +40,7 @@ export class NewUser extends Component {
         }
 
         this.setState({
-            submitText: `Patient ${name} created successfully. Click View Existing Patients to see the new patient.`, 
+            submitText: `Patient ${name} created successfully. Click View Existing Patients to see the new patient.`,
             submitTextType: 'success',
         })
     }
@@ -74,57 +56,7 @@ export class NewUser extends Component {
                 <Link to="/existing-patient" className="link text-decoration-underline"><h2>View Existing Patients</h2></Link>
 
                 <div className="d-flex flex-column align-items-center">
-                    <div className="mb-3 w-75" style={{ maxWidth: '500px' }}>
-                        <label className="form-label"><h5>Name <span className="text-danger">*</span></h5></label>
-                        <input
-                            type="text"
-                            className={`form-control ${!this.state.nameValid ? 'is-invalid' : ''}`}
-                            value={this.state.name}
-                            onChange={(e) => this.setState({ name: e.target.value })}
-                            placeholder="Enter patient name"
-                        />
-                        {!this.state.nameValid && (
-                            <div className="invalid-feedback">Name is required.</div>
-                        )}
-                    </div>
-
-                    <div className="mb-3 w-75" style={{ maxWidth: '500px' }}>
-                        <label className="form-label"><h5>Date of Birth <span className="text-muted">(optional)</span></h5></label>
-                        <input
-                            type="date"
-                            className="form-control"
-                            value={this.state.dateOfBirth}
-                            onChange={(e) => this.setState({ dateOfBirth: e.target.value })}
-                        />
-                    </div>
-
-                    <div className="mb-4 w-75" style={{ maxWidth: '500px' }}>
-                        <label className="form-label"><h5>Sex <span className="text-muted">(optional)</span></h5></label>
-                        {SEX_OPTIONS.map(option => (
-                            <div key={option} className="form-check">
-                                <input
-                                    className="form-check-input"
-                                    type="radio"
-                                    name="sex"
-                                    id={`sex-${option}`}
-                                    value={option}
-                                    checked={this.state.sex === option}
-                                    onChange={(e) => this.setState({ sex: e.target.value })}
-                                />
-                                <label className="form-check-label" htmlFor={`sex-${option}`}>
-                                    {option}
-                                </label>
-                            </div>
-                        ))}
-                        {this.state.sex && (
-                            <button
-                                className="btn btn-sm btn-outline-secondary mt-2"
-                                onClick={() => this.setState({ sex: '' })}
-                            >
-                                Clear
-                            </button>
-                        )}
-                    </div>
+                    <PatientForm ref={this.formRef} />
 
                     <Submit onClick={this.createUser} />
                     {this.state.submitText &&

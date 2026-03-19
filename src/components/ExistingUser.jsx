@@ -72,8 +72,17 @@ export class ExistingUser extends Component {
         return users
             .filter(u => u.name.toLowerCase().includes(search.toLowerCase()))
             .sort((a, b) => {
-                const valA = sortKey === 'createdAt' ? (a.createdAt || 0) : (a[sortKey] || '').toLowerCase()
-                const valB = sortKey === 'createdAt' ? (b.createdAt || 0) : (b[sortKey] || '').toLowerCase()
+                let valA, valB
+                if (sortKey === 'createdAt') {
+                    valA = a.createdAt || 0
+                    valB = b.createdAt || 0
+                } else if (sortKey === 'dateOfBirth') {
+                    valA = a.dateOfBirth || ''
+                    valB = b.dateOfBirth || ''
+                } else {
+                    valA = (a[sortKey] || '').toLowerCase()
+                    valB = (b[sortKey] || '').toLowerCase()
+                }
                 if (valA < valB) return sortAsc ? -1 : 1
                 if (valA > valB) return sortAsc ? 1 : -1
                 return 0
@@ -112,6 +121,9 @@ export class ExistingUser extends Component {
                                 <th className="cursor-p" onClick={() => this.toggleSort('name')}>
                                     <h5>Name {this.sortIcon('name')}</h5>
                                 </th>
+                                <th className="cursor-p" onClick={() => this.toggleSort('dateOfBirth')}>
+                                    <h5>Date of Birth {this.sortIcon('dateOfBirth')}</h5>
+                                </th>
                                 <th className="cursor-p" onClick={() => this.toggleSort('createdAt')}>
                                     <h5>Created {this.sortIcon('createdAt')}</h5>
                                 </th>
@@ -126,6 +138,7 @@ export class ExistingUser extends Component {
                                     <td className="align-middle">
                                         <h5 className="m-0"><Link to={`/patient?uuid=${user.uuid}`}>{user.name}</Link></h5>
                                     </td>
+                                    <td className="align-middle">{user.dateOfBirth ? new Date(user.dateOfBirth + 'T00:00:00').toLocaleDateString() : 'N/A'}</td>
                                     <td className="align-middle">{new Date(user.createdAt).toLocaleString()}</td>
                                     <td className="align-middle">
                                         <i className="bi bi-trash-fill text-danger cursor-p" onClick={() => this.deleteUser(user)} aria-label={`Delete patient ${user.name}`}></i>
@@ -133,7 +146,7 @@ export class ExistingUser extends Component {
                                 </tr>
                             ))}
                             {filtered.length === 0 && (
-                                <tr><td colSpan="3" className="text-center text-muted">No patients found.</td></tr>
+                                <tr><td colSpan="4" className="text-center text-muted">No patients found.</td></tr>
                             )}
                         </tbody>
                     </table>

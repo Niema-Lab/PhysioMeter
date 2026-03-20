@@ -651,7 +651,7 @@ export const PT_TEST_MEASUREMENT_CONFIG = [
         stateKey: 'thirtySecondSitToStand',
     },
     {
-        name: 'Assistive Device',
+        name: 'Assistive Device for Four Square Step Test',
         component: AssistiveDevice,
         stateKey: 'assistiveDevices',
     },

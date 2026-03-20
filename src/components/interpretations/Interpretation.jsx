@@ -1,4 +1,4 @@
-function Interpretation({ label, messages }) {
+function Interpretation({ label, messages, citation }) {
     return (
         <div className="card mb-3 border-primary" style={{ borderWidth: '2px' }}>
             <div className="card-header bg-primary text-white">
@@ -11,6 +11,11 @@ function Interpretation({ label, messages }) {
                     </div>
                 ))}
             </div>
+            {citation && (
+                <div className="card-footer py-1 px-2">
+                    <small className="text-muted" dangerouslySetInnerHTML={{ __html: `Reference: ${citation}` }} />
+                </div>
+            )}
         </div>
     )
 }

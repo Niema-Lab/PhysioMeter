@@ -35,7 +35,7 @@ export const PT_TEST_CONFIG = [
             '5 Meter Usual Walking Speed',
             '5 Meter Fast Walking Speed',
             '30 Second Sit to Stand',
-            'Assistive Device',
+            'Assistive Device for Four Square Step Test',
             'Four Square Step Test',
             'Modified Four Square Step Test',
             'Timed Up and Go',

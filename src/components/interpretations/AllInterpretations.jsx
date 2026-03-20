@@ -8,7 +8,7 @@ function AllInterpretations({ formState, validations, disabledValues, patientNam
     const interpretations = Object.entries(INTERPRETATION_SECTION_CONFIGS).map(([key, config]) => {
         const messages = config.messageFunction(formState, validations, disabledValues)
         if (messages === null || messages.length === 0) return null
-        return <Interpretation key={key} label={config.label} messages={messages} />
+        return <Interpretation key={key} label={config.label} messages={messages} citation={config.citation} />
     }).filter(Boolean)
 
     const exportInterpretations = () => {

@@ -19,7 +19,27 @@ const computeTrialMean = (formState, measurementKey) => {
     return (sum / allTrials.length).toFixed(2)
 }
 
-const computeFieldMean = (formState, measurementKey, fieldIndex) => {
+const computeTrialBest = (formState, measurementKey) => {
+    const measurements = formState[measurementKey]
+    if (!measurements || measurements.length === 0) return null
+
+    const allTrials = []
+    for (const measurement of measurements) {
+        const value = measurement.value
+        if (Array.isArray(value)) {
+            for (const trial of value) {
+                if (trial !== null && trial !== undefined && trial !== '') {
+                    allTrials.push(parseFloat(trial))
+                }
+            }
+        }
+    }
+
+    if (allTrials.length === 0) return null
+    return Math.min(...allTrials).toFixed(2)
+}
+
+const computeFieldBest = (formState, measurementKey, fieldIndex) => {
     const measurements = formState[measurementKey]
     if (!measurements || measurements.length === 0) return null
 
@@ -32,8 +52,7 @@ const computeFieldMean = (formState, measurementKey, fieldIndex) => {
     }
 
     if (values.length === 0) return null
-    const sum = values.reduce((a, b) => a + b, 0)
-    return (sum / values.length).toFixed(2)
+    return Math.min(...values).toFixed(2)
 }
 
 export const CALCULATION_SECTION_CONFIGS = {
@@ -58,34 +77,29 @@ export const CALCULATION_SECTION_CONFIGS = {
         unit: 's',
         valueFunction: (formState) => computeTrialMean(formState, 'fiveMeterUsualWalkingSpeed')
     },
-    fiveMeterFastWalkingSpeedMean: {
-        label: '5 Meter Fast Walking Speed - Mean',
+    fiveMeterFastWalkingSpeedBest: {
+        label: '5 Meter Fast Walking Speed - Best',
         unit: 's',
-        valueFunction: (formState) => computeTrialMean(formState, 'fiveMeterFastWalkingSpeed')
+        valueFunction: (formState) => computeTrialBest(formState, 'fiveMeterFastWalkingSpeed')
     },
-    thirtySecondChairStandMean: {
-        label: '30 Second Chair Stand - Mean',
-        unit: 'stands',
-        valueFunction: (formState) => computeFieldMean(formState, 'thirtySecondSitToStand', 1)
-    },
-    fourSquareStepTestMean: {
-        label: 'Four Square Step Test - Mean',
+    fourSquareStepTestBest: {
+        label: 'Four Square Step Test - Best',
         unit: 's',
-        valueFunction: (formState) => computeTrialMean(formState, 'fourSquareStepTest')
+        valueFunction: (formState) => computeTrialBest(formState, 'fourSquareStepTest')
     },
-    modifiedFourSquareStepTestMean: {
-        label: 'Modified Four Square Step Test - Mean',
+    modifiedFourSquareStepTestBest: {
+        label: 'Modified Four Square Step Test - Best',
         unit: 's',
-        valueFunction: (formState) => computeTrialMean(formState, 'modifiedFourSquareStepTest')
+        valueFunction: (formState) => computeTrialBest(formState, 'modifiedFourSquareStepTest')
     },
-    timedUpAndGoMean: {
-        label: 'Timed Up and Go (TUG) - Mean',
+    timedUpAndGoBest: {
+        label: 'Timed Up and Go (TUG) - Best',
         unit: 's',
-        valueFunction: (formState) => computeTrialMean(formState, 'timedUpAndGo')
+        valueFunction: (formState) => computeTrialBest(formState, 'timedUpAndGo')
     },
-    timedUpAndGoCognitiveMean: {
-        label: 'Timed Up and Go Cognitive Dual Task - Mean',
+    timedUpAndGoCognitiveBest: {
+        label: 'Timed Up and Go Cognitive Dual Task - Best',
         unit: 's',
-        valueFunction: (formState) => computeFieldMean(formState, 'timedUpAndGoCognitive', 0)
+        valueFunction: (formState) => computeFieldBest(formState, 'timedUpAndGoCognitive', 0)
     },
 }

@@ -22,6 +22,6 @@ Tester Instructions:
 - Begin timing as soon as you say "Go."
 - Give directional cues as necessary as the participant moves around the squares.
 - Stand near the participant (but do not impede their progression) in case of unsteadiness.
-- A trial is invalid if participants move the PVC apparatus out of position or if both feet do not land in each square. Provide feedback and start the test again.
+- A trial is invalid if participants if both feet do not land in each square. Provide feedback and start the test again.
 - Stop timing when both feet return to the starting "square" after reversing direction.
 - Provide 30-45 sec "rest" (standing or sitting as the participant prefers) and repeat.

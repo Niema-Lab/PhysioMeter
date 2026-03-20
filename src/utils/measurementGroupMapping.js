@@ -17,13 +17,13 @@ export const MEASUREMENT_GROUP_MAP = [
     { stateKey: 'sex', calculationKeys: [], interpretationKeys: [], patientLevel: true },
     { stateKey: 'vitalSigns', calculationKeys: [], interpretationKeys: ['vitalSigns', 'annualMobilityScreening'] },
     { stateKey: 'fiveMeterUsualWalkingSpeed', calculationKeys: ['fiveMeterUsualWalkingSpeedMean'], interpretationKeys: ['usualWalkingSpeed'] },
-    { stateKey: 'fiveMeterFastWalkingSpeed', calculationKeys: ['fiveMeterFastWalkingSpeedMean'], interpretationKeys: ['fastWalkingSpeed'] },
-    { stateKey: 'thirtySecondSitToStand', calculationKeys: ['thirtySecondChairStandMean'], interpretationKeys: [] },
+    { stateKey: 'fiveMeterFastWalkingSpeed', calculationKeys: ['fiveMeterFastWalkingSpeedBest'], interpretationKeys: ['fastWalkingSpeed'] },
+    { stateKey: 'thirtySecondSitToStand', calculationKeys: [], interpretationKeys: [] },
     { stateKey: 'assistiveDevices', calculationKeys: [], interpretationKeys: [] },
-    { stateKey: 'fourSquareStepTest', calculationKeys: ['fourSquareStepTestMean'], interpretationKeys: ['fourSquareStepTest'] },
-    { stateKey: 'modifiedFourSquareStepTest', calculationKeys: ['modifiedFourSquareStepTestMean'], interpretationKeys: [] },
-    { stateKey: 'timedUpAndGo', calculationKeys: ['timedUpAndGoMean'], interpretationKeys: ['timedUpAndGo'] },
-    { stateKey: 'timedUpAndGoCognitive', calculationKeys: ['timedUpAndGoCognitiveMean'], interpretationKeys: ['timedUpAndGoCognitive'] },
+    { stateKey: 'fourSquareStepTest', calculationKeys: ['fourSquareStepTestBest'], interpretationKeys: ['fourSquareStepTest'] },
+    { stateKey: 'modifiedFourSquareStepTest', calculationKeys: ['modifiedFourSquareStepTestBest'], interpretationKeys: [] },
+    { stateKey: 'timedUpAndGo', calculationKeys: ['timedUpAndGoBest'], interpretationKeys: ['timedUpAndGo'] },
+    { stateKey: 'timedUpAndGoCognitive', calculationKeys: ['timedUpAndGoCognitiveBest'], interpretationKeys: ['timedUpAndGoCognitive'] },
 ]
 
 export const getInterpretationKeysForMeasurement = (stateKey) => {

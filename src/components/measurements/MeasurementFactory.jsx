@@ -16,7 +16,7 @@ export const MAX_LENGTH = 1000
 export const MAX_SECONDS = 3600
 
 const SEX_OPTIONS = ['Male', 'Female']
-const ASSISTIVE_DEVICE_OPTIONS = ['None', 'Straight Cane', 'Small Based Quad Cane', 'Large Based Quad Cane', 'Hemi Walker', 'Front Wheeled Walker', 'Four Wheeled Walker']
+const ASSISTIVE_DEVICE_OPTIONS = ['None', 'Straight Cane', 'Other']
 
 const PHYSICAL_ACTIVITY_DISABLED_CASE = {
     text: "This patient is ineligible for physical activity. Uncheck this box to bypass the Vital Signs requirement.",
@@ -40,11 +40,11 @@ const ASSISTIVE_DEVICE_FOUR_SQUARE_STEP_TEST_DISABLED_CASE = {
 }
 
 const ASSISTIVE_DEVICE_MODIFIED_FOUR_SQUARE_STEP_TEST_DISABLED_CASE = {
-    text: "Select an assistive device. If an assistive device is selected, but is 'None' or 'Straight Cane', the participant should perform the Four Square Step Test instead. Uncheck this box to bypass this recommendation.",
+    text: "Select an assistive device. If the assistive device is 'None' or 'Straight Cane', the participant should perform the Four Square Step Test instead. Uncheck this box to bypass this recommendation.",
     showOverride: (formState, validations, disabledValues, measurementKey, index, value) => {
         const assistiveDevices = formState['assistiveDevices']
         const validAssistiveDevices = assistiveDevices && Array.isArray(assistiveDevices) && assistiveDevices.length > 0
-            && assistiveDevices.every(device => ['Small Based Quad Cane', 'Large Based Quad Cane', 'Hemi Walker', 'Front Wheeled Walker', 'Four Wheeled Walker'].includes(device.value))
+            && assistiveDevices.every(device => device.value === 'Other')
         return !validAssistiveDevices
     }
 }
@@ -169,7 +169,7 @@ export const MEASUREMENT_CONFIGS = {
 
     thirtySecondSitToStand: {
         type: 'fields',
-        defaultLabel: '30 Second Chair Stand',
+        defaultLabel: '30 Second Sit to Stand',
         instructions: ThirtySecondSitToStandText,
         disabledCases: ['Participant cannot stand without using their hands'],
         disabledCasesComputed: [PHYSICAL_ACTIVITY_DISABLED_CASE],
@@ -193,7 +193,7 @@ export const MEASUREMENT_CONFIGS = {
 
     assistiveDevices: {
         type: 'radio',
-        defaultLabel: 'Assistive Device Used',
+        defaultLabel: 'Assistive Device for Four Square Step Test',
         options: ASSISTIVE_DEVICE_OPTIONS,
         validationFunction: (value) => {
             return ASSISTIVE_DEVICE_OPTIONS.includes(value)

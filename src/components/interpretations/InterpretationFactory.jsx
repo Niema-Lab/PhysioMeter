@@ -1,5 +1,8 @@
 import { CALCULATION_SECTION_CONFIGS } from '../calculations/CalculationFactory'
-// TODO: Add Assistive Device (?), Berg Balance Scale, 30 Second Chair Stand, Modified Four Square Step Test
+// TODO: After guidelines are fully updated by PTs:
+// - Add interpretations: Assistive Device (?), Berg Balance Scale, 30 Second Sit to Stand, Modified Four Square Step Test
+// - Fix the numbers to match the updated spec
+// - Refactor so this logic goes in a YAML file instead of harcoded, for easier maintenance by non-developers
 
 // ========== Helper Functions ==========
 
@@ -60,17 +63,17 @@ export function isIneligibleForPhysicalActivity(formState) {
 }
 
 function getWalkingSpeedMps(formState, calculationKey) {
-    const meanTimeSec = CALCULATION_SECTION_CONFIGS[calculationKey].valueFunction(formState)
-    if (meanTimeSec === null) return null
-    const time = parseFloat(meanTimeSec)
+    const timeSec = CALCULATION_SECTION_CONFIGS[calculationKey].valueFunction(formState)
+    if (timeSec === null) return null
+    const time = parseFloat(timeSec)
     if (isNaN(time) || time <= 0) return null
     return 5 / time
 }
 
-function getMeanValue(formState, calculationKey) {
-    const mean = CALCULATION_SECTION_CONFIGS[calculationKey].valueFunction(formState)
-    if (mean === null) return null
-    const parsed = parseFloat(mean)
+function getCalculatedValue(formState, calculationKey) {
+    const result = CALCULATION_SECTION_CONFIGS[calculationKey].valueFunction(formState)
+    if (result === null) return null
+    const parsed = parseFloat(result)
     if (isNaN(parsed)) return null
     return parsed
 }
@@ -213,9 +216,12 @@ function getTimeMobilityMessages(value, sex, ageBracket, thresholds) {
 
 // ========== Interpretation Configs ==========
 
+const DEFAULT_CITATION = '<a href="https://aptageriatrics.org/wp-content/uploads/2026/02/AMA-InterpChartsFinalv2.1.pdf" target="_blank" rel="noopener noreferrer">Annual Mobility Assessment</a>'
+
 export const INTERPRETATION_SECTION_CONFIGS = {
     vitalSigns: {
         label: 'Vital Signs',
+        citation: DEFAULT_CITATION,
         messageFunction: (formState) => {
             const vitals = getVitalSigns(formState)
             if (!vitals) return null
@@ -232,6 +238,7 @@ export const INTERPRETATION_SECTION_CONFIGS = {
 
     usualWalkingSpeed: {
         label: '5 Meter Usual Walking Speed',
+        citation: DEFAULT_CITATION,
         messageFunction: (formState) => {
             const speed = getWalkingSpeedMps(formState, 'fiveMeterUsualWalkingSpeedMean')
             if (speed === null) return null
@@ -258,8 +265,9 @@ export const INTERPRETATION_SECTION_CONFIGS = {
 
     fastWalkingSpeed: {
         label: '5 Meter Fast Walking Speed',
+        citation: DEFAULT_CITATION,
         messageFunction: (formState) => {
-            const speed = getWalkingSpeedMps(formState, 'fiveMeterFastWalkingSpeedMean')
+            const speed = getWalkingSpeedMps(formState, 'fiveMeterFastWalkingSpeedBest')
             if (speed === null) return null
 
             const messages = []
@@ -281,8 +289,9 @@ export const INTERPRETATION_SECTION_CONFIGS = {
 
     fourSquareStepTest: {
         label: 'Four Square Step Test',
+        citation: DEFAULT_CITATION,
         messageFunction: (formState) => {
-            const value = getMeanValue(formState, 'fourSquareStepTestMean')
+            const value = getCalculatedValue(formState, 'fourSquareStepTestBest')
             if (value === null) return null
 
             const messages = []
@@ -304,8 +313,9 @@ export const INTERPRETATION_SECTION_CONFIGS = {
 
     timedUpAndGo: {
         label: 'Timed Up and Go (TUG)',
+        citation: DEFAULT_CITATION,
         messageFunction: (formState) => {
-            const value = getMeanValue(formState, 'timedUpAndGoMean')
+            const value = getCalculatedValue(formState, 'timedUpAndGoBest')
             if (value === null) return null
 
             const messages = []
@@ -345,8 +355,9 @@ export const INTERPRETATION_SECTION_CONFIGS = {
 
     timedUpAndGoCognitive: {
         label: 'Timed Up and Go Cognitive Dual Task',
+        citation: DEFAULT_CITATION,
         messageFunction: (formState) => {
-            const value = getMeanValue(formState, 'timedUpAndGoCognitiveMean')
+            const value = getCalculatedValue(formState, 'timedUpAndGoCognitiveBest')
             if (value === null) return null
 
             const messages = []
@@ -368,6 +379,7 @@ export const INTERPRETATION_SECTION_CONFIGS = {
 
     annualMobilityScreening: {
         label: 'Annual Mobility Screening',
+        citation: DEFAULT_CITATION,
         messageFunction: (formState) => {
             const vitalSignsMessages = INTERPRETATION_SECTION_CONFIGS.vitalSigns.messageFunction(formState)
             if (!vitalSignsMessages) return null

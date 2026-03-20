@@ -13,13 +13,13 @@ Each measurement is grouped with its related calculations and interpretations. I
 | Sex | — | — |
 | Vital Signs | — | Vital Signs, Annual Mobility Screening |
 | 5 Meter Usual Walking Speed | 5M Usual Walking Speed Mean | Usual Walking Speed |
-| 5 Meter Fast Walking Speed | 5M Fast Walking Speed Mean | Fast Walking Speed |
-| 30 Second Chair Stand | 30 Second Chair Stand Mean | — |
-| Assistive Device | — | — |
-| Four Square Step Test | Four Square Step Test Mean | Four Square Step Test |
-| Modified Four Square Step Test | Modified Four Square Step Test Mean | — |
-| Timed Up and Go | TUG Mean | Timed Up and Go |
-| Timed Up and Go Cognitive | TUG Cognitive Mean | TUG Cognitive Dual Task |
+| 5 Meter Fast Walking Speed | 5M Fast Walking Speed Best | Fast Walking Speed |
+| 30 Second Sit to Stand | — | — |
+| Assistive Device for Four Square Step Test | — | — |
+| Four Square Step Test | Four Square Step Test Best | Four Square Step Test |
+| Modified Four Square Step Test | Modified Four Square Step Test Best | — |
+| Timed Up and Go | TUG Best | Timed Up and Go |
+| Timed Up and Go Cognitive | TUG Cognitive Best | TUG Cognitive Dual Task |
 
 ## Adding New Measurements, Calculations, or Interpretations
 

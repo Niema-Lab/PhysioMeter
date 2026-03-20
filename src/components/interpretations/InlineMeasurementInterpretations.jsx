@@ -19,6 +19,7 @@ function InlineMeasurementInterpretations({ measurementKey, formState }) {
                         key={key}
                         label={config.label}
                         messages={messages && messages.length > 0 ? messages : NO_INTERPRETATION_MESSAGE}
+                        citation={config.citation}
                     />
                 )
             })}

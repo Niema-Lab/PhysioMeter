@@ -33,7 +33,7 @@ export class UtilitiesPage extends Component {
         return (
             <div id="utilities-page">
                 <Title>Utilities</Title>
-                <div className="d-flex flex-column align-items-center mb-3">
+                <div className="d-flex flex-column align-items-center mb-5">
                     <h5 className="text-center text-danger w-75">No information is saved. If you close or reload the page, all data will be lost.</h5>
                 </div>
                 <div className="d-flex flex-column align-items-center px-3">

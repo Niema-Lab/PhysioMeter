@@ -12,7 +12,7 @@ export class Home extends Component {
                     <Link to="/new-patient" className="link text-decoration-underline"><h2>New Patient</h2></Link>
                     <Link to="/existing-patient" className="link text-decoration-underline"><h2>Existing Patient</h2></Link>
                     <Link to="/presets" className="link text-decoration-underline"><h2>Presets</h2></Link>
-                    <Link to={`/utilities/home`} className="link text-decoration-underline"><h2>Utilities</h2></Link>
+                    <Link to="/utilities" className="link text-decoration-underline"><h2>Utilities</h2></Link>
                 </nav>
             </div>
         )

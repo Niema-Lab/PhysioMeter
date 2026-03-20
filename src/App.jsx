@@ -12,6 +12,7 @@ import { PT_TEST_CONFIG } from './components/physical-therapy-tests/PhysicalTher
 import NewUser from './components/NewUser'
 import ExistingUser from './components/ExistingUser'
 import NotFound from './components/NotFound'
+import UtilitiesPage from './components/utilities/UtilitiesPage'
 
 function HomeIcon() {
   return (
@@ -45,6 +46,7 @@ function AppContent() {
           <Route path="/patient/edit" element={<PatientEdit />} />
           <Route path="/new-session" element={<NewSession />} />
           <Route path="/presets" element={<Presets />} />
+          <Route path="/utilities" element={<UtilitiesPage />} />
           {PT_TEST_CONFIG.map(({ testKey, component, permittedMeasurements }) => {
             const permittedMeasurementConfigs = permittedMeasurements ? PT_TEST_MEASUREMENT_CONFIG.filter(m => permittedMeasurements.includes(m.name)) : PT_TEST_MEASUREMENT_CONFIG;
             return (

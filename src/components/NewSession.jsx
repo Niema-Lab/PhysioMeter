@@ -9,8 +9,7 @@ import Submit from './form/Submit'
 import LoadingPage from './LoadingPage'
 import { validateDate } from '../utils/dateValidation'
 
-// Test options available for sessions (exclude utilities which is guest-only)
-const SESSION_TEST_OPTIONS = PT_TEST_CONFIG.filter(c => c.testKey !== 'utilities')
+const SESSION_TEST_OPTIONS = PT_TEST_CONFIG
 
 export class NewSession extends Component {
     constructor(props) {

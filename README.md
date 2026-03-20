@@ -1,6 +1,6 @@
 # PhysioMeter
 
-A React web application for physical therapy measurements, interpretations, and assessments. Deployed at https://daniel-ji.github.io/PhysioMeter.
+A React web application for physical therapy measurements, interpretations, and assessments. Deployed at https://niema-lab.github.io/PhysioMeter/.
 
 ## Measurement Group Map
 

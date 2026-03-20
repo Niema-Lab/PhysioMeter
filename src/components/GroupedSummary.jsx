@@ -138,7 +138,7 @@ function GroupedSummary({ formState, validations, disabledValues, isDisabled, pa
                         if (!interpConfig) return null
                         const messages = interpConfig.messageFunction(formState, validations, disabledValues)
                         const defaultMessage = [{ text: 'No interpretation available for the current measurements.', type: 'secondary' }]
-                        return { key: interpKey, label: interpConfig.label, messages: messages && messages.length > 0 ? messages : defaultMessage }
+                        return { key: interpKey, label: interpConfig.label, messages: messages && messages.length > 0 ? messages : defaultMessage, citation: interpConfig.citation }
                     }).filter(Boolean)
 
                     return (
@@ -173,7 +173,7 @@ function GroupedSummary({ formState, validations, disabledValues, isDisabled, pa
                                 <Calculation key={calc.key} label={calc.label} value={calc.value} unit={calc.unit} />
                             ))}
                             {groupInterpretations.map(interp => (
-                                <Interpretation key={interp.key} label={interp.label} messages={interp.messages} />
+                                <Interpretation key={interp.key} label={interp.label} messages={interp.messages} citation={interp.citation} />
                             ))}
                         </div>
                     )

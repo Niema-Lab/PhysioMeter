@@ -48,7 +48,7 @@ function AppContent() {
           <Route path="/presets" element={<Presets />} />
           <Route path="/utilities" element={<UtilitiesPage />} />
           {PT_TEST_CONFIG.map(({ testKey, component, permittedMeasurements }) => {
-            const permittedMeasurementConfigs = permittedMeasurements ? PT_TEST_MEASUREMENT_CONFIG.filter(m => permittedMeasurements.includes(m.name)) : PT_TEST_MEASUREMENT_CONFIG;
+            const permittedMeasurementConfigs = permittedMeasurements ? PT_TEST_MEASUREMENT_CONFIG.filter(m => permittedMeasurements.includes(m.stateKey)) : PT_TEST_MEASUREMENT_CONFIG;
             return (
               <>
                 <Route path={`/${testKey}/home`} element={React.createElement(component, { setNavIcons, setNav, shownMeasurement: PT_TEST_HOME_PAGE, location: useLocation(), navigate: useNavigate() })} />

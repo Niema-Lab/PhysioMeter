@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "thresholds.schema.json",
+  "title": "PhysioMeter Threshold Tables",
+  "description": "Age/sex-specific clinical thresholds for mobility classification (PCML/ML).",
+  "type": "object",
+  "additionalProperties": {
+    "$ref": "#/$defs/threshold_table"
+  },
+  "$defs": {
+    "threshold_table": {
+      "type": "object",
+      "required": ["compare_as", "classifications"],
+      "properties": {
+        "compare_as": {
+          "type": "string",
+          "description": "How to interpret the threshold values.",
+          "enum": ["higher_is_better", "lower_is_better"]
+        },
+        "classifications": {
+          "type": "object",
+          "description": "Label and severity for each classification level.",
+          "required": ["no_pcml", "pcml", "ml"],
+          "additionalProperties": false,
+          "properties": {
+            "no_pcml": { "$ref": "#/$defs/classification_entry" },
+            "pcml": { "$ref": "#/$defs/classification_entry" },
+            "ml": { "$ref": "#/$defs/classification_entry" }
+          }
+        },
+        "Male": { "$ref": "#/$defs/sex_brackets" },
+        "Female": { "$ref": "#/$defs/sex_brackets" }
+      },
+      "additionalProperties": false
+    },
+    "classification_entry": {
+      "type": "object",
+      "required": ["label", "severity"],
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "type": "string",
+          "description": "Display label for this classification level."
+        },
+        "severity": {
+          "type": "string",
+          "description": "Severity level: concern (red), caution (yellow), normal (green), info (gray).",
+          "enum": ["concern", "caution", "normal", "info"]
+        }
+      }
+    },
+    "sex_brackets": {
+      "type": "object",
+      "description": "Threshold entries keyed by age bracket.",
+      "propertyNames": {
+        "pattern": "^(\\d{2}-\\d{2}|\\d{2}\\+)$"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/threshold_entry"
+      }
+    },
+    "threshold_entry": {
+      "type": "object",
+      "required": ["no_pcml", "pcml", "ml", "mean", "sd"],
+      "additionalProperties": false,
+      "properties": {
+        "no_pcml": {
+          "type": "number",
+          "description": "No Preclinical Mobility Limitation cutoff."
+        },
+        "pcml": {
+          "type": "number",
+          "description": "Preclinical Mobility Limitation cutoff."
+        },
+        "ml": {
+          "type": "number",
+          "description": "Mobility Limitation cutoff."
+        },
+        "mean": {
+          "type": "number",
+          "description": "Reference mean for the age/sex group."
+        },
+        "sd": {
+          "type": "number",
+          "description": "Standard deviation for the age/sex group."
+        }
+      }
+    }
+  }
+}

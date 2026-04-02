@@ -1,5 +1,8 @@
 import { PT_TEST_CONFIG } from './physical-therapy-tests/PhysicalTherapyTestFactory'
+import { PT_TEST_MEASUREMENT_CONFIG } from './physical-therapy-tests/PhysicalTherapyTest'
 import Title from './form/Title'
+
+const MEASUREMENT_NAME_MAP = Object.fromEntries(PT_TEST_MEASUREMENT_CONFIG.map(m => [m.stateKey, m.name]))
 
 function Presets() {
     const presets = PT_TEST_CONFIG.filter(c => c.testKey !== 'utilities' && c.testKey !== 'measurements')
@@ -14,7 +17,7 @@ function Presets() {
                             <h4>{preset.defaultTestName}</h4>
                             {preset.permittedMeasurements && (
                                 <p>
-                                    Includes: {preset.permittedMeasurements.join(', ')}
+                                    Includes: {preset.permittedMeasurements.map(k => MEASUREMENT_NAME_MAP[k] || k).join(', ')}
                                 </p>
                             )}
                             <p className="fw-bold">

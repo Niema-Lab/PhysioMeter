@@ -8,6 +8,7 @@ import Submit from './form/Submit'
 import Title from './form/Title'
 import { hasData } from './measurements/MeasurementSummary'
 import { downloadCSV, generateMeasurementsCSVRows, generateCalculationsCSVRows, generateInterpretationsCSVRows } from '../utils/csvExport'
+import { generateAndDownloadPDF } from '../utils/pdfExport'
 
 function MeasurementCard({ measurementKey, measurement, index, config, validations, isDisabled }) {
     const label = config.defaultLabel || measurementKey
@@ -39,6 +40,7 @@ function MeasurementCard({ measurementKey, measurement, index, config, validatio
                     {config.type === 'fields' && (config.fields || config.fieldNames) ? (
                         <div className="d-flex flex-wrap justify-content-evenly gap-3">
                             {(config.fields || config.fieldNames?.map(fn => MEASUREMENT_CONFIGS[fn])).map((field, idx) => {
+                                if (field?.displayOnly) return null
                                 const fieldValue = Array.isArray(value) ? value[idx] : value
                                 const fieldLabel = field?.defaultLabel || (config.fieldNames ? MEASUREMENT_CONFIGS[config.fieldNames[idx]]?.defaultLabel : `Field ${idx + 1}`)
                                 const fieldUnit = field?.unit || MEASUREMENT_CONFIGS[config.fieldNames?.[idx]]?.unit || ''
@@ -101,6 +103,10 @@ function GroupedSummary({ formState, validations, disabledValues, isDisabled, pa
         downloadCSV(rows, `interpretations_${patientName || 'guest'}_${date}.csv`)
     }
 
+    const exportPDF = () => {
+        generateAndDownloadPDF(formState, validations, disabledValues, isDisabled, patientName)
+    }
+
     if (!hasData(formState)) {
         return (
             <div className="grouped-summary">
@@ -127,7 +133,7 @@ function GroupedSummary({ formState, validations, disabledValues, isDisabled, pa
                     const groupCalculations = calculationKeys.map(calcKey => {
                         const calcConfig = CALCULATION_SECTION_CONFIGS[calcKey]
                         if (!calcConfig) return null
-                        const value = calcConfig.valueFunction(formState, validations, disabledValues)
+                        const value = calcConfig.valueFunction(formState)
                         if (value === null) return null
                         return { key: calcKey, label: calcConfig.label, value, unit: calcConfig.unit }
                     }).filter(Boolean)
@@ -136,7 +142,7 @@ function GroupedSummary({ formState, validations, disabledValues, isDisabled, pa
                     const groupInterpretations = interpretationKeys.map(interpKey => {
                         const interpConfig = INTERPRETATION_SECTION_CONFIGS[interpKey]
                         if (!interpConfig) return null
-                        const messages = interpConfig.messageFunction(formState, validations, disabledValues)
+                        const messages = interpConfig.messageFunction(formState)
                         const defaultMessage = [{ text: 'No interpretation available for the current measurements.', type: 'secondary' }]
                         return { key: interpKey, label: interpConfig.label, messages: messages && messages.length > 0 ? messages : defaultMessage, citation: interpConfig.citation }
                     }).filter(Boolean)
@@ -183,6 +189,7 @@ function GroupedSummary({ formState, validations, disabledValues, isDisabled, pa
                 <Submit label="Export Measurements to CSV" onClick={exportMeasurements} />
                 <Submit label="Export Calculations to CSV" onClick={exportCalculations} />
                 <Submit label="Export Interpretations to CSV" onClick={exportInterpretations} />
+                <Submit label="Export All Data to PDF" onClick={exportPDF} />
             </div>
         </div>
     )

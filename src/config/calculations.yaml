@@ -1,0 +1,66 @@
+# Calculation Definitions
+# Each calculation derives a value from measurement data.
+#
+# Fields:
+#   label:            Display name shown in the summary
+#   unit:             Unit of measurement (e.g., "years", "s")
+#   operation:        The type of calculation to perform. Options:
+#                       - age_from_date_of_birth: Computes age in years from a date field
+#                       - trial_mean: Averages all trial values across all instances
+#                       - trial_min: Finds the minimum trial value across all instances
+#                       - trial_max: Finds the maximum trial value across all instances
+#                       - field_min: Finds the minimum value of a specific field across instances
+#                       - field_max: Finds the maximum value of a specific field across instances
+#   from_measurement: The measurement key to pull data from
+#   field_label:      (field_min/field_max only) Label of the inline field to extract.
+#                     Must match a "label" in the measurement's "fields" list.
+#   decimal_places:   Number of decimal places to round to (default: 2)
+
+age:
+  label: "Age"
+  unit: "years"
+  operation: age_from_date_of_birth
+  from_measurement: dob
+
+fiveMeterUsualWalkingSpeedMean:
+  label: "5 Meter Usual Walking Speed - Mean"
+  unit: "s"
+  operation: trial_mean
+  from_measurement: fiveMeterUsualWalkingSpeed
+  decimal_places: 2
+
+fiveMeterFastWalkingSpeedBest:
+  label: "5 Meter Fast Walking Speed - Best"
+  unit: "s"
+  operation: trial_min
+  from_measurement: fiveMeterFastWalkingSpeed
+  decimal_places: 2
+
+fourSquareStepTestBest:
+  label: "Four Square Step Test - Best"
+  unit: "s"
+  operation: trial_min
+  from_measurement: fourSquareStepTest
+  decimal_places: 2
+
+modifiedFourSquareStepTestBest:
+  label: "Modified Four Square Step Test - Best"
+  unit: "s"
+  operation: trial_min
+  from_measurement: modifiedFourSquareStepTest
+  decimal_places: 2
+
+timedUpAndGoBest:
+  label: "Timed Up and Go (TUG) - Best"
+  unit: "s"
+  operation: trial_min
+  from_measurement: timedUpAndGo
+  decimal_places: 2
+
+timedUpAndGoCognitiveBest:
+  label: "Timed Up and Go Cognitive Dual Task - Best"
+  unit: "s"
+  operation: field_min
+  from_measurement: timedUpAndGoCognitive
+  field_label: "Time"
+  decimal_places: 2

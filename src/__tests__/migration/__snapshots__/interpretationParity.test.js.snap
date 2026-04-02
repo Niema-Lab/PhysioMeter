@@ -1,0 +1,962 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Full interpretation scenario snapshots > age/sex matrix > Female dob=1933-01-15 1`] = `
+{
+  "annualMobilityScreening": null,
+  "fastWalkingSpeed": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≥ 0.9
+Reference Mean 1.02 (Ages 90+) Standard Deviation 0.27",
+      "type": "success",
+    },
+  ],
+  "fourSquareStepTest": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 28.2
+Reference Mean 20 (Ages 90+) Standard Deviation 16.7",
+      "type": "success",
+    },
+  ],
+  "timedUpAndGo": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 17.9
+Reference Mean 14.7 (Ages 90+) Standard Deviation 6.3",
+      "type": "success",
+    },
+  ],
+  "timedUpAndGoCognitive": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 29.3
+Reference Mean 24.3 (Ages 90+) Standard Deviation 10.2",
+      "type": "success",
+    },
+  ],
+  "usualWalkingSpeed": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≥ 0.66
+Reference Mean 0.76 (Ages 90+) Standard Deviation 0.21",
+      "type": "success",
+    },
+  ],
+  "vitalSigns": [
+    {
+      "text": "This patient is eligible for physical activity.",
+      "type": "success",
+    },
+  ],
+}
+`;
+
+exports[`Full interpretation scenario snapshots > age/sex matrix > Female dob=1940-01-15 1`] = `
+{
+  "annualMobilityScreening": null,
+  "fastWalkingSpeed": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≥ 1.05
+Reference Mean 1.2 (Ages 80-89) Standard Deviation 0.33",
+      "type": "success",
+    },
+  ],
+  "fourSquareStepTest": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 17.6
+Reference Mean 14.9 (Ages 80-89) Standard Deviation 5.7",
+      "type": "success",
+    },
+  ],
+  "timedUpAndGo": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 12.9
+Reference Mean 11.4 (Ages 80-89) Standard Deviation 3",
+      "type": "success",
+    },
+  ],
+  "timedUpAndGoCognitive": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 19.5
+Reference Mean 17.3 (Ages 80-89) Standard Deviation 4.7",
+      "type": "success",
+    },
+  ],
+  "usualWalkingSpeed": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≥ 0.89
+Reference Mean 0.98 (Ages 80-89) Standard Deviation 0.21",
+      "type": "success",
+    },
+  ],
+  "vitalSigns": [
+    {
+      "text": "This patient is eligible for physical activity.",
+      "type": "success",
+    },
+  ],
+}
+`;
+
+exports[`Full interpretation scenario snapshots > age/sex matrix > Female dob=1950-01-15 1`] = `
+{
+  "annualMobilityScreening": null,
+  "fastWalkingSpeed": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≥ 1.37
+Reference Mean 1.52 (Ages 70-79) Standard Deviation 0.33",
+      "type": "success",
+    },
+  ],
+  "fourSquareStepTest": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 12.6
+Reference Mean 10.9 (Ages 70-79) Standard Deviation 3.6",
+      "type": "success",
+    },
+  ],
+  "timedUpAndGo": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 10.6
+Reference Mean 9.2 (Ages 70-79) Standard Deviation 2.7",
+      "type": "success",
+    },
+  ],
+  "timedUpAndGoCognitive": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 15.3
+Reference Mean 12.9 (Ages 70-79) Standard Deviation 5",
+      "type": "success",
+    },
+  ],
+  "usualWalkingSpeed": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≥ 1.03
+Reference Mean 1.12 (Ages 70-79) Standard Deviation 0.2",
+      "type": "success",
+    },
+  ],
+  "vitalSigns": [
+    {
+      "text": "This patient is eligible for physical activity.",
+      "type": "success",
+    },
+  ],
+}
+`;
+
+exports[`Full interpretation scenario snapshots > age/sex matrix > Female dob=1960-01-15 1`] = `
+{
+  "annualMobilityScreening": null,
+  "fastWalkingSpeed": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≥ 1.42
+Reference Mean 1.59 (Ages 60-69) Standard Deviation 0.37",
+      "type": "success",
+    },
+  ],
+  "fourSquareStepTest": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 10.8
+Reference Mean 9.7 (Ages 60-69) Standard Deviation 2.4",
+      "type": "success",
+    },
+  ],
+  "timedUpAndGo": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 9
+Reference Mean 8.1 (Ages 60-69) Standard Deviation 1.8",
+      "type": "success",
+    },
+  ],
+  "timedUpAndGoCognitive": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 15.4
+Reference Mean 13 (Ages 60-69) Standard Deviation 5",
+      "type": "success",
+    },
+  ],
+  "usualWalkingSpeed": [
+    {
+      "text": "Preclinical Mobility Limitation (PCML) ≤ 1.14
+Reference Mean 1.22 (Ages 60-69) Standard Deviation 0.16",
+      "type": "warning",
+    },
+  ],
+  "vitalSigns": [
+    {
+      "text": "This patient is eligible for physical activity.",
+      "type": "success",
+    },
+  ],
+}
+`;
+
+exports[`Full interpretation scenario snapshots > age/sex matrix > Female dob=1970-01-15 1`] = `
+{
+  "annualMobilityScreening": null,
+  "fastWalkingSpeed": [
+    {
+      "text": "Preclinical Mobility Limitation (PCML) ≤ 1.59
+Reference Mean 1.67 (Ages 50-59) Standard Deviation 0.51",
+      "type": "warning",
+    },
+  ],
+  "fourSquareStepTest": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 12.6
+Reference Mean 10.3 (Ages 50-59) Standard Deviation 4.7",
+      "type": "success",
+    },
+  ],
+  "timedUpAndGo": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 10.4
+Reference Mean 8.7 (Ages 50-59) Standard Deviation 3.3",
+      "type": "success",
+    },
+  ],
+  "timedUpAndGoCognitive": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 14.9
+Reference Mean 11.9 (Ages 50-59) Standard Deviation 5.9",
+      "type": "success",
+    },
+  ],
+  "usualWalkingSpeed": [
+    {
+      "text": "Preclinical Mobility Limitation (PCML) ≤ 1.17
+Reference Mean 1.26 (Ages 50-59) Standard Deviation 0.17",
+      "type": "warning",
+    },
+  ],
+  "vitalSigns": [
+    {
+      "text": "This patient is eligible for physical activity.",
+      "type": "success",
+    },
+  ],
+}
+`;
+
+exports[`Full interpretation scenario snapshots > age/sex matrix > Male dob=1933-01-15 1`] = `
+{
+  "annualMobilityScreening": null,
+  "fastWalkingSpeed": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≥ 1.04
+Reference Mean 1.19 (Ages 90+) Standard Deviation 0.32",
+      "type": "success",
+    },
+  ],
+  "fourSquareStepTest": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 14.6
+Reference Mean 13 (Ages 90+) Standard Deviation 3.4",
+      "type": "success",
+    },
+  ],
+  "timedUpAndGo": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 16.9
+Reference Mean 13.4 (Ages 90+) Standard Deviation 6.9",
+      "type": "success",
+    },
+  ],
+  "timedUpAndGoCognitive": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 24.9
+Reference Mean 20.2 (Ages 90+) Standard Deviation 9.6",
+      "type": "success",
+    },
+  ],
+  "usualWalkingSpeed": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≥ 0.83
+Reference Mean 0.91 (Ages 90+) Standard Deviation 0.17",
+      "type": "success",
+    },
+  ],
+  "vitalSigns": [
+    {
+      "text": "This patient is eligible for physical activity.",
+      "type": "success",
+    },
+  ],
+}
+`;
+
+exports[`Full interpretation scenario snapshots > age/sex matrix > Male dob=1940-01-15 1`] = `
+{
+  "annualMobilityScreening": null,
+  "fastWalkingSpeed": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≥ 1.18
+Reference Mean 1.36 (Ages 80-89) Standard Deviation 0.38",
+      "type": "success",
+    },
+  ],
+  "fourSquareStepTest": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 19.7
+Reference Mean 15.8 (Ages 80-89) Standard Deviation 8",
+      "type": "success",
+    },
+  ],
+  "timedUpAndGo": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 13.3
+Reference Mean 11.5 (Ages 80-89) Standard Deviation 3.6",
+      "type": "success",
+    },
+  ],
+  "timedUpAndGoCognitive": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 19.4
+Reference Mean 16.2 (Ages 80-89) Standard Deviation 6.6",
+      "type": "success",
+    },
+  ],
+  "usualWalkingSpeed": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≥ 0.93
+Reference Mean 1.02 (Ages 80-89) Standard Deviation 0.2",
+      "type": "success",
+    },
+  ],
+  "vitalSigns": [
+    {
+      "text": "This patient is eligible for physical activity.",
+      "type": "success",
+    },
+  ],
+}
+`;
+
+exports[`Full interpretation scenario snapshots > age/sex matrix > Male dob=1950-01-15 1`] = `
+{
+  "annualMobilityScreening": null,
+  "fastWalkingSpeed": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≥ 1.34
+Reference Mean 1.58 (Ages 70-79) Standard Deviation 0.51",
+      "type": "success",
+    },
+  ],
+  "fourSquareStepTest": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 12.9
+Reference Mean 10.9 (Ages 70-79) Standard Deviation 4.2",
+      "type": "success",
+    },
+  ],
+  "timedUpAndGo": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 10
+Reference Mean 8.6 (Ages 70-79) Standard Deviation 2.8",
+      "type": "success",
+    },
+  ],
+  "timedUpAndGoCognitive": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 13.5
+Reference Mean 11.6 (Ages 70-79) Standard Deviation 4.1",
+      "type": "success",
+    },
+  ],
+  "usualWalkingSpeed": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≥ 1.09
+Reference Mean 1.18 (Ages 70-79) Standard Deviation 0.2",
+      "type": "success",
+    },
+  ],
+  "vitalSigns": [
+    {
+      "text": "This patient is eligible for physical activity.",
+      "type": "success",
+    },
+  ],
+}
+`;
+
+exports[`Full interpretation scenario snapshots > age/sex matrix > Male dob=1960-01-15 1`] = `
+{
+  "annualMobilityScreening": null,
+  "fastWalkingSpeed": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≥ 1.26
+Reference Mean 1.4 (Ages 60-69) Standard Deviation 0.3",
+      "type": "success",
+    },
+  ],
+  "fourSquareStepTest": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 10.3
+Reference Mean 9.4 (Ages 60-69) Standard Deviation 1.9",
+      "type": "success",
+    },
+  ],
+  "timedUpAndGo": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 13.8
+Reference Mean 10.6 (Ages 60-69) Standard Deviation 6.4",
+      "type": "success",
+    },
+  ],
+  "timedUpAndGoCognitive": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 16.7
+Reference Mean 13.2 (Ages 60-69) Standard Deviation 7.3",
+      "type": "success",
+    },
+  ],
+  "usualWalkingSpeed": [
+    {
+      "text": "Preclinical Mobility Limitation (PCML) ≤ 1.18
+Reference Mean 1.27 (Ages 60-69) Standard Deviation 0.71",
+      "type": "warning",
+    },
+  ],
+  "vitalSigns": [
+    {
+      "text": "This patient is eligible for physical activity.",
+      "type": "success",
+    },
+  ],
+}
+`;
+
+exports[`Full interpretation scenario snapshots > age/sex matrix > Male dob=1970-01-15 1`] = `
+{
+  "annualMobilityScreening": null,
+  "fastWalkingSpeed": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≥ 1.26
+Reference Mean 1.33 (Ages 50-59) Standard Deviation 0.55",
+      "type": "success",
+    },
+  ],
+  "fourSquareStepTest": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 11.8
+Reference Mean 10.2 (Ages 50-59) Standard Deviation 3.3",
+      "type": "success",
+    },
+  ],
+  "timedUpAndGo": [
+    {
+      "text": "Preclinical Mobility Limitation (PCML) ≥ 8.4
+Reference Mean 7.5 (Ages 50-59) Standard Deviation 1.5",
+      "type": "warning",
+    },
+  ],
+  "timedUpAndGoCognitive": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 11.2
+Reference Mean 10.1 (Ages 50-59) Standard Deviation 2.1",
+      "type": "success",
+    },
+  ],
+  "usualWalkingSpeed": [
+    {
+      "text": "Preclinical Mobility Limitation (PCML) ≤ 1.22
+Reference Mean 1.31 (Ages 50-59) Standard Deviation 0.16",
+      "type": "warning",
+    },
+    {
+      "text": "Mobility Limitation (ML) ≤ 1.15
+Reference Mean 1.31 (Ages 50-59) Standard Deviation 0.16",
+      "type": "danger",
+    },
+  ],
+  "vitalSigns": [
+    {
+      "text": "This patient is eligible for physical activity.",
+      "type": "success",
+    },
+  ],
+}
+`;
+
+exports[`Full interpretation scenario snapshots > at risk female 92 1`] = `
+{
+  "annualMobilityScreening": null,
+  "fastWalkingSpeed": [
+    {
+      "text": "Fall Risk, <1.10 m/sec (Sn .76, Sp .60)",
+      "type": "danger",
+    },
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≥ 0.9
+Reference Mean 1.02 (Ages 90+) Standard Deviation 0.27",
+      "type": "success",
+    },
+  ],
+  "fourSquareStepTest": [
+    {
+      "text": "Multiple Fall risk ≥15 (Sn .85, Sp .88)",
+      "type": "danger",
+    },
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 28.2
+Reference Mean 20 (Ages 90+) Standard Deviation 16.7",
+      "type": "success",
+    },
+  ],
+  "timedUpAndGo": [
+    {
+      "text": "Fall risk >12.0 sec (Sn .78, Sp .52)",
+      "type": "danger",
+    },
+    {
+      "text": "Frailty ≥17.8 (Sn .93, Sp .98)",
+      "type": "danger",
+    },
+    {
+      "text": "Preclinical Mobility Limitation (PCML) ≥ 18
+Reference Mean 14.7 (Ages 90+) Standard Deviation 6.3",
+      "type": "warning",
+    },
+  ],
+  "timedUpAndGoCognitive": [
+    {
+      "text": "Fall risk >15 (Sn 1.00, Sp .66)",
+      "type": "danger",
+    },
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 29.3
+Reference Mean 24.3 (Ages 90+) Standard Deviation 10.2",
+      "type": "success",
+    },
+  ],
+  "usualWalkingSpeed": [
+    {
+      "text": "Fall Risk, <0.76m/sec (Sn .65, Sp .71)",
+      "type": "danger",
+    },
+    {
+      "text": "Preclinical Mobility Limitation (PCML) ≤ 0.65
+Reference Mean 0.76 (Ages 90+) Standard Deviation 0.21",
+      "type": "warning",
+    },
+  ],
+  "vitalSigns": [
+    {
+      "text": "This patient is eligible for physical activity.",
+      "type": "success",
+    },
+  ],
+}
+`;
+
+exports[`Full interpretation scenario snapshots > borderline male 55 1`] = `
+{
+  "annualMobilityScreening": null,
+  "fastWalkingSpeed": [
+    {
+      "text": "Fall Risk, <1.10 m/sec (Sn .76, Sp .60)",
+      "type": "danger",
+    },
+    {
+      "text": "Preclinical Mobility Limitation (PCML) ≤ 1.25
+Reference Mean 1.33 (Ages 50-59) Standard Deviation 0.55",
+      "type": "warning",
+    },
+  ],
+  "fourSquareStepTest": [
+    {
+      "text": "Preclinical Mobility Limitation (PCML) ≥ 11.9
+Reference Mean 10.2 (Ages 50-59) Standard Deviation 3.3",
+      "type": "warning",
+    },
+    {
+      "text": "Mobility Limitation (ML) ≥ 13.5
+Reference Mean 10.2 (Ages 50-59) Standard Deviation 3.3",
+      "type": "danger",
+    },
+  ],
+  "timedUpAndGo": [
+    {
+      "text": "Preclinical Mobility Limitation (PCML) ≥ 8.4
+Reference Mean 7.5 (Ages 50-59) Standard Deviation 1.5",
+      "type": "warning",
+    },
+    {
+      "text": "Mobility Limitation (ML) ≥ 9
+Reference Mean 7.5 (Ages 50-59) Standard Deviation 1.5",
+      "type": "danger",
+    },
+  ],
+  "timedUpAndGoCognitive": [
+    {
+      "text": "Preclinical Mobility Limitation (PCML) ≥ 11.3
+Reference Mean 10.1 (Ages 50-59) Standard Deviation 2.1",
+      "type": "warning",
+    },
+    {
+      "text": "Mobility Limitation (ML) ≥ 12.2
+Reference Mean 10.1 (Ages 50-59) Standard Deviation 2.1",
+      "type": "danger",
+    },
+  ],
+  "usualWalkingSpeed": [
+    {
+      "text": "Preclinical Mobility Limitation (PCML) ≤ 1.22
+Reference Mean 1.31 (Ages 50-59) Standard Deviation 0.16",
+      "type": "warning",
+    },
+    {
+      "text": "Mobility Limitation (ML) ≤ 1.15
+Reference Mean 1.31 (Ages 50-59) Standard Deviation 0.16",
+      "type": "danger",
+    },
+  ],
+  "vitalSigns": [
+    {
+      "text": "This patient is eligible for physical activity.",
+      "type": "success",
+    },
+  ],
+}
+`;
+
+exports[`Full interpretation scenario snapshots > empty form state 1`] = `
+{
+  "annualMobilityScreening": null,
+  "fastWalkingSpeed": null,
+  "fourSquareStepTest": null,
+  "timedUpAndGo": null,
+  "timedUpAndGoCognitive": null,
+  "usualWalkingSpeed": null,
+  "vitalSigns": null,
+}
+`;
+
+exports[`Full interpretation scenario snapshots > female 75 TUG fall risk 1`] = `
+{
+  "annualMobilityScreening": null,
+  "fastWalkingSpeed": null,
+  "fourSquareStepTest": null,
+  "timedUpAndGo": [
+    {
+      "text": "Fall risk >13.5 sec (Sn .74, Sp .31)",
+      "type": "danger",
+    },
+    {
+      "text": "Preclinical Mobility Limitation (PCML) ≥ 10.7
+Reference Mean 9.2 (Ages 70-79) Standard Deviation 2.7",
+      "type": "warning",
+    },
+    {
+      "text": "Mobility Limitation (ML) ≥ 11.9
+Reference Mean 9.2 (Ages 70-79) Standard Deviation 2.7",
+      "type": "danger",
+    },
+  ],
+  "timedUpAndGoCognitive": null,
+  "usualWalkingSpeed": null,
+  "vitalSigns": [
+    {
+      "text": "This patient is eligible for physical activity.",
+      "type": "success",
+    },
+  ],
+}
+`;
+
+exports[`Full interpretation scenario snapshots > female 85 TUG fall risk 1`] = `
+{
+  "annualMobilityScreening": null,
+  "fastWalkingSpeed": null,
+  "fourSquareStepTest": null,
+  "timedUpAndGo": [
+    {
+      "text": "Fall risk >12.0 sec (Sn .78, Sp .52)",
+      "type": "danger",
+    },
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 12.9
+Reference Mean 11.4 (Ages 80-89) Standard Deviation 3",
+      "type": "success",
+    },
+  ],
+  "timedUpAndGoCognitive": null,
+  "usualWalkingSpeed": null,
+  "vitalSigns": [
+    {
+      "text": "This patient is eligible for physical activity.",
+      "type": "success",
+    },
+  ],
+}
+`;
+
+exports[`Full interpretation scenario snapshots > healthy female 75 1`] = `
+{
+  "annualMobilityScreening": null,
+  "fastWalkingSpeed": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≥ 1.37
+Reference Mean 1.52 (Ages 70-79) Standard Deviation 0.33",
+      "type": "success",
+    },
+  ],
+  "fourSquareStepTest": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 12.6
+Reference Mean 10.9 (Ages 70-79) Standard Deviation 3.6",
+      "type": "success",
+    },
+  ],
+  "timedUpAndGo": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 10.6
+Reference Mean 9.2 (Ages 70-79) Standard Deviation 2.7",
+      "type": "success",
+    },
+  ],
+  "timedUpAndGoCognitive": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 15.3
+Reference Mean 12.9 (Ages 70-79) Standard Deviation 5",
+      "type": "success",
+    },
+  ],
+  "usualWalkingSpeed": null,
+  "vitalSigns": [
+    {
+      "text": "This patient is eligible for physical activity.",
+      "type": "success",
+    },
+  ],
+}
+`;
+
+exports[`Full interpretation scenario snapshots > healthy male 65 1`] = `
+{
+  "annualMobilityScreening": null,
+  "fastWalkingSpeed": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≥ 1.26
+Reference Mean 1.4 (Ages 60-69) Standard Deviation 0.3",
+      "type": "success",
+    },
+  ],
+  "fourSquareStepTest": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 10.3
+Reference Mean 9.4 (Ages 60-69) Standard Deviation 1.9",
+      "type": "success",
+    },
+  ],
+  "timedUpAndGo": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 13.8
+Reference Mean 10.6 (Ages 60-69) Standard Deviation 6.4",
+      "type": "success",
+    },
+  ],
+  "timedUpAndGoCognitive": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 16.7
+Reference Mean 13.2 (Ages 60-69) Standard Deviation 7.3",
+      "type": "success",
+    },
+  ],
+  "usualWalkingSpeed": [
+    {
+      "text": "No Preclinical Mobility Limitation (No PCML) ≥ 1.19
+Reference Mean 1.27 (Ages 60-69) Standard Deviation 0.71",
+      "type": "success",
+    },
+  ],
+  "vitalSigns": [
+    {
+      "text": "This patient is eligible for physical activity.",
+      "type": "success",
+    },
+  ],
+}
+`;
+
+exports[`Full interpretation scenario snapshots > ineligible male 85 1`] = `
+{
+  "annualMobilityScreening": [
+    {
+      "text": "Participants with the following vital sign findings on vital sign testing may not tolerate the intensity of functional testing. Instead of proceeding, thank them for coming to screening, and refer to their primary care provider, cardiologist, or emergency department for follow-up care.",
+      "type": "warning",
+    },
+  ],
+  "fastWalkingSpeed": null,
+  "fourSquareStepTest": null,
+  "timedUpAndGo": null,
+  "timedUpAndGoCognitive": null,
+  "usualWalkingSpeed": null,
+  "vitalSigns": [
+    {
+      "text": "This patient is ineligible for physical activity.",
+      "type": "danger",
+    },
+  ],
+}
+`;
+
+exports[`Full interpretation scenario snapshots > no demographics 1`] = `
+{
+  "annualMobilityScreening": null,
+  "fastWalkingSpeed": null,
+  "fourSquareStepTest": null,
+  "timedUpAndGo": null,
+  "timedUpAndGoCognitive": null,
+  "usualWalkingSpeed": null,
+  "vitalSigns": [
+    {
+      "text": "This patient is eligible for physical activity.",
+      "type": "success",
+    },
+  ],
+}
+`;
+
+exports[`Full interpretation scenario snapshots > null measurements 1`] = `
+{
+  "annualMobilityScreening": null,
+  "fastWalkingSpeed": null,
+  "fourSquareStepTest": null,
+  "timedUpAndGo": null,
+  "timedUpAndGoCognitive": null,
+  "usualWalkingSpeed": null,
+  "vitalSigns": null,
+}
+`;
+
+exports[`Full interpretation scenario snapshots > very slow male 75 1`] = `
+{
+  "annualMobilityScreening": null,
+  "fastWalkingSpeed": [
+    {
+      "text": "Fall Risk, <1.10 m/sec (Sn .76, Sp .60)",
+      "type": "danger",
+    },
+    {
+      "text": "Preclinical Mobility Limitation (PCML) ≤ 1.33
+Reference Mean 1.58 (Ages 70-79) Standard Deviation 0.51",
+      "type": "warning",
+    },
+    {
+      "text": "Mobility Limitation (ML) ≤ 1.07
+Reference Mean 1.58 (Ages 70-79) Standard Deviation 0.51",
+      "type": "danger",
+    },
+  ],
+  "fourSquareStepTest": [
+    {
+      "text": "Multiple Fall risk ≥15 (Sn .85, Sp .88)",
+      "type": "danger",
+    },
+    {
+      "text": "Preclinical Mobility Limitation (PCML) ≥ 13
+Reference Mean 10.9 (Ages 70-79) Standard Deviation 4.2",
+      "type": "warning",
+    },
+    {
+      "text": "Mobility Limitation (ML) ≥ 15.1
+Reference Mean 10.9 (Ages 70-79) Standard Deviation 4.2",
+      "type": "danger",
+    },
+  ],
+  "timedUpAndGo": [
+    {
+      "text": "Fall risk >12.0 sec (Sn .74, Sp .31)",
+      "type": "danger",
+    },
+    {
+      "text": "Frailty ≥17.8 (Sn .93, Sp .98)",
+      "type": "danger",
+    },
+    {
+      "text": "Preclinical Mobility Limitation (PCML) ≥ 10.1
+Reference Mean 8.6 (Ages 70-79) Standard Deviation 2.8",
+      "type": "warning",
+    },
+    {
+      "text": "Mobility Limitation (ML) ≥ 11.4
+Reference Mean 8.6 (Ages 70-79) Standard Deviation 2.8",
+      "type": "danger",
+    },
+  ],
+  "timedUpAndGoCognitive": [
+    {
+      "text": "Fall risk >15 (Sn 1.00, Sp .66)",
+      "type": "danger",
+    },
+    {
+      "text": "Preclinical Mobility Limitation (PCML) ≥ 13.6
+Reference Mean 11.6 (Ages 70-79) Standard Deviation 4.1",
+      "type": "warning",
+    },
+    {
+      "text": "Mobility Limitation (ML) ≥ 15.7
+Reference Mean 11.6 (Ages 70-79) Standard Deviation 4.1",
+      "type": "danger",
+    },
+  ],
+  "usualWalkingSpeed": [
+    {
+      "text": "Fall Risk, <0.76m/sec (Sn .65, Sp .71)",
+      "type": "danger",
+    },
+    {
+      "text": "Frailty Risk, <0.63 m/sec (Sn .90, Sp .90)",
+      "type": "danger",
+    },
+    {
+      "text": "Preclinical Mobility Limitation (PCML) ≤ 1.08
+Reference Mean 1.18 (Ages 70-79) Standard Deviation 0.2",
+      "type": "warning",
+    },
+    {
+      "text": "Mobility Limitation (ML) ≤ 0.98
+Reference Mean 1.18 (Ages 70-79) Standard Deviation 0.2",
+      "type": "danger",
+    },
+  ],
+  "vitalSigns": [
+    {
+      "text": "This patient is eligible for physical activity.",
+      "type": "success",
+    },
+  ],
+}
+`;
+
+exports[`Full interpretation scenario snapshots > vitals only 1`] = `
+{
+  "annualMobilityScreening": null,
+  "fastWalkingSpeed": null,
+  "fourSquareStepTest": null,
+  "timedUpAndGo": null,
+  "timedUpAndGoCognitive": null,
+  "usualWalkingSpeed": null,
+  "vitalSigns": [
+    {
+      "text": "This patient is eligible for physical activity.",
+      "type": "success",
+    },
+  ],
+}
+`;
+
+exports[`Full interpretation scenario snapshots > young patient 1`] = `
+{
+  "annualMobilityScreening": null,
+  "fastWalkingSpeed": null,
+  "fourSquareStepTest": null,
+  "timedUpAndGo": null,
+  "timedUpAndGoCognitive": null,
+  "usualWalkingSpeed": null,
+  "vitalSigns": [
+    {
+      "text": "This patient is eligible for physical activity.",
+      "type": "success",
+    },
+  ],
+}
+`;

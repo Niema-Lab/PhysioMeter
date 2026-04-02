@@ -3,7 +3,10 @@ import { Navigate } from 'react-router-dom'
 
 import { getCurrentUser, createSession } from '../DB'
 import { PT_TEST_CONFIG } from './physical-therapy-tests/PhysicalTherapyTestFactory'
+import { PT_TEST_MEASUREMENT_CONFIG } from './physical-therapy-tests/PhysicalTherapyTest'
 import Title from './form/Title'
+
+const MEASUREMENT_NAME_MAP = Object.fromEntries(PT_TEST_MEASUREMENT_CONFIG.map(m => [m.stateKey, m.name]))
 import Text from './form/Text'
 import Submit from './form/Submit'
 import LoadingPage from './LoadingPage'
@@ -45,7 +48,7 @@ export class NewSession extends Component {
 
     handleSubmit = async () => {
         if (!this.state.selectedTestKey) {
-            this.setState({ submitText: 'Please select a test type.', submitTextType: 'error' })
+            this.setState({ submitText: 'Please select a test type.', submitTextType: 'danger' })
             return
         }
 
@@ -69,7 +72,7 @@ export class NewSession extends Component {
         } catch (e) {
             this.setState({
                 submitText: `Error creating session: ${e}`,
-                submitTextType: 'error'
+                submitTextType: 'danger'
             })
         }
     }
@@ -122,7 +125,7 @@ export class NewSession extends Component {
                                     {config.defaultTestName}
                                     {config.permittedMeasurements && (
                                         <small className="text-muted d-block">
-                                            Includes: {config.permittedMeasurements.join(', ')}
+                                            Includes: {config.permittedMeasurements.map(k => MEASUREMENT_NAME_MAP[k] || k).join(', ')}
                                         </small>
                                     )}
                                 </label>

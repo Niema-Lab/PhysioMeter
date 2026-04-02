@@ -66,6 +66,7 @@ function MeasurementSummary({ formState, validations, isDisabled, patientName })
                                     {config.type === 'fields' && (config.fields || config.fieldNames) ? (
                                         <div className="d-flex flex-wrap justify-content-evenly gap-3">
                                             {(config.fields || config.fieldNames?.map(fn => MEASUREMENT_CONFIGS[fn])).map((field, idx) => {
+                                                if (field?.displayOnly) return null
                                                 const fieldValue = Array.isArray(value) ? value[idx] : value
                                                 const fieldLabel = field?.defaultLabel || (config.fieldNames ? MEASUREMENT_CONFIGS[config.fieldNames[idx]]?.defaultLabel : `Field ${idx + 1}`)
                                                 const fieldUnit = field?.unit || MEASUREMENT_CONFIGS[config.fieldNames?.[idx]]?.unit || ''

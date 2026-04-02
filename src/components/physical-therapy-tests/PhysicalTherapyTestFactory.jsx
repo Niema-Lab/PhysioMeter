@@ -1,8 +1,9 @@
 import { Component } from "react"
 import PhysicalTherapyTest from "./PhysicalTherapyTest"
+import testsConfig from '../../config/tests.yaml'
 
 /**
- * 
+ *
  * @param {String} key the type of test to create (will be saved in the user object in indexedDB under this key)
  */
 const createTest = (key) => {
@@ -19,30 +20,12 @@ const createTest = (key) => {
     }
 }
 
-export const PT_TEST_CONFIG = [
-    {
-        // freeform measurements session — all measurements available
-        testKey: 'measurements',
-        defaultTestName: 'Measurements',
-        permittedMeasurements: null, // all measurements selected
-    },
-    {
-        testKey: 'annualMobilityScreening',
-        defaultTestName: 'Annual Mobility Screening',
-        homePageComponent: null, // TODO: create this
-        permittedMeasurements: [
-            'Vital Signs',
-            '5 Meter Usual Walking Speed',
-            '5 Meter Fast Walking Speed',
-            '30 Second Sit to Stand',
-            'Assistive Device for Four Square Step Test',
-            'Four Square Step Test',
-            'Modified Four Square Step Test',
-            'Timed Up and Go',
-            'Timed Up and Go Cognitive',
-        ],
-    }
-];
+// Transform YAML config into the runtime shape expected by consumers.
+export const PT_TEST_CONFIG = testsConfig.map(t => ({
+    testKey: t.key,
+    defaultTestName: t.name,
+    permittedMeasurements: t.permitted_measurements || null,
+}))
 
 for (const config of PT_TEST_CONFIG) {
     config.component = createTest(config.testKey)

@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 
 import { Navigate } from "react-router-dom"
-import { VitalSigns, FiveMeterUsualWalkingSpeed, FiveMeterFastWalkingSpeed, ThirtySecondSitToStand, AssistiveDevice, FourSquareStepTest, ModifiedFourSquareStepTest, TimedUpAndGo, TimedUpAndGoCognitive, MEASUREMENT_CONFIGS, createMeasurementInstance } from '../measurements/MeasurementFactory'
+import { MEASUREMENT_CONFIGS, createMeasurementInstance, createMeasurement } from '../measurements/MeasurementFactory'
+import measurementGroupsConfig from '../../config/measurement_groups.yaml'
 import MultipleMeasurements from '../measurements/MultipleMeasurements'
 import { hasData } from '../measurements/MeasurementSummary'
 import InlineMeasurementInterpretations from '../interpretations/InlineMeasurementInterpretations'
@@ -564,7 +565,6 @@ export class PhysicalTherapyTest extends Component {
         return (
             <>
                 <Title>{titleName}</Title>
-                {this.props.homePageComponent && this.props.homePageComponent()}
                 {this.renderMeasurementSelection()}
             </>
         )
@@ -589,7 +589,7 @@ export class PhysicalTherapyTest extends Component {
                                 onValidationChange={(validations) => this.updateValidations(stateKey, validations)}
                                 onDisabledChange={(disabledValues) => this.updateDisabled(stateKey, disabledValues)}
                                 isDisabled={this.isDisabled}
-                                buttonHidden={this.props.permittedMeasurements && !this.props.permittedMeasurements.includes(name)}
+                                buttonHidden={this.props.permittedMeasurements && !this.props.permittedMeasurements.includes(stateKey)}
                                 buttonDisabledAndChecked={!!this.props.permittedMeasurements}
                                 getDisableCaseComputedText={this.getDisableCaseComputedText}
                                 // for now, only one measurement of each type is allowed
@@ -629,52 +629,14 @@ export class PhysicalTherapyTest extends Component {
     }
 }
 
-export const PT_TEST_MEASUREMENT_CONFIG = [
-    {
-        name: 'Vital Signs',
-        component: VitalSigns,
-        stateKey: 'vitalSigns',
-    },
-    {
-        name: '5 Meter Usual Walking Speed',
-        component: FiveMeterUsualWalkingSpeed,
-        stateKey: 'fiveMeterUsualWalkingSpeed',
-    },
-    {
-        name: '5 Meter Fast Walking Speed',
-        component: FiveMeterFastWalkingSpeed,
-        stateKey: 'fiveMeterFastWalkingSpeed',
-    },
-    {
-        name: '30 Second Sit to Stand',
-        component: ThirtySecondSitToStand,
-        stateKey: 'thirtySecondSitToStand',
-    },
-    {
-        name: 'Assistive Device for Four Square Step Test',
-        component: AssistiveDevice,
-        stateKey: 'assistiveDevices',
-    },
-    {
-        name: 'Four Square Step Test',
-        component: FourSquareStepTest,
-        stateKey: 'fourSquareStepTest'
-    },
-    {
-        name: 'Modified Four Square Step Test',
-        component: ModifiedFourSquareStepTest,
-        stateKey: 'modifiedFourSquareStepTest'
-    },
-    {
-        name: 'Timed Up and Go',
-        component: TimedUpAndGo,
-        stateKey: 'timedUpAndGo'
-    },
-    {
-        name: 'Timed Up and Go Cognitive',
-        component: TimedUpAndGoCognitive,
-        stateKey: 'timedUpAndGoCognitive'
-    },
-]
+// Derive PT_TEST_MEASUREMENT_CONFIG from YAML config + component factory.
+// Non-patient-level groups become measurement entries with dynamically created components.
+export const PT_TEST_MEASUREMENT_CONFIG = measurementGroupsConfig
+    .filter(g => !g.patient_level)
+    .map(g => ({
+        name: g.name,
+        component: createMeasurement(g.key),
+        stateKey: g.key,
+    }))
 
 export default PhysicalTherapyTest

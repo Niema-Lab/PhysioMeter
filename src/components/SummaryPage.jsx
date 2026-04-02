@@ -4,6 +4,7 @@ import Title from './form/Title'
 import Submit from './form/Submit'
 import { hasData } from './measurements/MeasurementSummary'
 import { downloadCSV, generateMeasurementsCSVRows, generateCalculationsCSVRows, generateInterpretationsCSVRows } from '../utils/csvExport'
+import { generateAndDownloadPDF } from '../utils/pdfExport'
 
 function SummaryPage({ name, patientName, submitText, submitTextType, formState, validations, disabledValues, isDisabled }) {
     const date = new Date().toISOString().split('T')[0]
@@ -23,12 +24,17 @@ function SummaryPage({ name, patientName, submitText, submitTextType, formState,
         }, 200)
     }
 
+    const exportPDF = () => {
+        generateAndDownloadPDF(formState, validations, disabledValues, isDisabled, patientName)
+    }
+
     return (
         <>
             <Title>Summary {name}</Title>
             {hasData(formState) &&
-                <div className="d-flex justify-content-center">
+                <div className="d-flex flex-wrap justify-content-center gap-2">
                     <Submit label="Export All Data to CSV" onClick={exportAll} />
+                    <Submit label="Export All Data to PDF" onClick={exportPDF} />
                 </div>
             }
             {submitText &&

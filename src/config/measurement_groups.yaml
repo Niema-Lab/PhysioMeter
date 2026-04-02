@@ -1,0 +1,81 @@
+# Measurement Group Mapping
+# Defines which calculations and interpretations belong to each measurement,
+# and the order measurements appear in the UI.
+#
+# Fields:
+#   key:              Internal state key matching the measurement config key
+#   name:             Display name shown in navigation and UI
+#   patient_level:    If true, this is a patient attribute (shown read-only in summary,
+#                     not in the measurement selection list)
+#   calculations:     List of calculation keys to display in this group's summary section
+#   interpretations:  List of interpretation keys to display in this group's summary section
+#
+# IMPORTANT: Every calculation and interpretation must appear in exactly one group.
+# Assign interpretations to the PRIMARY measurement they relate to -- not every
+# measurement they depend on.
+
+- key: name
+  name: "Name"
+  patient_level: true
+
+- key: dob
+  name: "Date of Birth"
+  patient_level: true
+  calculations:
+    - age
+
+- key: sex
+  name: "Sex"
+  patient_level: true
+
+- key: vitalSigns
+  name: "Vital Signs"
+  interpretations:
+    - vitalSigns
+    - annualMobilityScreening
+
+- key: fiveMeterUsualWalkingSpeed
+  name: "5 Meter Usual Walking Speed"
+  calculations:
+    - fiveMeterUsualWalkingSpeedMean
+  interpretations:
+    - usualWalkingSpeed
+
+- key: fiveMeterFastWalkingSpeed
+  name: "5 Meter Fast Walking Speed"
+  calculations:
+    - fiveMeterFastWalkingSpeedBest
+  interpretations:
+    - fastWalkingSpeed
+
+- key: thirtySecondSitToStand
+  name: "30 Second Sit to Stand"
+
+- key: assistiveDevices
+  name: "Assistive Device for Four Square Step Test"
+
+- key: fourSquareStepTest
+  name: "Four Square Step Test"
+  calculations:
+    - fourSquareStepTestBest
+  interpretations:
+    - fourSquareStepTest
+
+- key: modifiedFourSquareStepTest
+  name: "Modified Four Square Step Test"
+  calculations:
+    - modifiedFourSquareStepTestBest
+
+- key: timedUpAndGo
+  name: "Timed Up and Go"
+  calculations:
+    - timedUpAndGoBest
+  interpretations:
+    - timedUpAndGo
+
+- key: timedUpAndGoCognitive
+  name: "Timed Up and Go Cognitive"
+  calculations:
+    - timedUpAndGoCognitiveBest
+  interpretations:
+    - timedUpAndGoCognitive

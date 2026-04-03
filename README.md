@@ -1,61 +1,117 @@
 # PhysioMeter
 
-A React web application for physical therapy measurements, interpretations, and assessments. Deployed at https://niema-lab.github.io/PhysioMeter/.
+PhysioMeter is a clinical tool for recording physical therapy measurements, computing derived values, and generating evidence-based interpretations. Visit https://niema-lab.github.io/PhysioMeter/.
 
-## Measurement Group Map
+## Features
 
-Each measurement is grouped with its related calculations and interpretations. Interpretations are listed under their **primary** measurement only (not all measurements they depend on). This mapping is defined in `src/utils/measurementGroupMapping.js`.
+- **Fully client-side** — all data is stored in the browser via IndexedDB; no patient data is sent to or stored on any server
+- **YAML-driven configuration** — all clinical logic (measurements, calculations, interpretations, thresholds) is defined in YAML files, no code changes needed
+- **Declarative validation** — input validation rules are defined alongside measurements
+- **Automated interpretations** — rule-based interpretation engine with threshold table lookups, cross-interpretation references, and severity classifications
+- **PDF export** — generate summary reports with measurements, calculations, and interpretations
+- **Test presets** — configurable subsets of measurements for specific assessment protocols
 
-| Measurement | Calculations | Interpretations |
-|---|---|---|
-| Name | — | — |
-| Date of Birth | Age | — |
-| Sex | — | — |
-| Vital Signs | — | Vital Signs, Annual Mobility Screening |
-| 5 Meter Usual Walking Speed | 5M Usual Walking Speed Mean | Usual Walking Speed |
-| 5 Meter Fast Walking Speed | 5M Fast Walking Speed Best | Fast Walking Speed |
-| 30 Second Sit to Stand | — | — |
-| Assistive Device for Four Square Step Test | — | — |
-| Four Square Step Test | Four Square Step Test Best | Four Square Step Test |
-| Modified Four Square Step Test | Modified Four Square Step Test Best | — |
-| Timed Up and Go | TUG Best | Timed Up and Go |
-| Timed Up and Go Cognitive | TUG Cognitive Best | TUG Cognitive Dual Task |
+## Overview
 
-## Adding New Measurements, Calculations, or Interpretations
+### Home Page
 
-When adding new components, update these files:
+The home page provides four entry points: **New Patient**, **Existing Patient**, **Presets**, and **Utilities**.
 
-1. **New Measurement:**
-   - Add config to `MEASUREMENT_CONFIGS` in `src/components/measurements/MeasurementFactory.jsx`
-   - Add `createMeasurement()` export in the same file
-   - Add entry to `PT_TEST_MEASUREMENT_CONFIG` in `src/components/physical-therapy-tests/PhysicalTherapyTest.jsx`
-   - Add entry to `MEASUREMENT_GROUP_MAP` in `src/utils/measurementGroupMapping.js`
+### Patients and Sessions
 
-2. **New Calculation:**
-   - Add config to `CALCULATION_SECTION_CONFIGS` in `src/components/calculations/CalculationFactory.jsx`
-   - Add its key to the parent measurement's `calculationKeys` in `MEASUREMENT_GROUP_MAP`
+Each patient has a name, date of birth, and sex. Patient data is stored locally in the browser via IndexedDB. From a patient's page, you can create new sessions or revisit previous ones.
 
-3. **New Interpretation:**
-   - Add config to `INTERPRETATION_SECTION_CONFIGS` in `src/components/interpretations/InterpretationFactory.jsx`
-   - Add its key to the PRIMARY measurement's `interpretationKeys` in `MEASUREMENT_GROUP_MAP`
-   - Primary = the measurement most directly associated, not all measurements it depends on
+### Test Presets
 
-4. **New Preset/Test:**
-   - Add config to `PT_TEST_CONFIG` in `src/components/physical-therapy-tests/PhysicalTherapyTestFactory.jsx`
+When creating a session, you choose a test preset that determines which measurements are available. Currently there are two presets: **Measurements** (all measurements) and **Annual Mobility Screening** (a curated subset of 10 measurements).
 
-## Roadmap
+### Measurements
 
-Next week:
+Each measurement is an input form — ranging from simple single-field entries (vital signs) to multi-trial timed tests (5-meter walking speed with 3 trials and a built-in stopwatch). Measurements can have conditional logic that disables them based on other inputs (e.g., Four Square Step Test is disabled if the patient uses a walker).
 
-- [ ] Implement multiple tabs open for one / multiple patients?
-- [ ] Import data feature?
+### Calculations and Interpretations
 
-Final chores:
+**Calculations** are values derived automatically from measurements (e.g., mean walking speed across trials, age from date of birth). **Interpretations** compare calculated values against age/sex normative threshold tables to produce clinical assessments with severity classifications (normal, caution, concern).
 
-- [ ] Add Playwright E2E tests
-- [ ] Improve design? Branding? UI?
-- [ ] Dark mode?
+### Summary and Export
 
-## Potential future features
+The summary page displays all measurements, calculations, and interpretations grouped by category with color-coded status indicators. From here, you can export to CSV (three separate files) or a single PDF report.
 
-- [ ] Full computedValues support with counter value for all measurements (and counter + time for Stopwatch and Countdown Timer)
+### Utilities
+
+Standalone tools accessible from the home page — stopwatch, countdown timer, tally counter, calculator, and metronome. These are independent of patient data and don't persist any information.
+
+## Project Structure
+
+```
+src/
+├── config/                  # YAML configuration files
+│   ├── measurements.yaml        # Input field definitions
+│   ├── calculations.yaml        # Derived value formulas
+│   ├── interpretations.yaml     # Clinical interpretation rules
+│   ├── thresholds.yaml          # Age/sex normative data tables
+│   ├── measurement_groups.yaml  # Groups measurements with their calculations/interpretations
+│   ├── tests.yaml               # Test preset definitions
+│   └── schemas/                 # JSON Schemas for config validation
+├── engines/                 # YAML-to-runtime config converters
+│   ├── measurementEngine.js     # Builds measurement configs
+│   ├── calculationEngine.js     # Builds calculation configs
+│   ├── interpretationEngine.js  # Builds interpretation configs
+│   ├── validationEngine.js      # Builds validation functions
+│   └── conditionEngine.js       # Evaluates declarative conditions
+├── components/              # React components
+│   ├── measurements/            # Measurement input components + instructions
+│   ├── calculations/            # Calculation display components
+│   ├── interpretations/         # Interpretation display components
+│   ├── physical-therapy-tests/  # Test preset selection + execution
+│   ├── form/                    # Shared form components
+│   └── utilities/               # Timer, stopwatch, etc.
+├── utils/                   # Helpers (PDF export, group mapping, date validation)
+├── __tests__/               # Vitest tests (migration parity, fixtures)
+└── scss/                    # Custom styles
+scripts/                     # Config validation scripts
+docs/                        # Configuration guide
+```
+
+## Configuration
+
+All clinical logic is defined in 6 YAML files in `src/config/`. To add or modify measurements, calculations, interpretations, or test presets, edit these files — no code changes required.
+
+See [`docs/configuration-guide.md`](docs/configuration-guide.md) for full documentation on the configuration format, available options, and examples.
+
+## Local Development
+
+Prerequisites: [Node.js](https://nodejs.org/) (v22+)
+
+```bash
+# Install dependencies
+npm install
+
+# Start dev server
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+```
+
+## Testing and Validation
+
+```bash
+# Run all tests (Vitest)
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Validate YAML configs against JSON Schemas + cross-file reference checks
+npm run validate:config
+```
+
+CI (GitHub Actions) runs tests and config validation on push/PR against Node 22 and 25.
+
+## Deployment
+
+The app is deployed to GitHub Pages at https://niema-lab.github.io/PhysioMeter/. Production builds are generated with `npm run build` and output to `dist/`.

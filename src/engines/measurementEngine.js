@@ -1,16 +1,11 @@
-// Measurement Engine
-// Converts declarative measurement configs from measurements.yaml into the
-// runtime MEASUREMENT_CONFIGS shape expected by existing components.
+// Converts measurements.yaml into the runtime MEASUREMENT_CONFIGS shape.
 
 import { buildValidationFunction } from './validationEngine'
 import { evaluate } from './conditionEngine'
 
-// ========== Computed Display ==========
-
 function buildComputedFields(computedDisplayConfig) {
     if (!computedDisplayConfig || computedDisplayConfig.length === 0) return undefined
 
-    // Currently only supports the "divide" formula
     return (value) => {
         const results = {}
         for (const display of computedDisplayConfig) {
@@ -31,15 +26,6 @@ function buildComputedFields(computedDisplayConfig) {
     }
 }
 
-// ========== Disabled Cases ==========
-
-/**
- * Build disabled cases from YAML config.
- * Each disabled_cases item with show_when conditions generates a disabledCasesComputed entry
- * whose showOverride function evaluates the conditions via the condition engine.
- * @param {Object} yamlConfig - A single measurement's YAML config
- * @param {Object} fieldMappings - Field mappings for resolving dotted measurement paths
- */
 function buildDisabledCases(yamlConfig, fieldMappings) {
     const disabledCasesComputed = []
     const disabledCases = []
@@ -66,8 +52,6 @@ function buildDisabledCases(yamlConfig, fieldMappings) {
     return { disabledCasesComputed, disabledCases }
 }
 
-// ========== Inline Fields ==========
-
 function buildInlineField(fieldYaml) {
     const field = {
         type: fieldYaml.type,
@@ -87,27 +71,17 @@ function buildInlineField(fieldYaml) {
     return field
 }
 
-// ========== Main Build Function ==========
-
-/**
- * Build MEASUREMENT_CONFIGS from YAML config + instruction markdown map.
- * @param {Object} yamlConfig - The parsed measurements.yaml
- * @param {Object} instructionsMap - { filename: markdownString } mapping
- * @param {Object} fieldMappings - { measurementKey: [fieldName, ...] } for resolving dotted paths
- * @returns {Object} MEASUREMENT_CONFIGS matching the original hardcoded shape
- */
 export function buildMeasurementConfigs(yamlConfig, instructionsMap, fieldMappings) {
     const configs = {}
 
     for (const [key, yaml] of Object.entries(yamlConfig)) {
-        // Skip YAML anchor definitions (keys starting with _)
+        // Keys starting with _ are YAML anchor definitions, not measurements.
         if (key.startsWith('_')) continue
         const config = {
             type: yaml.type,
             defaultLabel: yaml.label,
         }
 
-        // Optional simple properties
         if (yaml.placeholder) config.placeholder = yaml.placeholder
         if (yaml.min !== undefined) config.min = yaml.min
         if (yaml.max !== undefined) config.max = yaml.max
@@ -116,40 +90,32 @@ export function buildMeasurementConfigs(yamlConfig, instructionsMap, fieldMappin
         if (yaml.num_trials) config.numTrials = yaml.num_trials
         if (yaml.trial_names) config.trialNames = yaml.trial_names
 
-        // Instructions (resolve filename to markdown string)
         if (yaml.instructions && instructionsMap[yaml.instructions]) {
             config.instructions = instructionsMap[yaml.instructions]
         }
 
-        // Validation (for non-fields types or when the config has direct validation)
         if (yaml.validation) {
             const validationFn = buildValidationFunction(yaml.validation)
             if (validationFn) config.validationFunction = validationFn
         } else if (yaml.options) {
-            // Radio/select: auto-generate includes validation
             config.validationFunction = (value) => yaml.options.includes(value)
         }
 
-        // Composite fields (fieldNames references)
         if (yaml.field_names) {
             config.fieldNames = yaml.field_names
         }
 
-        // Inline fields
         if (yaml.fields) {
             config.fields = yaml.fields.map(buildInlineField)
         }
 
-        // Computed display
         const computedFields = buildComputedFields(yaml.computed_display)
         if (computedFields) config.computedFields = computedFields
 
-        // Disabled cases
         const { disabledCasesComputed, disabledCases } = buildDisabledCases(yaml, fieldMappings)
         if (disabledCasesComputed.length > 0) config.disabledCasesComputed = disabledCasesComputed
         if (disabledCases.length > 0) config.disabledCases = disabledCases
 
-        // Action button
         if (yaml.action_button) {
             config.actionButton = {
                 text: yaml.action_button.text,

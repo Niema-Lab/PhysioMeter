@@ -1,20 +1,12 @@
-# Calculation Definitions
-# Each calculation derives a value from measurement data.
+# Calculations derive values from measurement data for the summary.
 #
-# Fields:
-#   label:            Display name shown in the summary
-#   unit:             Unit of measurement (e.g., "years", "s")
-#   operation:        The type of calculation to perform. Options:
-#                       - age_from_date_of_birth: Computes age in years from a date field
-#                       - trial_mean: Averages all trial values across all instances
-#                       - trial_min: Finds the minimum trial value across all instances
-#                       - trial_max: Finds the maximum trial value across all instances
-#                       - field_min: Finds the minimum value of a specific field across instances
-#                       - field_max: Finds the maximum value of a specific field across instances
-#   from_measurement: The measurement key to pull data from
-#   field_label:      (field_min/field_max only) Label of the inline field to extract.
-#                     Must match a "label" in the measurement's "fields" list.
-#   decimal_places:   Number of decimal places to round to (default: 2)
+# operation (one of):
+#   age_from_date_of_birth  - age in years from a date field
+#   trial_mean/min/max      - aggregate all trial values across all instances
+#   field_min / field_max   - aggregate a single inline field across instances (requires field_label)
+#
+# Other fields: label, unit, from_measurement, decimal_places (default 2).
+# field_label must match a "label" in the target measurement's "fields" list.
 
 age:
   label: "Age"

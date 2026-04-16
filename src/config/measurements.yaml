@@ -1,49 +1,25 @@
-# Measurement Definitions
-# Each measurement defines a data input field with its type, validation, and behavior.
+# Measurement input definitions: type, validation, and behavior.
 #
-# Common fields:
-#   type:           Input type. Options: text, date, radio, decimal, integer, stopwatch, countdown, fields
-#   label:          Display name
-#   placeholder:    Placeholder text for the input
-#   unit:           Unit of measurement (displayed next to the value)
-#   min/max:        Numeric bounds (displayed in the UI, NOT used for validation)
-#   instructions:   Filename (without .md) of a markdown file in instructions/
-#   options:        List of choices (for radio type)
+# type: text | date | radio | decimal | integer | stopwatch | countdown | fields
+# Common fields: label, placeholder, unit, min/max (UI hints only — not validated),
+# instructions (markdown filename in instructions/), options (for radio).
 #
-# Validation:
-#   See validationEngine.js for all supported validation rules.
+# validation: see validationEngine.js for supported rules.
 #
-# Composite measurements (type: fields):
-#   field_names:    References to other measurement keys (each renders as its own input)
-#   fields:         Inline field definitions (each has its own type/label/validation)
-#                   Set display_only: true on a field to hide it from summaries/exports (e.g., countdown timer)
+# Composite (type: fields):
+#   field_names: references to other measurement keys (render as separate inputs)
+#   fields:      inline definitions (each with own type/label/validation);
+#                display_only: true hides the field from summaries/exports.
 #
-# Stopwatch measurements:
-#   num_trials:     Number of trial inputs to show
+# Stopwatch: num_trials, trial_names.
 #
-# Disabled cases:
-#   disabled_cases: Conditions that disable this measurement. Each has:
-#     text:           Explanation shown with the override checkbox
-#     show_when:      Condition determining when to show the disabled case override
-#     default_checked: If true, starts checked (measurement disabled by default)
-#   static_disabled_cases:  Simple checkboxes the user can toggle. Each is a text string.
+# disabled_cases:        [{ text, show_when, default_checked }] - conditional override checkboxes.
+# static_disabled_cases: plain text entries that render as toggleable checkboxes.
 #
-# Computed display:
-#   computed_display: Derived values shown next to the input. Each has:
-#     label:          Display label
-#     unit:           Unit string
-#     formula:        Calculation type (e.g., "divide")
-#     numerator:      Fixed numerator value
-#     denominator_from: "value" to use the input value as denominator
-#     decimal_places: Rounding precision
+# computed_display: [{ label, unit, formula, numerator, denominator_from, decimal_places }]
+#   shows derived values next to the input. Currently only formula: divide is supported.
 #
-# Action button:
-#   action_button:  Navigation button shown on the measurement page.
-#     text:           Button label
-#     navigate_to:    Measurement key to navigate to
-#     bypass_disabled_indices: Indices of disabled_cases entries to bypass on the target
-
-# ========== Patient Information ==========
+# action_button: { text, navigate_to, bypass_disabled_indices } - navigation button on the page.
 
 name:
   type: text
@@ -64,8 +40,6 @@ sex:
   type: radio
   label: "Sex"
   options: ["Male", "Female"]
-
-# ========== Vital Signs ==========
 
 bloodPressure:
   type: text
@@ -116,9 +90,7 @@ vitalSigns:
     - bloodPressure
     - oxygenSaturation
 
-# ========== Shared Disabled Case Conditions ==========
-# YAML anchors let us define conditions once and reuse them across measurements.
-
+# YAML anchors let us define disabled-case conditions once and reuse them across measurements.
 _physical_activity_disabled_case: &physical_activity_disabled_case
   text: "This patient is ineligible for physical activity. Uncheck this box to bypass the Vital Signs requirement."
   default_checked: true
@@ -137,8 +109,6 @@ _physical_activity_disabled_case: &physical_activity_disabled_case
         is_less_than: 90
       - from_measurement: vitalSigns.bloodPressure.diastolic
         is_less_than: 60
-
-# ========== Walking Speed Tests ==========
 
 fiveMeterUsualWalkingSpeed:
   type: stopwatch
@@ -176,8 +146,6 @@ fiveMeterFastWalkingSpeed:
   disabled_cases:
     - *physical_activity_disabled_case
 
-# ========== 30 Second Sit to Stand ==========
-
 thirtySecondSitToStand:
   type: fields
   label: "30 Second Sit to Stand"
@@ -199,14 +167,10 @@ thirtySecondSitToStand:
         is_between: [0, 100]
         is_integer: true
 
-# ========== Assistive Device ==========
-
 assistiveDevices:
   type: radio
   label: "Assistive Device for Four Square Step Test"
   options: ["None", "Straight Cane", "Other"]
-
-# ========== Four Square Step Tests ==========
 
 fourSquareStepTest:
   type: stopwatch
@@ -245,8 +209,6 @@ modifiedFourSquareStepTest:
         not:
           every_instance_of: assistiveDevices
           equals: "Other"
-
-# ========== Timed Up and Go ==========
 
 timedUpAndGo:
   type: stopwatch

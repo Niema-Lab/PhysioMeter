@@ -2,6 +2,8 @@
 
 PhysioMeter is a clinical tool for recording physical therapy measurements, computing derived values, and generating evidence-based interpretations. Visit https://niema-lab.github.io/PhysioMeter/.
 
+For an end-user walkthrough of the app with annotated screenshots of every step in the Annual Mobility Screening workflow, see [`docs/user-guide.md`](docs/user-guide.md).
+
 ## Features
 
 - **Fully client-side** — all data is stored in the browser via IndexedDB; no patient data is sent to or stored on any server
@@ -70,7 +72,8 @@ src/
 ├── __tests__/               # Vitest tests (migration parity, fixtures)
 └── scss/                    # Custom styles
 scripts/                     # Config validation scripts
-docs/                        # Configuration guide
+e2e/                         # Playwright golden-path walkthrough (also generates user-guide screenshots)
+docs/                        # User guide + configuration guide
 ```
 
 ## Configuration
@@ -105,6 +108,10 @@ npm test
 
 # Run tests in watch mode
 npm run test:watch
+
+# Run the end-to-end walkthrough (Playwright). Also regenerates the
+# screenshots used in docs/user-guide.md.
+npm run test:e2e
 
 # Validate YAML configs against JSON Schemas + cross-file reference checks
 npm run validate:config

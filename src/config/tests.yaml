@@ -1,15 +1,9 @@
-# Physical Therapy Test Presets
-# Each test defines a preset configuration that controls which measurements are available.
-#
-# Fields:
-#   key:                     URL-friendly identifier for routing
-#   name:                    Display name shown in the UI
-#   permitted_measurements:  List of measurement group keys that are allowed.
-#                            If omitted or null, ALL measurements are available.
+# Physical therapy test presets. Each entry gates which measurement groups are available.
+# Fields: key (URL identifier), name, permitted_measurements (omit or null for all).
 
 - key: measurements
   name: "Measurements"
-  # All measurements permitted (no restriction)
+  # permitted_measurements omitted → all allowed
 
 - key: annualMobilityScreening
   name: "Annual Mobility Screening"

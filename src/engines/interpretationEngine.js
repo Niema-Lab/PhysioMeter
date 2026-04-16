@@ -1,6 +1,4 @@
-// Interpretation Engine
-// Walks declarative rule chains from interpretations.yaml top-to-bottom,
-// evaluating conditions and accumulating messages.
+// Walks rule chains from interpretations.yaml top-to-bottom, accumulating messages.
 
 import { evaluate } from './conditionEngine'
 
@@ -9,7 +7,6 @@ const SEVERITY_MAP = {
     caution: 'warning',
     concern: 'danger',
     info: 'secondary',
-    // Also allow raw bootstrap types for backwards compatibility
     success: 'success',
     warning: 'warning',
     danger: 'danger',
@@ -20,14 +17,10 @@ function mapSeverity(severity) {
     return SEVERITY_MAP[severity] || severity
 }
 
-/**
- * Find the matching age bracket for a given age from the threshold table's keys.
- * Brackets are parsed from strings like "50-59", "90+".
- */
+// Parses bracket keys like "50-59" or "90+" to match an age.
 function getAgeBracket(age, table) {
     if (age === null || age === undefined) return null
 
-    // Get bracket keys from the first sex entry in the table
     const sexKey = table.Male ? 'Male' : table.Female ? 'Female' : null
     if (!sexKey) return null
     const brackets = Object.keys(table[sexKey])
@@ -66,7 +59,6 @@ function resolveLetValue(letConfig, context) {
         value = context.variables?.[letConfig.from_variable] ?? null
     }
 
-    // Apply conversions
     // TODO: time_to_speed is the only conversion. If more are needed, make conversions declarative.
     if (value !== null && letConfig.convert === 'time_to_speed' && letConfig.distance_meters) {
         if (value > 0) {
@@ -79,11 +71,7 @@ function resolveLetValue(letConfig, context) {
     return value
 }
 
-/**
- * Generate mobility classification messages from a threshold table lookup.
- */
 function lookupThreshold(config, context) {
-    // Resolve the value
     let value = null
     if (config.value_from_variable) {
         value = context.variables?.[config.value_from_variable] ?? null
@@ -100,7 +88,6 @@ function lookupThreshold(config, context) {
     }
     if (value === null) return []
 
-    // Resolve patient sex and age
     let sex = null
     if (config.patient_sex_from) {
         const parts = config.patient_sex_from.split('.')
@@ -122,7 +109,6 @@ function lookupThreshold(config, context) {
 
     if (!sex || age === null) return []
 
-    // Look up the threshold table
     const table = context.thresholds?.[config.table]
     if (!table) return []
 
@@ -161,21 +147,13 @@ function lookupThreshold(config, context) {
     return messages
 }
 
-/**
- * Execute an interpretation's rule chain against context.
- * @param {Object} interpConfig - { label, citation, rules } from interpretations.yaml
- * @param {Object} context - { formState, calculationConfigs, thresholds, fieldMappings, allInterpretations }
- * @returns {Array|null} Array of { text, type } messages, or null
- */
 export function executeInterpretation(interpConfig, context) {
     if (!interpConfig.rules) return null
 
     const messages = []
-    // Create a local context with a mutable variables map
     const localContext = { ...context, variables: { ...(context.variables || {}) } }
 
     for (const rule of interpConfig.rules) {
-        // "when" + "then: skip" → early return null
         if (rule.when && rule.then === 'skip') {
             if (evaluate(rule.when, localContext)) {
                 return null
@@ -183,7 +161,6 @@ export function executeInterpretation(interpConfig, context) {
             continue
         }
 
-        // "when" + "show_message" → conditional message
         if (rule.when && rule.show_message) {
             if (evaluate(rule.when, localContext)) {
                 messages.push({
@@ -194,7 +171,6 @@ export function executeInterpretation(interpConfig, context) {
             continue
         }
 
-        // "let" → compute and store variable
         if (rule.let) {
             for (const [varName, letConfig] of Object.entries(rule.let)) {
                 localContext.variables[varName] = resolveLetValue(letConfig, localContext)
@@ -202,14 +178,13 @@ export function executeInterpretation(interpConfig, context) {
             continue
         }
 
-        // "lookup_threshold" → threshold table lookup
         if (rule.lookup_threshold) {
             const thresholdMessages = lookupThreshold(rule.lookup_threshold, localContext)
             messages.push(...thresholdMessages)
             continue
         }
 
-        // "otherwise" → fires only if no messages accumulated yet
+        // "otherwise" fires only if no messages accumulated yet
         if (rule.otherwise) {
             if (messages.length === 0) {
                 if (rule.otherwise.show_message) {
@@ -222,7 +197,6 @@ export function executeInterpretation(interpConfig, context) {
             continue
         }
 
-        // "check_interpretation" → evaluate another interpretation and check its result
         if (rule.check_interpretation) {
             const otherKey = rule.check_interpretation.interpretation
             const otherConfig = context.allInterpretations?.[otherKey]
@@ -257,17 +231,11 @@ export function executeInterpretation(interpConfig, context) {
     return messages.length > 0 ? messages : null
 }
 
-/**
- * Build INTERPRETATION_SECTION_CONFIGS from YAML config.
- * Returns an object with the same shape as the original:
- * { [key]: { label, citation, messageFunction } }
- */
 export function buildInterpretationConfigs(yamlConfig, thresholds, calculationConfigs, fieldMappings) {
     const configs = {}
 
-    // First pass: build all configs without messageFunction (needed for cross-references)
+    // First pass builds configs without messageFunction so cross-references resolve.
     for (const [key, config] of Object.entries(yamlConfig)) {
-        // Validate that "otherwise" is only used as the last rule
         if (config.rules) {
             const otherwiseIndex = config.rules.findIndex(r => r.otherwise)
             if (otherwiseIndex !== -1 && otherwiseIndex !== config.rules.length - 1) {
@@ -282,7 +250,6 @@ export function buildInterpretationConfigs(yamlConfig, thresholds, calculationCo
         }
     }
 
-    // Second pass: add messageFunction with access to all interpretations
     for (const [key, config] of Object.entries(configs)) {
         configs[key].messageFunction = (formState) => {
             const context = {

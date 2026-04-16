@@ -1,24 +1,12 @@
-# Threshold Data for Mobility Interpretations
-# These tables define the clinical thresholds for PCML and ML classifications.
-#
-# Structure: table_name → compare_as (speed|time) → classifications → sex → age_bracket → thresholds
-#
-# Threshold fields:
-#   no_pcml:  No Preclinical Mobility Limitation cutoff
-#   pcml:     Preclinical Mobility Limitation cutoff
-#   ml:       Mobility Limitation cutoff
-#   mean:     Reference mean for the age/sex group
-#   sd:       Standard deviation for the age/sex group
+# Threshold tables for PCML / ML mobility classifications.
+# Structure: table_name → compare_as + classifications + <sex> → <age_bracket> → { no_pcml, pcml, ml, mean, sd }.
 #
 # compare_as:
-#   higher_is_better - Higher values are better (e.g., walking speed). no_pcml uses >=, pcml/ml use <=
-#   lower_is_better  - Lower values are better (e.g., completion time). no_pcml uses <=, pcml/ml use >=
+#   higher_is_better - e.g. walking speed. no_pcml uses >=, pcml/ml use <=.
+#   lower_is_better  - e.g. completion time. no_pcml uses <=, pcml/ml use >=.
 #
-# classifications:
-#   Defines the label and severity for each classification level.
-#   Severity levels: concern (red), caution (yellow), normal (green), info (gray)
-#
-# Age brackets: 50-59, 60-69, 70-79, 80-89, 90+
+# classifications: label + severity (concern/caution/normal/info) for each of no_pcml, pcml, ml.
+# Age brackets: 50-59, 60-69, 70-79, 80-89, 90+.
 
 usual_walking_speed:
   compare_as: "higher_is_better"

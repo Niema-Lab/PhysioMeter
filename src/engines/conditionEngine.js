@@ -1,12 +1,5 @@
-// Condition Engine
-// General-purpose evaluator for declarative conditions from YAML.
-// Evaluates conditions against a context containing formState, calculations, variables, and thresholds.
+// Evaluates YAML condition objects against a context of formState, calculations, variables, thresholds.
 
-/**
- * Resolve a value from context based on a condition object.
- * Looks for from_measurement, from_calculation, or from_variable.
- * @returns the resolved numeric value, or null if missing/invalid
- */
 function resolveValue(condition, context) {
     if (condition.from_measurement !== undefined) {
         return resolveMeasurement(condition.from_measurement, context)
@@ -24,11 +17,9 @@ function resolveMeasurement(path, context) {
     const { formState } = context
     if (!formState) return null
 
-    // Support dotted paths like "vitalSigns.bloodPressure"
     const parts = path.split('.')
 
     if (parts.length === 1) {
-        // Simple measurement: formState[key][0].value
         const measurement = formState[parts[0]]
         if (!measurement || !Array.isArray(measurement) || measurement.length === 0) return null
         const value = measurement[0].value
@@ -36,8 +27,7 @@ function resolveMeasurement(path, context) {
         return value
     }
 
-    // Nested path for fields-type measurements
-    // e.g., "vitalSigns.bloodPressure" or "vitalSigns.bloodPressure.systolic"
+    // Nested path for fields-type measurements, e.g. "vitalSigns.bloodPressure.systolic"
     const topKey = parts[0]
     const measurement = formState[topKey]
     if (!measurement || !Array.isArray(measurement) || measurement.length === 0) return null
@@ -45,9 +35,6 @@ function resolveMeasurement(path, context) {
     const topValue = measurement[0].value
     if (!topValue || !Array.isArray(topValue)) return null
 
-    // Resolve the field index from the field name
-    // Fields in vitalSigns are stored as an array: [restingPulseRate, bloodPressure, oxygenSaturation]
-    // We need to know the field_names to resolve the index
     const fieldMapping = context.fieldMappings?.[topKey]
     if (!fieldMapping) return null
 
@@ -58,18 +45,15 @@ function resolveMeasurement(path, context) {
     const fieldValue = topValue[fieldIndex]
 
     if (parts.length === 2) {
-        // Return the field value directly
         if (fieldValue === null || fieldValue === undefined || fieldValue === '') return null
         const parsed = parseFloat(fieldValue)
         return isNaN(parsed) ? fieldValue : parsed
     }
 
-    // Sub-field (e.g., "vitalSigns.bloodPressure.systolic")
     // TODO: Sub-field extraction is hardcoded for blood pressure's "X/Y" format.
     // If more composite text formats need sub-field access, make this declarative in YAML.
     if (parts.length === 3 && typeof fieldValue === 'string') {
         const subField = parts[2]
-        // Blood pressure parsing: "120/80" → systolic=120, diastolic=80
         const match = fieldValue.match(/^(\d+)\/(\d+)$/)
         if (!match) return null
         if (subField === 'systolic') return parseInt(match[1], 10)
@@ -88,16 +72,9 @@ function resolveCalculation(key, context) {
     return isNaN(parsed) ? null : parsed
 }
 
-/**
- * Evaluate a condition object against context.
- * @param {Object} condition - A condition object from YAML
- * @param {Object} context - { formState, calculationConfigs, variables, thresholds, fieldMappings, validations }
- * @returns {boolean}
- */
 export function evaluate(condition, context) {
     if (!condition || typeof condition !== 'object') return false
 
-    // Logical combinators
     if (condition.all_of) {
         return condition.all_of.every(sub => evaluate(sub, context))
     }
@@ -108,8 +85,6 @@ export function evaluate(condition, context) {
         return !evaluate(condition.not, context)
     }
 
-    // Validations state check: true if measurement validations are incomplete/missing
-    // Requires context.validations (the React component's validation state)
     if (condition.validations_incomplete !== undefined) {
         const key = condition.validations_incomplete
         const vals = context.validations?.[key]
@@ -117,8 +92,6 @@ export function evaluate(condition, context) {
         return !vals.every(v => Array.isArray(v) ? v.every(inner => inner === true) : v === true)
     }
 
-    // Check all instances of a measurement: true only if every instance's value passes
-    // Usage: { every_instance_of: "assistiveDevices", is_one_of: ["None", "Straight Cane"] }
     if (condition.every_instance_of !== undefined) {
         const key = condition.every_instance_of
         const measurements = context.formState?.[key]
@@ -126,15 +99,11 @@ export function evaluate(condition, context) {
         return measurements.every(m => evaluateValueCondition(condition, m.value))
     }
 
-    // Value-based conditions
     const value = resolveValue(condition, context)
 
     return evaluateValueCondition(condition, value)
 }
 
-/**
- * Evaluate value-based comparison conditions against a resolved value.
- */
 function evaluateValueCondition(condition, value) {
     if (condition.is_missing !== undefined) {
         const isMissing = value === null || value === undefined || value === ''

@@ -1,21 +1,8 @@
-# Interpretation Definitions
-# Each interpretation evaluates clinical rules against patient data and produces messages.
+# Interpretations evaluate clinical rules and produce summary messages.
 #
-# Rule types:
-#   when + then: skip     If condition is true, return null (no interpretation possible)
-#   when + show_message   If condition is true, add a message to the results
-#   let                   Compute and store a named variable for use in later rules
-#   lookup_threshold      Look up age/sex threshold table and generate PCML/ML messages
-#   otherwise             Fires only if no messages have been accumulated yet
-#   check_interpretation  Evaluate another interpretation and check its result
-#
-# Severity levels:
-#   concern  → red (danger)     Indicates a clinical risk or ineligibility
-#   caution  → yellow (warning) Indicates a clinical warning
-#   normal   → green (success)  Indicates a normal/positive result
-#   info     → gray (secondary) Informational message
-#
-# See conditionEngine.js for all supported condition operators.
+# Rule types: when+then:skip, when+show_message, let, lookup_threshold, otherwise, check_interpretation.
+# Severity: concern (red), caution (yellow), normal (green), info (gray).
+# See conditionEngine.js for supported condition operators.
 
 vitalSigns:
   label: "Vital Signs"

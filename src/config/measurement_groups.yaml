@@ -1,18 +1,10 @@
-# Measurement Group Mapping
-# Defines which calculations and interpretations belong to each measurement,
-# and the order measurements appear in the UI.
+# Maps measurements to their summary calculations/interpretations and orders them in the UI.
 #
-# Fields:
-#   key:              Internal state key matching the measurement config key
-#   name:             Display name shown in navigation and UI
-#   patient_level:    If true, this is a patient attribute (shown read-only in summary,
-#                     not in the measurement selection list)
-#   calculations:     List of calculation keys to display in this group's summary section
-#   interpretations:  List of interpretation keys to display in this group's summary section
+# Fields: key (matches measurement config), name, patient_level (read-only patient attribute),
+# calculations, interpretations.
 #
-# IMPORTANT: Every calculation and interpretation must appear in exactly one group.
-# Assign interpretations to the PRIMARY measurement they relate to -- not every
-# measurement they depend on.
+# Every calculation and interpretation must appear in exactly one group. Assign interpretations
+# to the PRIMARY measurement they relate to, not every measurement they depend on.
 
 - key: name
   name: "Name"

@@ -1,17 +1,10 @@
-// Validation Engine
-// Converts declarative validation rules from measurements.yaml into validationFunction(value) → boolean.
+// Converts measurements.yaml validation rules into a (value) => boolean function.
 
 import { isValidDobForMeasurement } from '../utils/dateValidation'
 
-/**
- * Build a validationFunction from a declarative validation config.
- * @param {Object} validation - The validation rules object from YAML
- * @returns {Function} (value) => boolean
- */
 export function buildValidationFunction(validation) {
     if (!validation) return undefined
 
-    // Named built-in rule
     if (validation.rule) {
         if (!BUILT_IN_RULES[validation.rule]) {
             throw new Error(`Unknown validation rule: "${validation.rule}". Available rules: ${Object.keys(BUILT_IN_RULES).join(', ')}`)
@@ -19,12 +12,10 @@ export function buildValidationFunction(validation) {
         return BUILT_IN_RULES[validation.rule]
     }
 
-    // Pattern matching with extracted values (e.g., blood pressure)
     if (validation.matches_pattern && validation.extracted_values) {
         return buildPatternValidation(validation)
     }
 
-    // Compose multiple checks
     const checks = []
 
     if (validation.required) {
@@ -66,7 +57,6 @@ function buildPatternValidation(validation) {
         const match = value.match(regex)
         if (!match) return false
 
-        // Extract and validate each named group
         const extracted = {}
         for (const [name, config] of Object.entries(extractedValues)) {
             const raw = match[config.group]
@@ -80,7 +70,6 @@ function buildPatternValidation(validation) {
             }
         }
 
-        // Apply inter-field rules
         for (const rule of rules) {
             if (rule.is_greater_than_field) {
                 if (!(extracted[rule.field] > extracted[rule.is_greater_than_field])) return false

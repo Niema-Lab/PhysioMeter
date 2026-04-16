@@ -1,6 +1,4 @@
-// Calculation Engine
-// Evaluates declarative calculation configs from calculations.yaml against formState.
-// Each operation type is a pure function: (formState, config) → value | null
+// Evaluates calculation configs from calculations.yaml against formState.
 
 function collectTrials(formState, measurementKey) {
     const measurements = formState[measurementKey]
@@ -80,10 +78,6 @@ function computeAgeFromDob(formState, measurementKey) {
     return age
 }
 
-/**
- * Resolve field_label to a field index by looking up the label in the
- * measurement's inline fields definition.
- */
 function resolveFieldIndex(config, measurementsConfig) {
     if (config.field_index !== undefined) return config.field_index
     if (!config.field_label) return undefined
@@ -131,12 +125,6 @@ const OPERATIONS = {
         computeFieldMax(formState, config.from_measurement, config._resolvedFieldIndex, config.decimal_places ?? 2),
 }
 
-/**
- * Build CALCULATION_SECTION_CONFIGS from YAML config.
- * @param {Object} yamlConfig - The parsed calculations.yaml
- * @param {Object} measurementsConfig - The parsed measurements.yaml (for field_label resolution)
- * @returns {Object} { [key]: { label, unit, valueFunction } }
- */
 export function buildCalculationConfigs(yamlConfig, measurementsConfig) {
     const configs = {}
     for (const [key, config] of Object.entries(yamlConfig)) {
@@ -145,7 +133,6 @@ export function buildCalculationConfigs(yamlConfig, measurementsConfig) {
             throw new Error(`Unknown calculation operation: "${config.operation}" for key "${key}"`)
         }
 
-        // Resolve field_label to index at build time (not per-call)
         if (config.operation === 'field_min' || config.operation === 'field_max') {
             config._resolvedFieldIndex = resolveFieldIndex(config, measurementsConfig)
         }

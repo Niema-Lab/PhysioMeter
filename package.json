@@ -12,6 +12,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
     "validate:config": "bash scripts/validate-config-schemas.sh"
   },
   "dependencies": {
@@ -27,6 +29,7 @@
   "devDependencies": {
     "@eslint/js": "^9.39.1",
     "@modyfi/vite-plugin-yaml": "^1.1.1",
+    "@playwright/test": "^1.59.1",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react-swc": "^4.2.2",

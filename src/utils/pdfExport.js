@@ -6,7 +6,6 @@ import { INTERPRETATION_SECTION_CONFIGS } from '../components/interpretations/In
 import { MEASUREMENT_GROUP_MAP } from './measurementGroupMapping'
 import { hasData } from '../components/measurements/MeasurementSummary'
 
-// Bootstrap 5.3 default hex colors (as RGB arrays for jsPDF)
 const COLORS = {
     success: [25, 135, 84],
     danger: [220, 53, 69],
@@ -45,8 +44,7 @@ function getLastY(doc) {
     return doc.lastAutoTable?.finalY ?? PAGE_MARGIN
 }
 
-// jsPDF's default font (Helvetica) uses WinAnsi encoding which lacks Unicode
-// math symbols. Replace them with ASCII equivalents for PDF output.
+// jsPDF's Helvetica uses WinAnsi encoding which lacks Unicode math symbols — swap to ASCII.
 function sanitizeText(text) {
     return text.replace(/\u2265/g, '>=').replace(/\u2264/g, '<=')
 }
@@ -56,8 +54,6 @@ function extractHtmlLink(html) {
     const text = html.replace(/<[^>]*>/g, '')
     return { text, url: hrefMatch ? hrefMatch[1] : null }
 }
-
-// --- Card Renderers ---
 
 function addMeasurementCard(doc, startY, measurementKey, measurement, index, config, validations, isDisabled) {
     const disabled = isDisabled(measurementKey, index)
@@ -179,8 +175,6 @@ function addInterpretationCard(doc, startY, label, messages, citation) {
     return y + CARD_SPACING
 }
 
-// --- Page Helpers ---
-
 function addPageNumbers(doc) {
     const pageCount = doc.internal.getNumberOfPages()
     const pageWidth = doc.internal.pageSize.getWidth()
@@ -192,8 +186,6 @@ function addPageNumbers(doc) {
         doc.text(`Page ${i} of ${pageCount}`, pageWidth / 2, pageHeight - 10, { align: 'center' })
     }
 }
-
-// --- Main Export ---
 
 export function generateAndDownloadPDF(formState, validations, disabledValues, isDisabled, patientName) {
     if (!hasData(formState)) return

@@ -1,8 +1,4 @@
-// Merges patient-level attributes (name, dateOfBirth, sex) into a session's formState
-// so that calculations and interpretations can read them in the same shape they expect:
-//   formState.dob[0].value  (used by CalculationFactory for age)
-//   formState.sex[0].value  (used by InterpretationFactory for sex-specific thresholds)
-//   formState.name[0].value (used by summary/export)
+// Merges patient attributes into formState shape so calculations/interpretations can read them.
 export function mergePatientDataIntoFormState(patient, sessionFormState) {
     const merged = { ...sessionFormState }
 

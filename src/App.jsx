@@ -13,6 +13,7 @@ import NewUser from './components/NewUser'
 import ExistingUser from './components/ExistingUser'
 import NotFound from './components/NotFound'
 import UtilitiesPage from './components/utilities/UtilitiesPage'
+import UserGuide from './components/UserGuide'
 
 function HomeIcon() {
   return (
@@ -47,6 +48,7 @@ function AppContent() {
           <Route path="/new-session" element={<NewSession />} />
           <Route path="/presets" element={<Presets />} />
           <Route path="/utilities" element={<UtilitiesPage />} />
+          <Route path="/user-guide" element={<UserGuide />} />
           {PT_TEST_CONFIG.map(({ testKey, component, permittedMeasurements }) => {
             const permittedMeasurementConfigs = permittedMeasurements ? PT_TEST_MEASUREMENT_CONFIG.filter(m => permittedMeasurements.includes(m.stateKey)) : PT_TEST_MEASUREMENT_CONFIG;
             return (

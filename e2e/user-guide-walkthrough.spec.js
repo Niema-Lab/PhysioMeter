@@ -108,7 +108,18 @@ test('user guide walkthrough: home -> AMS session -> summary', async ({ page }) 
   // 1. Landing page
   await page.goto('/')
   await expect(page.getByRole('heading', { name: 'Home' })).toBeVisible()
-  await shot(page, '01-home.png')
+  await expect(page.getByRole('link', { name: 'User Guide' })).toBeVisible()
+  await shot(page, '01-home.png', { fullPage: true })
+
+  await page.getByRole('link', { name: 'User Guide' }).click()
+  await expect(page.getByRole('heading', { name: /PhysioMeter User Guide/ })).toBeVisible()
+  await expect(page.locator('img[alt="Home page"]').first()).toBeVisible()
+  await expect(page.locator('#user-guide table')).toBeVisible()
+  await expect(page.locator('#user-guide table').getByText('Concern')).toBeVisible()
+  await page.getByRole('link', { name: /Data persistence and privacy/ }).click()
+  await expect(page.locator('[id="9-data-persistence-and-privacy"]')).toBeInViewport()
+  await page.goBack()
+  await expect(page.getByRole('heading', { name: 'Home' })).toBeVisible()
 
   // 2. Create New Patient form
   await page.getByRole('link', { name: 'New Patient' }).click()

@@ -226,3 +226,20 @@ input {
     font-size: calc(0.8 * var(--base-font-size));
   }
 }
+
+#home-scroll-indicator {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  font-size: 3rem;
+  color: #000;
+  pointer-events: none;
+  animation: home-scroll-bounce 1.2s ease-in-out infinite;
+  transition: opacity 0.3s ease;
+}
+
+@keyframes home-scroll-bounce {
+  0%   { transform: translate(-50%, 0);      opacity: 0.4; }
+  50%  { transform: translate(-50%, 1.2rem); opacity: 1;   }
+  100% { transform: translate(-50%, 0);      opacity: 0.4; }
+}

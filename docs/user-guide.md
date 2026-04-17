@@ -19,14 +19,15 @@ so they stay in sync with the deployed UI.
 ## Contents
 
 1. [Accessing PhysioMeter](#1-accessing-physiometer)
-2. [Creating a patient](#2-creating-a-patient)
-3. [The patient dashboard](#3-the-patient-dashboard)
-4. [Starting a session](#4-starting-a-session)
-5. [Administering the Annual Mobility Screen](#5-administering-the-annual-mobility-screen)
-6. [Reading the summary](#6-reading-the-summary)
-7. [Interpretation severities](#7-interpretation-severities)
-8. [Exporting results](#8-exporting-results)
-9. [Data persistence and privacy](#9-data-persistence-and-privacy)
+2. [Installing as an app (optional, offline-capable)](#2-installing-as-an-app-optional-offline-capable)
+3. [Creating a patient](#3-creating-a-patient)
+4. [The patient dashboard](#4-the-patient-dashboard)
+5. [Starting a session](#5-starting-a-session)
+6. [Administering the Annual Mobility Screen](#6-administering-the-annual-mobility-screen)
+7. [Reading the summary](#7-reading-the-summary)
+8. [Interpretation severities](#8-interpretation-severities)
+9. [Exporting results](#9-exporting-results)
+10. [Data persistence and privacy](#10-data-persistence-and-privacy)
 
 ---
 
@@ -35,7 +36,9 @@ so they stay in sync with the deployed UI.
 PhysioMeter is deployed as a static site at
 <https://niema-lab.github.io/PhysioMeter/>. No account, login, or
 installation is required. Any modern evergreen browser (Chrome, Edge,
-Firefox, Safari) with IndexedDB and JavaScript enabled is supported.
+Firefox, Safari) with IndexedDB and JavaScript enabled is supported. If
+you want it to behave like a native app and work fully offline, see
+[section 2](#2-installing-as-an-app-optional-offline-capable).
 
 The landing page exposes four entry points: **New Patient**, **Existing
 Patient**, **Presets** (reference list of available protocols), and
@@ -44,7 +47,27 @@ session).
 
 <p align="center"><img src="user-guide-images/01-home.png" alt="Home page" width="720"></p>
 
-## 2. Creating a patient
+## 2. Installing as an app (optional, offline-capable)
+
+PhysioMeter is a Progressive Web App. You can install it onto your device's
+home screen or applications menu and run it without a browser window —
+after the first load it also works fully offline, which is useful for home
+visits, community screenings, or clinics with unreliable networks. All
+scoring, interpretation, and data storage already happen on-device, so the
+offline experience is identical to the online one.
+
+- **iOS (Safari):** tap the **Share** button, then **Add to Home Screen**.
+- **Android (Chrome):** tap the **⋮** menu, then **Install app** (or
+  **Add to Home screen**).
+- **Desktop (Chrome, Edge):** click the install icon in the address bar
+  (a small monitor-with-arrow icon), or open the **⋮** / **…** menu and
+  select **Install PhysioMeter**.
+
+Once installed, launching PhysioMeter opens it in a standalone window.
+Updates are fetched automatically the next time the device is online; no
+action is needed.
+
+## 3. Creating a patient
 
 From the home page, click **New Patient**. Name is required; date of birth
 and sex are optional but enable age- and sex-stratified interpretations
@@ -65,7 +88,7 @@ this browser.
 
 <p align="center"><img src="user-guide-images/05-existing-patients.png" alt="Existing patients list" width="720"></p>
 
-## 3. The patient dashboard
+## 4. The patient dashboard
 
 Clicking a patient opens their dashboard: identifying info, an **Edit
 Patient Info** link, a **New Session** button, and the table of existing
@@ -74,7 +97,7 @@ point it was last saved.
 
 <p align="center"><img src="user-guide-images/06-patient-page-empty.png" alt="Patient dashboard (no sessions yet)" width="720"></p>
 
-## 4. Starting a session
+## 5. Starting a session
 
 **New Session** prompts for a session timestamp (defaults to now; can be
 backdated) and a test type. Selecting the **Annual Mobility Screening**
@@ -88,7 +111,7 @@ that protocol in the order they should be administered. Selecting
 
 Click **Create Session** to land on the session home.
 
-## 5. Administering the Annual Mobility Screen
+## 6. Administering the Annual Mobility Screen
 
 The session home shows the full ordered list of measurements for the
 preset. Click **Proceed to Measurements** to step into the workflow; the
@@ -147,7 +170,7 @@ separate error count for the cognitive dual-task variant.
 <p align="center"><img src="user-guide-images/16-tug.png" alt="Timed Up and Go" width="720"></p>
 <p align="center"><img src="user-guide-images/17-tug-cognitive.png" alt="TUG Cognitive" width="720"></p>
 
-## 6. Reading the summary
+## 7. Reading the summary
 
 Click **Finish** on the last measurement (or **Summary** in the side-nav)
 to open the summary page. It lists patient info, the raw measurements,
@@ -155,7 +178,7 @@ every calculation, and every interpretation for the session.
 
 <p align="center"><img src="user-guide-images/18-summary.png" alt="Summary page" width="720"></p>
 
-## 7. Interpretation severities
+## 8. Interpretation severities
 
 Interpretations are color-coded:
 
@@ -170,18 +193,22 @@ Each interpretation includes a literature citation link. If demographics
 (age, sex) are missing, age- and sex-stratified interpretations show
 "insufficient data" rather than guessing.
 
-## 8. Exporting results
+## 9. Exporting results
 
 The summary page provides export buttons for **CSV** (raw data for
 spreadsheets and EHR paste) and **PDF** (a printable report). Exports happen
 entirely in the browser; nothing is uploaded.
 
-## 9. Data persistence and privacy
+## 10. Data persistence and privacy
 
 - All patient records, sessions, and measurements live in the browser's
   **IndexedDB** (database `PTAppDB`, store `users`).
 - No data is transmitted off the device. The app has no backend, no
   authentication, and no analytics.
+- Because the application bundle is precached by the service worker (see
+  [section 2](#2-installing-as-an-app-optional-offline-capable)), scoring
+  and interpretation continue to work offline. New sessions entered while
+  offline persist to IndexedDB normally.
 - Data is tied to the browser profile on the device. Clearing browser
   storage, using a different browser, or switching devices will not carry
   the data over. Use the **Export CSV/PDF** buttons on the summary if you

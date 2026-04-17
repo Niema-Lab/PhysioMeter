@@ -7,6 +7,7 @@ For an end-user walkthrough of the app with annotated screenshots of every step 
 ## Features
 
 - **Fully client-side** — all data is stored in the browser via IndexedDB; no patient data is sent to or stored on any server
+- **Installable, offline-capable** — packaged as a Progressive Web App; can be installed to a home screen or desktop and works fully offline after first load (see [install instructions](docs/user-guide.md#2-installing-as-an-app-optional-offline-capable))
 - **YAML-driven configuration** — all clinical logic (measurements, calculations, interpretations, thresholds) is defined in YAML files, no code changes needed
 - **Declarative validation** — input validation rules are defined alongside measurements
 - **Automated interpretations** — rule-based interpretation engine with threshold table lookups, cross-interpretation references, and severity classifications

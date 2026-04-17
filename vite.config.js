@@ -7,5 +7,6 @@ export default defineConfig({
   plugins: [react(), yaml()],
   test: {
     environment: 'node',
+    exclude: ['**/node_modules/**', '**/dist/**', 'e2e/**'],
   },
 })

@@ -253,4 +253,9 @@ annualMobilityScreening:
         show_message:
           text: "Participants with the following vital sign findings on vital sign testing may not tolerate the intensity of functional testing. Instead of proceeding, thank them for coming to screening, and refer to their primary care provider, cardiologist, or emergency department for follow-up care."
           severity: caution
-        otherwise: skip
+
+    # If vitals were acceptable (and no other concerns), patient is eligible for the screening.
+    - otherwise:
+        show_message:
+          text: "This patient is eligible for the Annual Mobility Screening."
+          severity: normal

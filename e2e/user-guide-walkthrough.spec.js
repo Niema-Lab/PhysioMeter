@@ -79,10 +79,29 @@ async function clickNext(page) {
   await page.waitForTimeout(200)
 }
 
+async function expectNoBrokenValues(page) {
+  const body = page.locator('body')
+  await expect(body).not.toContainText('NaN')
+  await expect(body).not.toContainText('Infinity')
+  await expect(body).not.toContainText(/\bundefined\b/)
+  await expect(body).not.toContainText(/\bnull\b/)
+}
+
+function collectPageErrors(page) {
+  const errors = []
+  page.on('pageerror', e => errors.push(`pageerror: ${e.message}`))
+  page.on('console', msg => {
+    if (msg.type() === 'error') errors.push(`console.error: ${msg.text()}`)
+  })
+  return errors
+}
+
 test.describe.configure({ mode: 'serial' })
 
 test('user guide walkthrough: home -> AMS session -> summary', async ({ page }) => {
   test.setTimeout(180_000)
+
+  const pageErrors = collectPageErrors(page)
 
   await clearStorage(page)
 
@@ -131,6 +150,16 @@ test('user guide walkthrough: home -> AMS session -> summary', async ({ page }) 
 
   // 9. Session home (AMS measurement list)
   await expect(page.getByRole('heading', { level: 1, name: /Annual Mobility Screening/ })).toBeVisible()
+  for (const name of [
+    'Vital Signs',
+    '5 Meter Usual Walking Speed',
+    '5 Meter Fast Walking Speed',
+    '30 Second Sit to Stand',
+    'Four Square Step Test',
+    'Timed Up and Go Cognitive',
+  ]) {
+    await expect(page.getByText(name, { exact: false }).first()).toBeVisible()
+  }
   await shot(page, '09-session-home.png')
 
   // 10. Proceed into measurements: Vital Signs
@@ -143,12 +172,18 @@ test('user guide walkthrough: home -> AMS session -> summary', async ({ page }) 
   await vitalsInputs.nth(1).blur()
   await vitalsInputs.nth(2).fill(VITALS.spo2)
   await vitalsInputs.nth(2).blur()
+  await expect(page.getByText('This patient is eligible for physical activity.')).toBeVisible()
+  await expect(page.getByText('This patient is eligible for the Annual Mobility Screening.')).toBeVisible()
+  await expectNoBrokenValues(page)
   await shot(page, '10-vitals-filled.png', { fullPage: true })
 
   // 11. 5m Usual Walking Speed
   await clickNext(page)
   await expect(page.getByRole('heading', { level: 1, name: /5 Meter Usual Walking Speed/ })).toBeVisible()
   await fillTrials(page, [TRIALS.usualWalk.t1, TRIALS.usualWalk.t2])
+  await expect(page.getByText(/Walking Speed: \d+\.\d+ m\/s/).first()).toBeVisible()
+  expect(await page.getByText(/Walking Speed: \d+\.\d+ m\/s/).count()).toBe(2)
+  await expectNoBrokenValues(page)
   await scrollToInputs(page)
   await shot(page, '11-usual-walking-speed.png')
 
@@ -156,6 +191,8 @@ test('user guide walkthrough: home -> AMS session -> summary', async ({ page }) 
   await clickNext(page)
   await expect(page.getByRole('heading', { level: 1, name: /5 Meter Fast Walking Speed/ })).toBeVisible()
   await fillTrials(page, [TRIALS.fastWalk.t1, TRIALS.fastWalk.t2])
+  expect(await page.getByText(/Walking Speed: \d+\.\d+ m\/s/).count()).toBe(2)
+  await expectNoBrokenValues(page)
   await scrollToInputs(page)
   await shot(page, '12-fast-walking-speed.png')
 
@@ -192,6 +229,9 @@ test('user guide walkthrough: home -> AMS session -> summary', async ({ page }) 
   // 17. Timed Up and Go
   await expect(page.getByRole('heading', { level: 1, name: /^Timed Up and Go(?! Cognitive)/ })).toBeVisible()
   await fillTrials(page, [TRIALS.tug.t1, TRIALS.tug.t2])
+  await expect(page.getByText(/Fall risk >13\.5 sec/)).toBeVisible()
+  await expect(page.getByText(/Mobility Limitation \(ML\)/)).toBeVisible()
+  await expectNoBrokenValues(page)
   await scrollToInputs(page)
   await shot(page, '16-tug.png')
 
@@ -211,5 +251,30 @@ test('user guide walkthrough: home -> AMS session -> summary', async ({ page }) 
   await expect(page).toHaveURL(/\/summary/)
   // Allow summary interpretations to render.
   await page.waitForTimeout(500)
+
+  await expect(page.getByRole('heading', { name: `Summary (${PATIENT.name})` })).toBeVisible()
+  const body = page.locator('body')
+  await expect(body).toContainText(PATIENT.name)
+  await expect(body).toContainText('1950-06-15')
+  await expect(body).toContainText(/7[4-6] years/)
+  await expect(body).toContainText('Female')
+
+  for (const label of [
+    'Vital Signs',
+    '5 Meter Usual Walking Speed',
+    '5 Meter Fast Walking Speed',
+    '30 Second Sit to Stand',
+    'Four Square Step Test',
+    'Timed Up and Go (TUG)',
+    'Timed Up and Go Cognitive Dual Task',
+  ]) {
+    await expect(body.getByText(label, { exact: false }).first()).toBeVisible()
+  }
+
+  await expect(body).not.toContainText('No interpretation available')
+  await expectNoBrokenValues(page)
+
   await shot(page, '18-summary.png', { fullPage: true })
+
+  expect(pageErrors, `Unexpected page/console errors:\n${pageErrors.join('\n')}`).toEqual([])
 })

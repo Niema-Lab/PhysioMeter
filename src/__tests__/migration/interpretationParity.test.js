@@ -423,9 +423,12 @@ describe('Interpretation: annualMobilityScreening', () => {
         expect(result[0].text).toContain('vital sign findings')
     })
 
-    it('returns null when patient is eligible', () => {
+    it('returns eligibility message when patient is eligible', () => {
         const fs = buildFormState({ vitals: ['80', '120/80', '98'] })
-        expect(interpret(fs)).toBe(null)
+        const result = interpret(fs)
+        expect(result).not.toBe(null)
+        expect(result[0].type).toBe('success')
+        expect(result[0].text).toBe('This patient is eligible for the Annual Mobility Screening.')
     })
 
     it('triggers for all ineligibility reasons', () => {

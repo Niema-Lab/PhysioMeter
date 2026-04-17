@@ -166,7 +166,7 @@ export class Measurement extends Component {
                     name={`measurement-${type}`}
                     type={(type === 'date' && value) ? 'date' : 'text'}
                     className={`measurement-input form-control ${valid === false && !disabled ? 'is-invalid' : ''}`}
-                    value={value}
+                    value={value ?? ''}
                     onChange={(e) => this.onChangeAndValidate(e.target.value, parameters)}
                     placeholder={placeholder}
                     onFocus={(e) => type === 'date' && (e.target.type = 'date')}
@@ -250,7 +250,7 @@ export class Measurement extends Component {
                         step={step}
                         inputMode={inputMode}
                         className={`measurement-input form-control ${valid === false && !disabled ? 'is-invalid' : ''}`}
-                        value={value}
+                        value={value ?? ''}
                         onChange={(e) => this.onChangeAndValidate(parseFloat(e.target.value), parameters)}
                         placeholder={placeholder}
                         min={min}

@@ -84,16 +84,19 @@ export class MultipleMeasurements extends Component {
         if (this.props.buttonHidden) {
             return;
         }
+        const isNonEditable = this.props.buttonDisabledAndChecked
         return (
             <div className={`multiple-measurements`}>
                 <h2 className={`measurement-header text-center w-100`}>
                     {this.props.name}
-                    <i
-                        className={`bi ms-3 cursor-p ${this.props.oneMax && this.props.measurements.length === 1 ? 'text-success bi-check-square-fill' : 'text-danger bi-square'} ${this.props.buttonDisabledAndChecked && 'pe-none'}`}
-                        onClick={this.handleMeasurementAction}
-                        title={`${this.props.oneMax && this.props.measurements.length === 1 ? 'Remove measurement' : 'Add measurement'}`}
-                    >
-                    </i>
+                    {!isNonEditable && (
+                        <i
+                            className={`bi ms-3 cursor-p ${this.props.oneMax && this.props.measurements.length === 1 ? 'text-success bi-check-square-fill' : 'text-danger bi-square'}`}
+                            onClick={this.handleMeasurementAction}
+                            title={`${this.props.oneMax && this.props.measurements.length === 1 ? 'Remove measurement' : 'Add measurement'}`}
+                        >
+                        </i>
+                    )}
                 </h2>
             </div>
         )

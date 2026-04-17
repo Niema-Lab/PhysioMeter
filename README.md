@@ -4,6 +4,8 @@ PhysioMeter is a clinical tool for recording physical therapy measurements, comp
 
 For an end-user walkthrough of the app with annotated screenshots of every step in the Annual Mobility Screening workflow, see [`docs/user-guide.md`](docs/user-guide.md).
 
+Licensed under the GNU General Public License v3.0 — see [`LICENSE`](LICENSE).
+
 ## Features
 
 - **Fully client-side** — all data is stored in the browser via IndexedDB; no patient data is sent to or stored on any server

@@ -10,6 +10,7 @@ import SummaryPage from '../SummaryPage'
 import { getCurrentUser, getCurrentSessionUUID, openDB } from '../../DB'
 import { mergePatientDataIntoFormState } from '../../utils/formStateMerge'
 import Title from '../form/Title'
+import ScrollIndicator from '../form/ScrollIndicator'
 import LoadingPage from '../LoadingPage'
 
 const THROTTLE_TIMEOUT = 250;
@@ -566,6 +567,7 @@ export class PhysicalTherapyTest extends Component {
             <>
                 <Title>{titleName}</Title>
                 {this.renderMeasurementSelection()}
+                <ScrollIndicator />
             </>
         )
     }

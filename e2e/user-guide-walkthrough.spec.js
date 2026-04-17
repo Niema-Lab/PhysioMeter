@@ -117,7 +117,7 @@ test('user guide walkthrough: home -> AMS session -> summary', async ({ page }) 
   await expect(page.locator('#user-guide table')).toBeVisible()
   await expect(page.locator('#user-guide table').getByText('Concern')).toBeVisible()
   await page.getByRole('link', { name: /Data persistence and privacy/ }).click()
-  await expect(page.locator('[id="9-data-persistence-and-privacy"]')).toBeInViewport()
+  await expect(page.locator('[id="10-data-persistence-and-privacy"]')).toBeInViewport()
   await page.goBack()
   await expect(page.getByRole('heading', { name: 'Home' })).toBeVisible()
 

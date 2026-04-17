@@ -1,9 +1,12 @@
 import { createRoot } from 'react-dom/client'
+import { registerSW } from 'virtual:pwa-register'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 
 import './scss/index.scss'
 import App from './App'
+
+registerSW({ immediate: true })
 
 createRoot(document.getElementById('root')).render(
   <App />

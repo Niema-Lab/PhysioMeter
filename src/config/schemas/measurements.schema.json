@@ -152,6 +152,10 @@
           "type": "boolean",
           "description": "Value must not be empty."
         },
+        "optional": {
+          "type": "boolean",
+          "description": "If true, an empty value passes validation; a provided value is still validated against the other rules."
+        },
         "max_length": {
           "type": "integer",
           "description": "Maximum string length.",

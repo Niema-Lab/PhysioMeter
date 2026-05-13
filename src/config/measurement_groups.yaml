@@ -24,7 +24,7 @@
   name: "Vital Signs"
   interpretations:
     - vitalSigns
-    - annualMobilityScreening
+    - annualMobilityAssessment
 
 - key: fiveMeterUsualWalkingSpeed
   name: "5 Meter Usual Walking Speed"

@@ -8,7 +8,8 @@ vitalSigns:
   label: "Vital Signs"
   citation: '<a href="https://aptageriatrics.org/wp-content/uploads/2026/02/AMA-InterpChartsFinalv2.1.pdf" target="_blank" rel="noopener noreferrer">Annual Mobility Assessment</a>'
   rules:
-    # Skip if vitals are missing or incomplete
+    # Skip if vitals are missing or incomplete. Oxygen saturation is optional;
+    # if blank, eligibility is determined from pulse and BP alone.
     - when:
         any_of:
           - from_measurement: vitalSigns
@@ -16,8 +17,6 @@ vitalSigns:
           - from_measurement: vitalSigns.restingPulseRate
             is_missing: true
           - from_measurement: vitalSigns.bloodPressure
-            is_missing: true
-          - from_measurement: vitalSigns.oxygenSaturation
             is_missing: true
       then: skip
 
@@ -241,8 +240,8 @@ timedUpAndGoCognitive:
         patient_sex_from: measurement.sex
         patient_age_from: calculation.age
 
-annualMobilityScreening:
-  label: "Annual Mobility Screening"
+annualMobilityAssessment:
+  label: "Annual Mobility Assessment"
   citation: '<a href="https://aptageriatrics.org/wp-content/uploads/2026/02/AMA-InterpChartsFinalv2.1.pdf" target="_blank" rel="noopener noreferrer">Annual Mobility Assessment</a>'
   rules:
     # Check the vitalSigns interpretation
@@ -257,5 +256,5 @@ annualMobilityScreening:
     # If vitals were acceptable (and no other concerns), patient is eligible for the screening.
     - otherwise:
         show_message:
-          text: "This patient is eligible for the Annual Mobility Screening."
+          text: "This patient is eligible for the Annual Mobility Assessment."
           severity: normal

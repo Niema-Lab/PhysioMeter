@@ -37,7 +37,7 @@ describe('YAML Config Parity: MEASUREMENT_GROUP_MAP', () => {
     it('maps vitalSigns to correct interpretations', () => {
         const vs = MEASUREMENT_GROUP_MAP.find(e => e.stateKey === 'vitalSigns')
         expect(vs.calculationKeys).toEqual([])
-        expect(vs.interpretationKeys).toEqual(['vitalSigns', 'annualMobilityScreening'])
+        expect(vs.interpretationKeys).toEqual(['vitalSigns', 'annualMobilityAssessment'])
     })
 
     it('maps fiveMeterUsualWalkingSpeed correctly', () => {
@@ -77,7 +77,7 @@ describe('YAML Config Parity: MEASUREMENT_GROUP_MAP', () => {
     })
 
     it('getInterpretationKeysForMeasurement works correctly', () => {
-        expect(getInterpretationKeysForMeasurement('vitalSigns')).toEqual(['vitalSigns', 'annualMobilityScreening'])
+        expect(getInterpretationKeysForMeasurement('vitalSigns')).toEqual(['vitalSigns', 'annualMobilityAssessment'])
         expect(getInterpretationKeysForMeasurement('fiveMeterUsualWalkingSpeed')).toEqual(['usualWalkingSpeed'])
         expect(getInterpretationKeysForMeasurement('thirtySecondSitToStand')).toEqual([])
         expect(getInterpretationKeysForMeasurement('nonexistent')).toEqual([])
@@ -115,9 +115,9 @@ describe('YAML Config Parity: PT_TEST_CONFIG', () => {
         expect(m.permittedMeasurements).toBe(null)
     })
 
-    it('annualMobilityScreening test has correct restrictions', () => {
-        const m = PT_TEST_CONFIG.find(c => c.testKey === 'annualMobilityScreening')
-        expect(m.defaultTestName).toBe('Annual Mobility Screening')
+    it('annualMobilityAssessment test has correct restrictions', () => {
+        const m = PT_TEST_CONFIG.find(c => c.testKey === 'annualMobilityAssessment')
+        expect(m.defaultTestName).toBe('Annual Mobility Assessment')
         expect(m.permittedMeasurements).toEqual([
             'vitalSigns',
             'fiveMeterUsualWalkingSpeed',

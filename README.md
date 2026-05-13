@@ -2,7 +2,7 @@
 
 PhysioMeter is a clinical tool for recording physical therapy measurements, computing derived values, and generating evidence-based interpretations. Visit https://niema-lab.github.io/PhysioMeter/.
 
-For an end-user walkthrough of the app with annotated screenshots of every step in the Annual Mobility Screening workflow, see [`docs/user-guide.md`](docs/user-guide.md).
+For an end-user walkthrough of the app with annotated screenshots of every step in the Annual Mobility Assessment workflow, see [`docs/user-guide.md`](docs/user-guide.md).
 
 Licensed under the GNU General Public License v3.0 — see [`LICENSE`](LICENSE).
 
@@ -28,7 +28,7 @@ Each patient has a name, date of birth, and sex. Patient data is stored locally 
 
 ### Test Presets
 
-When creating a session, you choose a test preset that determines which measurements are available. Currently there are two presets: **Measurements** (all measurements) and **Annual Mobility Screening** (a curated subset of 10 measurements).
+When creating a session, you choose a test preset that determines which measurements are available. Currently there are two presets: **Measurements** (all measurements) and **Annual Mobility Assessment** (a curated subset of 10 measurements).
 
 ### Measurements
 

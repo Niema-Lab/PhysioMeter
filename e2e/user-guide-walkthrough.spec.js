@@ -98,7 +98,7 @@ function collectPageErrors(page) {
 
 test.describe.configure({ mode: 'serial' })
 
-test('user guide walkthrough: home -> AMS session -> summary', async ({ page }) => {
+test('user guide walkthrough: home -> AMA session -> summary', async ({ page }) => {
   test.setTimeout(180_000)
 
   const pageErrors = collectPageErrors(page)
@@ -116,6 +116,7 @@ test('user guide walkthrough: home -> AMS session -> summary', async ({ page }) 
   await expect(page.locator('img[alt="Home page"]').first()).toBeVisible()
   await expect(page.locator('#user-guide table')).toBeVisible()
   await expect(page.locator('#user-guide table').getByText('Concern')).toBeVisible()
+  await shot(page, 'user-guide.png')
   await page.getByRole('link', { name: /Data persistence and privacy/ }).click()
   await expect(page.locator('[id="10-data-persistence-and-privacy"]')).toBeInViewport()
   await page.goBack()
@@ -154,13 +155,13 @@ test('user guide walkthrough: home -> AMS session -> summary', async ({ page }) 
   await expect(page.getByRole('heading', { name: /New Session for/ })).toBeVisible()
   await shot(page, '07-new-session.png')
 
-  // 8. Select Annual Mobility Screening preset + create
-  await page.getByLabel('Annual Mobility Screening').check()
-  await shot(page, '08-new-session-ams-selected.png')
+  // 8. Select Annual Mobility Assessment preset + create
+  await page.getByLabel('Annual Mobility Assessment').check()
+  await shot(page, '08-new-session-ama-selected.png')
   await page.getByRole('button', { name: 'Create Session' }).click()
 
-  // 9. Session home (AMS measurement list)
-  await expect(page.getByRole('heading', { level: 1, name: /Annual Mobility Screening/ })).toBeVisible()
+  // 9. Session home (AMA measurement list)
+  await expect(page.getByRole('heading', { level: 1, name: /Annual Mobility Assessment/ })).toBeVisible()
   for (const name of [
     'Vital Signs',
     '5 Meter Usual Walking Speed',
@@ -176,15 +177,16 @@ test('user guide walkthrough: home -> AMS session -> summary', async ({ page }) 
   // 10. Proceed into measurements: Vital Signs
   await clickNext(page)
   await expect(page.getByRole('heading', { level: 1, name: /Vital Signs/ })).toBeVisible()
+  // Vital Signs field order in YAML: [bloodPressure, restingPulseRate, oxygenSaturation]
   const vitalsInputs = page.locator('.measurement-input')
-  await vitalsInputs.nth(0).fill(VITALS.pulse)
+  await vitalsInputs.nth(0).fill(VITALS.bp)
   await vitalsInputs.nth(0).blur()
-  await vitalsInputs.nth(1).fill(VITALS.bp)
+  await vitalsInputs.nth(1).fill(VITALS.pulse)
   await vitalsInputs.nth(1).blur()
   await vitalsInputs.nth(2).fill(VITALS.spo2)
   await vitalsInputs.nth(2).blur()
   await expect(page.getByText('This patient is eligible for physical activity.')).toBeVisible()
-  await expect(page.getByText('This patient is eligible for the Annual Mobility Screening.')).toBeVisible()
+  await expect(page.getByText('This patient is eligible for the Annual Mobility Assessment.')).toBeVisible()
   await expectNoBrokenValues(page)
   await shot(page, '10-vitals-filled.png', { fullPage: true })
 
@@ -286,6 +288,13 @@ test('user guide walkthrough: home -> AMS session -> summary', async ({ page }) 
   await expectNoBrokenValues(page)
 
   await shot(page, '18-summary.png', { fullPage: true })
+
+  // Navigate back to the patient page so we can capture it with a completed session.
+  await page.goto('/#/existing-patient')
+  await expect(page.getByRole('heading', { level: 1, name: 'Existing Patients' })).toBeVisible()
+  await page.getByRole('link', { name: PATIENT.name }).click()
+  await expect(page.getByRole('heading', { name: `Patient: ${PATIENT.name}` })).toBeVisible()
+  await shot(page, 'patient-with-session.png')
 
   expect(pageErrors, `Unexpected page/console errors:\n${pageErrors.join('\n')}`).toEqual([])
 })

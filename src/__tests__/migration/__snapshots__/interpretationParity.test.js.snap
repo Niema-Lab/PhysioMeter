@@ -2,9 +2,9 @@
 
 exports[`Full interpretation scenario snapshots > age/sex matrix > Female dob=1933-01-15 1`] = `
 {
-  "annualMobilityScreening": [
+  "annualMobilityAssessment": [
     {
-      "text": "This patient is eligible for the Annual Mobility Screening.",
+      "text": "This patient is eligible for the Annual Mobility Assessment.",
       "type": "success",
     },
   ],
@@ -54,9 +54,9 @@ Reference Mean 0.76 (Ages 90+) Standard Deviation 0.21",
 
 exports[`Full interpretation scenario snapshots > age/sex matrix > Female dob=1940-01-15 1`] = `
 {
-  "annualMobilityScreening": [
+  "annualMobilityAssessment": [
     {
-      "text": "This patient is eligible for the Annual Mobility Screening.",
+      "text": "This patient is eligible for the Annual Mobility Assessment.",
       "type": "success",
     },
   ],
@@ -106,9 +106,9 @@ Reference Mean 0.98 (Ages 80-89) Standard Deviation 0.21",
 
 exports[`Full interpretation scenario snapshots > age/sex matrix > Female dob=1950-01-15 1`] = `
 {
-  "annualMobilityScreening": [
+  "annualMobilityAssessment": [
     {
-      "text": "This patient is eligible for the Annual Mobility Screening.",
+      "text": "This patient is eligible for the Annual Mobility Assessment.",
       "type": "success",
     },
   ],
@@ -158,9 +158,9 @@ Reference Mean 1.12 (Ages 70-79) Standard Deviation 0.2",
 
 exports[`Full interpretation scenario snapshots > age/sex matrix > Female dob=1960-01-15 1`] = `
 {
-  "annualMobilityScreening": [
+  "annualMobilityAssessment": [
     {
-      "text": "This patient is eligible for the Annual Mobility Screening.",
+      "text": "This patient is eligible for the Annual Mobility Assessment.",
       "type": "success",
     },
   ],
@@ -210,9 +210,9 @@ Reference Mean 1.22 (Ages 60-69) Standard Deviation 0.16",
 
 exports[`Full interpretation scenario snapshots > age/sex matrix > Female dob=1970-01-15 1`] = `
 {
-  "annualMobilityScreening": [
+  "annualMobilityAssessment": [
     {
-      "text": "This patient is eligible for the Annual Mobility Screening.",
+      "text": "This patient is eligible for the Annual Mobility Assessment.",
       "type": "success",
     },
   ],
@@ -262,9 +262,9 @@ Reference Mean 1.26 (Ages 50-59) Standard Deviation 0.17",
 
 exports[`Full interpretation scenario snapshots > age/sex matrix > Male dob=1933-01-15 1`] = `
 {
-  "annualMobilityScreening": [
+  "annualMobilityAssessment": [
     {
-      "text": "This patient is eligible for the Annual Mobility Screening.",
+      "text": "This patient is eligible for the Annual Mobility Assessment.",
       "type": "success",
     },
   ],
@@ -314,9 +314,9 @@ Reference Mean 0.91 (Ages 90+) Standard Deviation 0.17",
 
 exports[`Full interpretation scenario snapshots > age/sex matrix > Male dob=1940-01-15 1`] = `
 {
-  "annualMobilityScreening": [
+  "annualMobilityAssessment": [
     {
-      "text": "This patient is eligible for the Annual Mobility Screening.",
+      "text": "This patient is eligible for the Annual Mobility Assessment.",
       "type": "success",
     },
   ],
@@ -366,9 +366,9 @@ Reference Mean 1.02 (Ages 80-89) Standard Deviation 0.2",
 
 exports[`Full interpretation scenario snapshots > age/sex matrix > Male dob=1950-01-15 1`] = `
 {
-  "annualMobilityScreening": [
+  "annualMobilityAssessment": [
     {
-      "text": "This patient is eligible for the Annual Mobility Screening.",
+      "text": "This patient is eligible for the Annual Mobility Assessment.",
       "type": "success",
     },
   ],
@@ -418,9 +418,9 @@ Reference Mean 1.18 (Ages 70-79) Standard Deviation 0.2",
 
 exports[`Full interpretation scenario snapshots > age/sex matrix > Male dob=1960-01-15 1`] = `
 {
-  "annualMobilityScreening": [
+  "annualMobilityAssessment": [
     {
-      "text": "This patient is eligible for the Annual Mobility Screening.",
+      "text": "This patient is eligible for the Annual Mobility Assessment.",
       "type": "success",
     },
   ],
@@ -470,9 +470,9 @@ Reference Mean 1.27 (Ages 60-69) Standard Deviation 0.71",
 
 exports[`Full interpretation scenario snapshots > age/sex matrix > Male dob=1970-01-15 1`] = `
 {
-  "annualMobilityScreening": [
+  "annualMobilityAssessment": [
     {
-      "text": "This patient is eligible for the Annual Mobility Screening.",
+      "text": "This patient is eligible for the Annual Mobility Assessment.",
       "type": "success",
     },
   ],
@@ -527,9 +527,9 @@ Reference Mean 1.31 (Ages 50-59) Standard Deviation 0.16",
 
 exports[`Full interpretation scenario snapshots > at risk female 92 1`] = `
 {
-  "annualMobilityScreening": [
+  "annualMobilityAssessment": [
     {
-      "text": "This patient is eligible for the Annual Mobility Screening.",
+      "text": "This patient is eligible for the Annual Mobility Assessment.",
       "type": "success",
     },
   ],
@@ -603,9 +603,9 @@ Reference Mean 0.76 (Ages 90+) Standard Deviation 0.21",
 
 exports[`Full interpretation scenario snapshots > borderline male 55 1`] = `
 {
-  "annualMobilityScreening": [
+  "annualMobilityAssessment": [
     {
-      "text": "This patient is eligible for the Annual Mobility Screening.",
+      "text": "This patient is eligible for the Annual Mobility Assessment.",
       "type": "success",
     },
   ],
@@ -679,7 +679,7 @@ Reference Mean 1.31 (Ages 50-59) Standard Deviation 0.16",
 
 exports[`Full interpretation scenario snapshots > empty form state 1`] = `
 {
-  "annualMobilityScreening": null,
+  "annualMobilityAssessment": null,
   "fastWalkingSpeed": null,
   "fourSquareStepTest": null,
   "timedUpAndGo": null,
@@ -691,9 +691,9 @@ exports[`Full interpretation scenario snapshots > empty form state 1`] = `
 
 exports[`Full interpretation scenario snapshots > female 75 TUG fall risk 1`] = `
 {
-  "annualMobilityScreening": [
+  "annualMobilityAssessment": [
     {
-      "text": "This patient is eligible for the Annual Mobility Screening.",
+      "text": "This patient is eligible for the Annual Mobility Assessment.",
       "type": "success",
     },
   ],
@@ -728,9 +728,9 @@ Reference Mean 9.2 (Ages 70-79) Standard Deviation 2.7",
 
 exports[`Full interpretation scenario snapshots > female 85 TUG fall risk 1`] = `
 {
-  "annualMobilityScreening": [
+  "annualMobilityAssessment": [
     {
-      "text": "This patient is eligible for the Annual Mobility Screening.",
+      "text": "This patient is eligible for the Annual Mobility Assessment.",
       "type": "success",
     },
   ],
@@ -760,9 +760,9 @@ Reference Mean 11.4 (Ages 80-89) Standard Deviation 3",
 
 exports[`Full interpretation scenario snapshots > healthy female 75 1`] = `
 {
-  "annualMobilityScreening": [
+  "annualMobilityAssessment": [
     {
-      "text": "This patient is eligible for the Annual Mobility Screening.",
+      "text": "This patient is eligible for the Annual Mobility Assessment.",
       "type": "success",
     },
   ],
@@ -806,9 +806,9 @@ Reference Mean 12.9 (Ages 70-79) Standard Deviation 5",
 
 exports[`Full interpretation scenario snapshots > healthy male 65 1`] = `
 {
-  "annualMobilityScreening": [
+  "annualMobilityAssessment": [
     {
-      "text": "This patient is eligible for the Annual Mobility Screening.",
+      "text": "This patient is eligible for the Annual Mobility Assessment.",
       "type": "success",
     },
   ],
@@ -858,7 +858,7 @@ Reference Mean 1.27 (Ages 60-69) Standard Deviation 0.71",
 
 exports[`Full interpretation scenario snapshots > ineligible male 85 1`] = `
 {
-  "annualMobilityScreening": [
+  "annualMobilityAssessment": [
     {
       "text": "Participants with the following vital sign findings on vital sign testing may not tolerate the intensity of functional testing. Instead of proceeding, thank them for coming to screening, and refer to their primary care provider, cardiologist, or emergency department for follow-up care.",
       "type": "warning",
@@ -880,9 +880,9 @@ exports[`Full interpretation scenario snapshots > ineligible male 85 1`] = `
 
 exports[`Full interpretation scenario snapshots > no demographics 1`] = `
 {
-  "annualMobilityScreening": [
+  "annualMobilityAssessment": [
     {
-      "text": "This patient is eligible for the Annual Mobility Screening.",
+      "text": "This patient is eligible for the Annual Mobility Assessment.",
       "type": "success",
     },
   ],
@@ -902,7 +902,7 @@ exports[`Full interpretation scenario snapshots > no demographics 1`] = `
 
 exports[`Full interpretation scenario snapshots > null measurements 1`] = `
 {
-  "annualMobilityScreening": null,
+  "annualMobilityAssessment": null,
   "fastWalkingSpeed": null,
   "fourSquareStepTest": null,
   "timedUpAndGo": null,
@@ -914,9 +914,9 @@ exports[`Full interpretation scenario snapshots > null measurements 1`] = `
 
 exports[`Full interpretation scenario snapshots > very slow male 75 1`] = `
 {
-  "annualMobilityScreening": [
+  "annualMobilityAssessment": [
     {
-      "text": "This patient is eligible for the Annual Mobility Screening.",
+      "text": "This patient is eligible for the Annual Mobility Assessment.",
       "type": "success",
     },
   ],
@@ -1019,9 +1019,9 @@ Reference Mean 1.18 (Ages 70-79) Standard Deviation 0.2",
 
 exports[`Full interpretation scenario snapshots > vitals only 1`] = `
 {
-  "annualMobilityScreening": [
+  "annualMobilityAssessment": [
     {
-      "text": "This patient is eligible for the Annual Mobility Screening.",
+      "text": "This patient is eligible for the Annual Mobility Assessment.",
       "type": "success",
     },
   ],
@@ -1041,9 +1041,9 @@ exports[`Full interpretation scenario snapshots > vitals only 1`] = `
 
 exports[`Full interpretation scenario snapshots > young patient 1`] = `
 {
-  "annualMobilityScreening": [
+  "annualMobilityAssessment": [
     {
-      "text": "This patient is eligible for the Annual Mobility Screening.",
+      "text": "This patient is eligible for the Annual Mobility Assessment.",
       "type": "success",
     },
   ],

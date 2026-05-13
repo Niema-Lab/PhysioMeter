@@ -5,8 +5,8 @@
   name: "Measurements"
   # permitted_measurements omitted → all allowed
 
-- key: annualMobilityScreening
-  name: "Annual Mobility Screening"
+- key: annualMobilityAssessment
+  name: "Annual Mobility Assessment"
   permitted_measurements:
     - vitalSigns
     - fiveMeterUsualWalkingSpeed

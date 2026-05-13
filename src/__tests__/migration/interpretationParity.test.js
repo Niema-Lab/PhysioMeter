@@ -402,10 +402,10 @@ describe('Interpretation: timedUpAndGoCognitive', () => {
     })
 })
 
-// ==================== Annual Mobility Screening Interpretation ====================
+// ==================== Annual Mobility Assessment Interpretation ====================
 
-describe('Interpretation: annualMobilityScreening', () => {
-    const interpret = INTERPRETATION_SECTION_CONFIGS.annualMobilityScreening.messageFunction
+describe('Interpretation: annualMobilityAssessment', () => {
+    const interpret = INTERPRETATION_SECTION_CONFIGS.annualMobilityAssessment.messageFunction
 
     it('returns null when no vitals', () => {
         expect(interpret(EMPTY_FORM_STATE)).toBe(null)
@@ -428,7 +428,7 @@ describe('Interpretation: annualMobilityScreening', () => {
         const result = interpret(fs)
         expect(result).not.toBe(null)
         expect(result[0].type).toBe('success')
-        expect(result[0].text).toBe('This patient is eligible for the Annual Mobility Screening.')
+        expect(result[0].text).toBe('This patient is eligible for the Annual Mobility Assessment.')
     })
 
     it('triggers for all ineligibility reasons', () => {
@@ -542,7 +542,7 @@ describe('Interpretation metadata', () => {
         expect(INTERPRETATION_SECTION_CONFIGS.fourSquareStepTest.label).toBe('Four Square Step Test')
         expect(INTERPRETATION_SECTION_CONFIGS.timedUpAndGo.label).toBe('Timed Up and Go (TUG)')
         expect(INTERPRETATION_SECTION_CONFIGS.timedUpAndGoCognitive.label).toBe('Timed Up and Go Cognitive Dual Task')
-        expect(INTERPRETATION_SECTION_CONFIGS.annualMobilityScreening.label).toBe('Annual Mobility Screening')
+        expect(INTERPRETATION_SECTION_CONFIGS.annualMobilityAssessment.label).toBe('Annual Mobility Assessment')
     })
 
     it('all have citations', () => {

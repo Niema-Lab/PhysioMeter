@@ -455,8 +455,8 @@ Add an entry to `measurement_groups.yaml`:
   name: "Measurements"                    # Display name
   # No permitted_measurements → all measurements available
 
-- key: annualMobilityScreening
-  name: "Annual Mobility Screening"
+- key: annualMobilityAssessment
+  name: "Annual Mobility Assessment"
   permitted_measurements:
     - vitalSigns
     - fiveMeterUsualWalkingSpeed

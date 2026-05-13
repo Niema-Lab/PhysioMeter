@@ -7,7 +7,7 @@
 // Value shapes by measurement type:
 //   text/date/radio: string
 //   integer/decimal: number (stored as string in some paths, parsed by consumers)
-//   fields (vitalSigns): array [restingPulseRate, bloodPressure, oxygenSaturation]
+//   fields (vitalSigns): array [bloodPressure, restingPulseRate, oxygenSaturation] (matches YAML field_names order)
 //   fields (timedUpAndGoCognitive): array [time, errorCount]
 //   stopwatch: array of trial values (numbers or strings)
 
@@ -47,7 +47,9 @@ export const DOB_AGE_92 = '1933-01-15'   // age 92
 // ==================== Vital Signs ====================
 
 function makeVitals(pulse, bp, spo2) {
-    return [entry('Vital Signs', [pulse, bp, spo2])]
+    // YAML field_names order is [bloodPressure, restingPulseRate, oxygenSaturation];
+    // helper signature stays pulse-first for readability at call sites.
+    return [entry('Vital Signs', [bp, pulse, spo2])]
 }
 
 export const VALID_VITALS = makeVitals('80', '120/80', '98')
@@ -79,7 +81,7 @@ function makeMultipleTrials(label, ...valueSets) {
  * @param {Object} opts
  * @param {string} opts.sex - 'Male' or 'Female'
  * @param {string} opts.dob - date string
- * @param {Array} opts.vitals - [pulse, bp, spo2] or null
+ * @param {Array} opts.vitals - [pulse, bp, spo2] or null (rearranged internally to YAML order)
  * @param {Array} opts.usualWalkTrials - array of trial times or null
  * @param {Array} opts.fastWalkTrials - array of trial times or null
  * @param {Array} opts.fsstTrials - array of trial times or null
@@ -100,7 +102,7 @@ export function buildFormState(opts = {}) {
     if (opts.vitals !== undefined) {
         fs.vitalSigns = opts.vitals === null
             ? [entry('Vital Signs', '')]
-            : [entry('Vital Signs', opts.vitals)]
+            : [entry('Vital Signs', [opts.vitals[1], opts.vitals[0], opts.vitals[2]])]
     }
     if (opts.usualWalkTrials !== undefined) {
         fs.fiveMeterUsualWalkingSpeed = opts.usualWalkTrials === null

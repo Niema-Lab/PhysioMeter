@@ -63,13 +63,14 @@ bloodPressure:
 
 oxygenSaturation:
   type: decimal
-  label: "Oxygen Saturation"
+  label: "Oxygen Saturation (optional)"
   placeholder: "oxygen saturation (%)"
   min: 0
   max: 100
   unit: "%"
   instructions: OxygenSaturation
   validation:
+    optional: true
     is_between: [0, 100]
 
 restingPulseRate:
@@ -86,8 +87,8 @@ vitalSigns:
   type: fields
   label: "Vital Signs"
   field_names:
-    - restingPulseRate
     - bloodPressure
+    - restingPulseRate
     - oxygenSaturation
 
 # YAML anchors let us define disabled-case conditions once and reuse them across measurements.
@@ -96,7 +97,10 @@ _physical_activity_disabled_case: &physical_activity_disabled_case
   default_checked: true
   show_when:
     any_of:
-      - validations_incomplete: vitalSigns
+      - from_measurement: vitalSigns.restingPulseRate
+        is_missing: true
+      - from_measurement: vitalSigns.bloodPressure
+        is_missing: true
       - from_measurement: vitalSigns.restingPulseRate
         is_greater_than: 100
       - from_measurement: vitalSigns.oxygenSaturation
@@ -124,7 +128,7 @@ fiveMeterUsualWalkingSpeed:
       formula: divide
       numerator: 5
       denominator_from: value
-      decimal_places: 3
+      decimal_places: 2
   disabled_cases:
     - *physical_activity_disabled_case
 
@@ -142,7 +146,7 @@ fiveMeterFastWalkingSpeed:
       formula: divide
       numerator: 5
       denominator_from: value
-      decimal_places: 3
+      decimal_places: 2
   disabled_cases:
     - *physical_activity_disabled_case
 

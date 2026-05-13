@@ -45,7 +45,14 @@ export function buildValidationFunction(validation) {
     }
 
     if (checks.length === 0) return undefined
-    return (value) => checks.every(check => check(value))
+    const allChecksPass = (value) => checks.every(check => check(value))
+    if (validation.optional) {
+        return (value) =>
+            value === null || value === undefined || value === '' || (typeof value === 'number' && isNaN(value))
+                ? true
+                : allChecksPass(value)
+    }
+    return allChecksPass
 }
 
 function buildPatternValidation(validation) {

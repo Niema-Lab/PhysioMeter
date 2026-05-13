@@ -215,13 +215,13 @@ describe('Validation Parity: computedFields', () => {
             expect(compute(0)).toEqual({ 'Walking Speed': 'N/A' })
         })
         it('computes speed correctly for 5 seconds', () => {
-            expect(compute(5)).toEqual({ 'Walking Speed': '1.000 m/s' })
+            expect(compute(5)).toEqual({ 'Walking Speed': '1.00 m/s' })
         })
         it('computes speed correctly for 4.1 seconds', () => {
-            expect(compute(4.1)).toEqual({ 'Walking Speed': '1.220 m/s' })
+            expect(compute(4.1)).toEqual({ 'Walking Speed': '1.22 m/s' })
         })
         it('computes speed correctly for string value', () => {
-            expect(compute('4.0')).toEqual({ 'Walking Speed': '1.250 m/s' })
+            expect(compute('4.0')).toEqual({ 'Walking Speed': '1.25 m/s' })
         })
     })
 
@@ -232,7 +232,7 @@ describe('Validation Parity: computedFields', () => {
             expect(compute(null)).toEqual({ 'Walking Speed': 'N/A' })
         })
         it('computes speed correctly', () => {
-            expect(compute(3.0)).toEqual({ 'Walking Speed': '1.667 m/s' })
+            expect(compute(3.0)).toEqual({ 'Walking Speed': '1.67 m/s' })
         })
     })
 })
@@ -250,20 +250,20 @@ describe('Validation Parity: disabledCasesComputed showOverride', () => {
             expect(showOverride(formState, validations, {}, 'fiveMeterUsualWalkingSpeed')).toBe(true)
         })
 
-        it('shows override when vitals are invalid', () => {
-            const formState = { vitalSigns: [{ value: ['80', '120/80', '98'] }] }
-            const validations = { vitalSigns: [[false, true, true]] }
-            expect(showOverride(formState, validations, {}, 'fiveMeterUsualWalkingSpeed')).toBe(true)
+        it('does not show override when only SpO2 is missing (SpO2 is optional)', () => {
+            const formState = { vitalSigns: [{ value: ['120/80', '80', ''] }] }
+            const validations = { vitalSigns: [[true, true, true]] }
+            expect(showOverride(formState, validations, {}, 'fiveMeterUsualWalkingSpeed')).toBe(false)
         })
 
         it('shows override when vitals indicate ineligibility', () => {
-            const formState = { vitalSigns: [{ value: ['105', '120/80', '98'] }] }
+            const formState = { vitalSigns: [{ value: ['120/80', '105', '98'] }] }
             const validations = { vitalSigns: [[true, true, true]] }
             expect(showOverride(formState, validations, {}, 'fiveMeterUsualWalkingSpeed')).toBe(true)
         })
 
         it('hides override when vitals are valid and eligible', () => {
-            const formState = { vitalSigns: [{ value: ['80', '120/80', '98'] }] }
+            const formState = { vitalSigns: [{ value: ['120/80', '80', '98'] }] }
             const validations = { vitalSigns: [[true, true, true]] }
             expect(showOverride(formState, validations, {}, 'fiveMeterUsualWalkingSpeed')).toBe(false)
         })

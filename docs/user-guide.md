@@ -6,7 +6,7 @@ storage happen in your browser; no patient information is transmitted to a
 server.
 
 This guide walks through the complete workflow on the Annual Mobility
-Screening (AMS) preset: creating a patient, starting a session, administering
+Assessment (AMA) preset: creating a patient, starting a session, administering
 measurements, and reviewing the summary. The screenshots below are produced
 by the end-to-end walkthrough test at `e2e/user-guide-walkthrough.spec.js`,
 so they stay in sync with the deployed UI.
@@ -23,7 +23,7 @@ so they stay in sync with the deployed UI.
 3. [Creating a patient](#3-creating-a-patient)
 4. [The patient dashboard](#4-the-patient-dashboard)
 5. [Starting a session](#5-starting-a-session)
-6. [Administering the Annual Mobility Screen](#6-administering-the-annual-mobility-screen)
+6. [Administering the Annual Mobility Assessment](#6-administering-the-annual-mobility-assessment)
 7. [Reading the summary](#7-reading-the-summary)
 8. [Interpretation severities](#8-interpretation-severities)
 9. [Exporting results](#9-exporting-results)
@@ -100,25 +100,25 @@ point it was last saved.
 ## 5. Starting a session
 
 **New Session** prompts for a session timestamp (defaults to now; can be
-backdated) and a test type. Selecting the **Annual Mobility Screening**
+backdated) and a test type. Selecting the **Annual Mobility Assessment**
 preset restricts the measurement list to the nine measures that make up
 that protocol in the order they should be administered. Selecting
 **Measurements** gives access to every configured measurement.
 
 <p align="center"><img src="user-guide-images/07-new-session.png" alt="New Session form" width="720"></p>
 
-<p align="center"><img src="user-guide-images/08-new-session-ams-selected.png" alt="Annual Mobility Screening selected" width="720"></p>
+<p align="center"><img src="user-guide-images/08-new-session-ama-selected.png" alt="Annual Mobility Assessment selected" width="720"></p>
 
 Click **Create Session** to land on the session home.
 
-## 6. Administering the Annual Mobility Screen
+## 6. Administering the Annual Mobility Assessment
 
 The session home shows the full ordered list of measurements for the
 preset. Click **Proceed to Measurements** to step into the workflow; the
 **Next Measurement** / **Previous Measurement** buttons (or the side-nav
 icon) move between pages. Your session auto-saves to IndexedDB as you go.
 
-<p align="center"><img src="user-guide-images/09-session-home.png" alt="AMS session home" width="720"></p>
+<p align="center"><img src="user-guide-images/09-session-home.png" alt="AMA session home" width="720"></p>
 
 ### Vital Signs (safety screen)
 

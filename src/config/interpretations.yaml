@@ -129,7 +129,7 @@ fourSquareStepTest:
         from_calculation: fourSquareStepTestBest
         is_at_least: 15
       show_message:
-        text: "Multiple Fall risk ≥15 (Sn .85, Sp .88)"
+        text: "Multiple Fall risk >=15 (Sn .85, Sp .88)"
         severity: concern
 
     # Mobility classification by age/sex
@@ -206,7 +206,7 @@ timedUpAndGo:
         from_calculation: timedUpAndGoBest
         is_at_least: 17.8
       show_message:
-        text: "Frailty ≥17.8 (Sn .93, Sp .98)"
+        text: "Frailty >=17.8 (Sn .93, Sp .98)"
         severity: concern
 
     # Mobility classification by age/sex

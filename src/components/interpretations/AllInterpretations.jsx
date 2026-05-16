@@ -3,6 +3,7 @@ import Interpretation from './Interpretation'
 import Submit from '../form/Submit'
 import Title from '../form/Title'
 import { downloadCSV, generateInterpretationsCSVRows } from '../../utils/csvExport'
+import { confirmUnencryptedExport } from '../../utils/exportConfirm'
 
 function AllInterpretations({ formState, validations, disabledValues, patientName }) {
     const interpretations = Object.entries(INTERPRETATION_SECTION_CONFIGS).map(([key, config]) => {
@@ -12,6 +13,7 @@ function AllInterpretations({ formState, validations, disabledValues, patientNam
     }).filter(Boolean)
 
     const exportInterpretations = () => {
+        if (!confirmUnencryptedExport()) return
         const date = new Date().toISOString().split('T')[0]
         const rows = generateInterpretationsCSVRows(formState, validations, disabledValues)
         downloadCSV(rows, `interpretations_${patientName || 'guest'}_${date}.csv`)

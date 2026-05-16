@@ -119,32 +119,45 @@ function lookupThreshold(config, context) {
     if (!entry) return []
 
     const compareAs = table.compare_as
-    const classifications = table.classifications || {}
-    const messages = []
-    const refLine = `Reference Mean ${entry.mean} (Ages ${ageBracket}) Standard Deviation ${entry.sd}`
+    const unit = table.unit ? ` ${table.unit}` : ''
+    const decimals = Number.isInteger(table.decimals) ? table.decimals : 2
+    const fmt = (n) => n.toFixed(decimals)
 
-    const classificationChecks = compareAs === 'higher_is_better'
-        ? [
-            { key: 'no_pcml', pass: value >= entry.no_pcml, symbol: '\u2265' },
-            { key: 'pcml',    pass: value <= entry.pcml,    symbol: '\u2264' },
-            { key: 'ml',      pass: value <= entry.ml,      symbol: '\u2264' },
-        ]
-        : [
-            { key: 'no_pcml', pass: value <= entry.no_pcml, symbol: '\u2264' },
-            { key: 'pcml',    pass: value >= entry.pcml,    symbol: '\u2265' },
-            { key: 'ml',      pass: value >= entry.ml,      symbol: '\u2265' },
-        ]
+    const zoneDefaults = context.thresholds.zone_defaults
+    const yellowBoundary = compareAs === 'higher_is_better'
+        ? entry.mean - zoneDefaults.yellow_sd * entry.sd
+        : entry.mean + zoneDefaults.yellow_sd * entry.sd
+    const redBoundary = compareAs === 'higher_is_better'
+        ? entry.mean - zoneDefaults.red_sd * entry.sd
+        : entry.mean + zoneDefaults.red_sd * entry.sd
 
-    for (const { key, pass, symbol } of classificationChecks) {
-        if (pass) {
-            const cls = classifications[key] || {}
-            const label = cls.label || key
-            const severity = cls.severity ? mapSeverity(cls.severity) : 'secondary'
-            messages.push({ text: `${label} ${symbol} ${entry[key]}\n${refLine}`, type: severity })
-        }
+    let zone
+    if (compareAs === 'higher_is_better') {
+        if (value >= yellowBoundary) zone = 'green'
+        else if (value >= redBoundary) zone = 'yellow'
+        else zone = 'red'
+    } else {
+        if (value <= yellowBoundary) zone = 'green'
+        else if (value <= redBoundary) zone = 'yellow'
+        else zone = 'red'
     }
 
-    return messages
+    const cutoffLine = (() => {
+        if (compareAs === 'higher_is_better') {
+            if (zone === 'green') return `Green Zone (>= ${fmt(yellowBoundary)}${unit})`
+            if (zone === 'yellow') return `Yellow Zone (< ${fmt(yellowBoundary)}${unit})`
+            return `Red Zone (< ${fmt(redBoundary)}${unit})`
+        }
+        if (zone === 'green') return `Green Zone (<= ${fmt(yellowBoundary)}${unit})`
+        if (zone === 'yellow') return `Yellow Zone (> ${fmt(yellowBoundary)}${unit})`
+        return `Red Zone (> ${fmt(redBoundary)}${unit})`
+    })()
+
+    const severityByZone = { green: 'success', yellow: 'warning', red: 'danger' }
+    const refLine = `Reference Mean ${entry.mean} (Ages ${ageBracket}) Standard Deviation ${entry.sd}`
+    const text = `${cutoffLine}\n${refLine}\n${zoneDefaults.descriptions[zone]}`
+
+    return [{ text, type: severityByZone[zone] }]
 }
 
 export function executeInterpretation(interpConfig, context) {

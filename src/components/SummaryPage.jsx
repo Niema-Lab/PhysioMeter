@@ -5,11 +5,13 @@ import Submit from './form/Submit'
 import { hasData } from './measurements/MeasurementSummary'
 import { downloadCSV, generateMeasurementsCSVRows, generateCalculationsCSVRows, generateInterpretationsCSVRows } from '../utils/csvExport'
 import { generateAndDownloadPDF } from '../utils/pdfExport'
+import { confirmUnencryptedExport } from '../utils/exportConfirm'
 
 function SummaryPage({ name, patientName, submitText, submitTextType, formState, validations, disabledValues, isDisabled }) {
     const date = new Date().toISOString().split('T')[0]
 
     const exportAll = () => {
+        if (!confirmUnencryptedExport()) return
         const measurementRows = generateMeasurementsCSVRows(formState, isDisabled)
         downloadCSV(measurementRows, `measurements_${patientName}_${date}.csv`)
 
@@ -25,6 +27,7 @@ function SummaryPage({ name, patientName, submitText, submitTextType, formState,
     }
 
     const exportPDF = () => {
+        if (!confirmUnencryptedExport()) return
         generateAndDownloadPDF(formState, validations, disabledValues, isDisabled, patientName)
     }
 

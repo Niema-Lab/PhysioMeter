@@ -3,6 +3,7 @@ import Calculation from './Calculation'
 import Submit from '../form/Submit'
 import Title from '../form/Title'
 import { downloadCSV, generateCalculationsCSVRows } from '../../utils/csvExport'
+import { confirmUnencryptedExport } from '../../utils/exportConfirm'
 
 function AllCalculations({ formState, validations, disabledValues, patientName }) {
     const calculations = Object.entries(CALCULATION_SECTION_CONFIGS).map(([key, config]) => {
@@ -12,6 +13,7 @@ function AllCalculations({ formState, validations, disabledValues, patientName }
     }).filter(Boolean)
 
     const exportCalculations = () => {
+        if (!confirmUnencryptedExport()) return
         const date = new Date().toISOString().split('T')[0]
         const rows = generateCalculationsCSVRows(formState, validations, disabledValues)
         downloadCSV(rows, `calculations_${patientName || 'guest'}_${date}.csv`)

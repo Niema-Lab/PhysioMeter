@@ -44,11 +44,6 @@ function getLastY(doc) {
     return doc.lastAutoTable?.finalY ?? PAGE_MARGIN
 }
 
-// jsPDF's Helvetica uses WinAnsi encoding which lacks Unicode math symbols — swap to ASCII.
-function sanitizeText(text) {
-    return text.replace(/\u2265/g, '>=').replace(/\u2264/g, '<=')
-}
-
 function extractHtmlLink(html) {
     const hrefMatch = html.match(/href="([^"]*)"/)
     const text = html.replace(/<[^>]*>/g, '')
@@ -145,7 +140,7 @@ function addCalculationCard(doc, startY, label, value, unit) {
 function addInterpretationCard(doc, startY, label, messages, citation) {
     const body = messages.map(msg => {
         const style = ALERT_STYLES[msg.type] || ALERT_STYLES.secondary
-        return [{ content: sanitizeText(msg.text), styles: { fillColor: style.fill, textColor: style.text } }]
+        return [{ content: msg.text, styles: { fillColor: style.fill, textColor: style.text } }]
     })
 
     autoTable(doc, {

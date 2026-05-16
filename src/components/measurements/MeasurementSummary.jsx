@@ -2,6 +2,7 @@ import { MEASUREMENT_CONFIGS } from './MeasurementFactory'
 import Submit from '../form/Submit'
 import Title from '../form/Title'
 import { downloadCSV, generateMeasurementsCSVRows } from '../../utils/csvExport'
+import { confirmUnencryptedExport } from '../../utils/exportConfirm'
 
 export const hasData = (formState) => Object.entries(formState).some(([key, measurements]) =>
     measurements && measurements.length > 0 && MEASUREMENT_CONFIGS[key]
@@ -9,6 +10,7 @@ export const hasData = (formState) => Object.entries(formState).some(([key, meas
 
 function MeasurementSummary({ formState, validations, isDisabled, patientName }) {
     const exportMeasurements = () => {
+        if (!confirmUnencryptedExport()) return
         const date = new Date().toISOString().split('T')[0]
         const rows = generateMeasurementsCSVRows(formState, isDisabled)
         downloadCSV(rows, `measurements_${patientName || 'guest'}_${date}.csv`)

@@ -10,36 +10,41 @@ exports[`Full interpretation scenario snapshots > age/sex matrix > Female dob=19
   ],
   "fastWalkingSpeed": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≥ 0.9
-Reference Mean 1.02 (Ages 90+) Standard Deviation 0.27",
+      "text": "Green Zone (>= 0.89 m/s)
+Reference Mean 1.02 (Ages 90+) Standard Deviation 0.27
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "fourSquareStepTest": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 28.2
-Reference Mean 20 (Ages 90+) Standard Deviation 16.7",
+      "text": "Green Zone (<= 28.4 sec)
+Reference Mean 20 (Ages 90+) Standard Deviation 16.7
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "timedUpAndGo": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 17.9
-Reference Mean 14.7 (Ages 90+) Standard Deviation 6.3",
+      "text": "Green Zone (<= 17.8 sec)
+Reference Mean 14.7 (Ages 90+) Standard Deviation 6.3
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "timedUpAndGoCognitive": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 29.3
-Reference Mean 24.3 (Ages 90+) Standard Deviation 10.2",
+      "text": "Green Zone (<= 29.4 sec)
+Reference Mean 24.3 (Ages 90+) Standard Deviation 10.2
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "usualWalkingSpeed": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≥ 0.66
-Reference Mean 0.76 (Ages 90+) Standard Deviation 0.21",
+      "text": "Green Zone (>= 0.66 m/s)
+Reference Mean 0.76 (Ages 90+) Standard Deviation 0.21
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
@@ -62,36 +67,41 @@ exports[`Full interpretation scenario snapshots > age/sex matrix > Female dob=19
   ],
   "fastWalkingSpeed": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≥ 1.05
-Reference Mean 1.2 (Ages 80-89) Standard Deviation 0.33",
+      "text": "Green Zone (>= 1.03 m/s)
+Reference Mean 1.2 (Ages 80-89) Standard Deviation 0.33
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "fourSquareStepTest": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 17.6
-Reference Mean 14.9 (Ages 80-89) Standard Deviation 5.7",
+      "text": "Green Zone (<= 17.8 sec)
+Reference Mean 14.9 (Ages 80-89) Standard Deviation 5.7
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "timedUpAndGo": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 12.9
-Reference Mean 11.4 (Ages 80-89) Standard Deviation 3",
+      "text": "Green Zone (<= 12.9 sec)
+Reference Mean 11.4 (Ages 80-89) Standard Deviation 3
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "timedUpAndGoCognitive": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 19.5
-Reference Mean 17.3 (Ages 80-89) Standard Deviation 4.7",
+      "text": "Green Zone (<= 19.7 sec)
+Reference Mean 17.3 (Ages 80-89) Standard Deviation 4.7
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "usualWalkingSpeed": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≥ 0.89
-Reference Mean 0.98 (Ages 80-89) Standard Deviation 0.21",
+      "text": "Green Zone (>= 0.88 m/s)
+Reference Mean 0.98 (Ages 80-89) Standard Deviation 0.21
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
@@ -114,36 +124,41 @@ exports[`Full interpretation scenario snapshots > age/sex matrix > Female dob=19
   ],
   "fastWalkingSpeed": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≥ 1.37
-Reference Mean 1.52 (Ages 70-79) Standard Deviation 0.33",
+      "text": "Green Zone (>= 1.35 m/s)
+Reference Mean 1.52 (Ages 70-79) Standard Deviation 0.33
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "fourSquareStepTest": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 12.6
-Reference Mean 10.9 (Ages 70-79) Standard Deviation 3.6",
+      "text": "Green Zone (<= 12.7 sec)
+Reference Mean 10.9 (Ages 70-79) Standard Deviation 3.6
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "timedUpAndGo": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 10.6
-Reference Mean 9.2 (Ages 70-79) Standard Deviation 2.7",
+      "text": "Green Zone (<= 10.5 sec)
+Reference Mean 9.2 (Ages 70-79) Standard Deviation 2.7
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "timedUpAndGoCognitive": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 15.3
-Reference Mean 12.9 (Ages 70-79) Standard Deviation 5",
+      "text": "Green Zone (<= 15.4 sec)
+Reference Mean 12.9 (Ages 70-79) Standard Deviation 5
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "usualWalkingSpeed": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≥ 1.03
-Reference Mean 1.12 (Ages 70-79) Standard Deviation 0.2",
+      "text": "Green Zone (>= 1.02 m/s)
+Reference Mean 1.12 (Ages 70-79) Standard Deviation 0.2
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
@@ -166,36 +181,41 @@ exports[`Full interpretation scenario snapshots > age/sex matrix > Female dob=19
   ],
   "fastWalkingSpeed": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≥ 1.42
-Reference Mean 1.59 (Ages 60-69) Standard Deviation 0.37",
+      "text": "Green Zone (>= 1.41 m/s)
+Reference Mean 1.59 (Ages 60-69) Standard Deviation 0.37
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "fourSquareStepTest": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 10.8
-Reference Mean 9.7 (Ages 60-69) Standard Deviation 2.4",
+      "text": "Green Zone (<= 10.9 sec)
+Reference Mean 9.7 (Ages 60-69) Standard Deviation 2.4
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "timedUpAndGo": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 9
-Reference Mean 8.1 (Ages 60-69) Standard Deviation 1.8",
+      "text": "Green Zone (<= 9.0 sec)
+Reference Mean 8.1 (Ages 60-69) Standard Deviation 1.8
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "timedUpAndGoCognitive": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 15.4
-Reference Mean 13 (Ages 60-69) Standard Deviation 5",
+      "text": "Green Zone (<= 15.5 sec)
+Reference Mean 13 (Ages 60-69) Standard Deviation 5
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "usualWalkingSpeed": [
     {
-      "text": "Preclinical Mobility Limitation (PCML) ≤ 1.14
-Reference Mean 1.22 (Ages 60-69) Standard Deviation 0.16",
+      "text": "Yellow Zone (< 1.14 m/s)
+Reference Mean 1.22 (Ages 60-69) Standard Deviation 0.16
+The participant is performing below normative data, which could be an early indicator of mobility changes, but may not be to a level that it is limiting their daily activities.",
       "type": "warning",
     },
   ],
@@ -218,36 +238,41 @@ exports[`Full interpretation scenario snapshots > age/sex matrix > Female dob=19
   ],
   "fastWalkingSpeed": [
     {
-      "text": "Preclinical Mobility Limitation (PCML) ≤ 1.59
-Reference Mean 1.67 (Ages 50-59) Standard Deviation 0.51",
-      "type": "warning",
+      "text": "Green Zone (>= 1.42 m/s)
+Reference Mean 1.67 (Ages 50-59) Standard Deviation 0.51
+The participant's performance is similar to others in the same age range and sex.",
+      "type": "success",
     },
   ],
   "fourSquareStepTest": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 12.6
-Reference Mean 10.3 (Ages 50-59) Standard Deviation 4.7",
+      "text": "Green Zone (<= 12.7 sec)
+Reference Mean 10.3 (Ages 50-59) Standard Deviation 4.7
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "timedUpAndGo": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 10.4
-Reference Mean 8.7 (Ages 50-59) Standard Deviation 3.3",
+      "text": "Green Zone (<= 10.3 sec)
+Reference Mean 8.7 (Ages 50-59) Standard Deviation 3.3
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "timedUpAndGoCognitive": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 14.9
-Reference Mean 11.9 (Ages 50-59) Standard Deviation 5.9",
+      "text": "Green Zone (<= 14.9 sec)
+Reference Mean 11.9 (Ages 50-59) Standard Deviation 5.9
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "usualWalkingSpeed": [
     {
-      "text": "Preclinical Mobility Limitation (PCML) ≤ 1.17
-Reference Mean 1.26 (Ages 50-59) Standard Deviation 0.17",
+      "text": "Yellow Zone (< 1.18 m/s)
+Reference Mean 1.26 (Ages 50-59) Standard Deviation 0.17
+The participant is performing below normative data, which could be an early indicator of mobility changes, but may not be to a level that it is limiting their daily activities.",
       "type": "warning",
     },
   ],
@@ -270,36 +295,41 @@ exports[`Full interpretation scenario snapshots > age/sex matrix > Male dob=1933
   ],
   "fastWalkingSpeed": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≥ 1.04
-Reference Mean 1.19 (Ages 90+) Standard Deviation 0.32",
+      "text": "Green Zone (>= 1.03 m/s)
+Reference Mean 1.19 (Ages 90+) Standard Deviation 0.32
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "fourSquareStepTest": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 14.6
-Reference Mean 13 (Ages 90+) Standard Deviation 3.4",
+      "text": "Green Zone (<= 14.7 sec)
+Reference Mean 13 (Ages 90+) Standard Deviation 3.4
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "timedUpAndGo": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 16.9
-Reference Mean 13.4 (Ages 90+) Standard Deviation 6.9",
+      "text": "Green Zone (<= 16.9 sec)
+Reference Mean 13.4 (Ages 90+) Standard Deviation 6.9
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "timedUpAndGoCognitive": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 24.9
-Reference Mean 20.2 (Ages 90+) Standard Deviation 9.6",
+      "text": "Green Zone (<= 25.0 sec)
+Reference Mean 20.2 (Ages 90+) Standard Deviation 9.6
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "usualWalkingSpeed": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≥ 0.83
-Reference Mean 0.91 (Ages 90+) Standard Deviation 0.17",
+      "text": "Green Zone (>= 0.83 m/s)
+Reference Mean 0.91 (Ages 90+) Standard Deviation 0.17
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
@@ -322,36 +352,41 @@ exports[`Full interpretation scenario snapshots > age/sex matrix > Male dob=1940
   ],
   "fastWalkingSpeed": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≥ 1.18
-Reference Mean 1.36 (Ages 80-89) Standard Deviation 0.38",
+      "text": "Green Zone (>= 1.17 m/s)
+Reference Mean 1.36 (Ages 80-89) Standard Deviation 0.38
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "fourSquareStepTest": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 19.7
-Reference Mean 15.8 (Ages 80-89) Standard Deviation 8",
+      "text": "Green Zone (<= 19.8 sec)
+Reference Mean 15.8 (Ages 80-89) Standard Deviation 8
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "timedUpAndGo": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 13.3
-Reference Mean 11.5 (Ages 80-89) Standard Deviation 3.6",
+      "text": "Green Zone (<= 13.3 sec)
+Reference Mean 11.5 (Ages 80-89) Standard Deviation 3.6
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "timedUpAndGoCognitive": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 19.4
-Reference Mean 16.2 (Ages 80-89) Standard Deviation 6.6",
+      "text": "Green Zone (<= 19.5 sec)
+Reference Mean 16.2 (Ages 80-89) Standard Deviation 6.6
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "usualWalkingSpeed": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≥ 0.93
-Reference Mean 1.02 (Ages 80-89) Standard Deviation 0.2",
+      "text": "Green Zone (>= 0.92 m/s)
+Reference Mean 1.02 (Ages 80-89) Standard Deviation 0.2
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
@@ -374,36 +409,41 @@ exports[`Full interpretation scenario snapshots > age/sex matrix > Male dob=1950
   ],
   "fastWalkingSpeed": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≥ 1.34
-Reference Mean 1.58 (Ages 70-79) Standard Deviation 0.51",
+      "text": "Green Zone (>= 1.33 m/s)
+Reference Mean 1.58 (Ages 70-79) Standard Deviation 0.51
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "fourSquareStepTest": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 12.9
-Reference Mean 10.9 (Ages 70-79) Standard Deviation 4.2",
+      "text": "Green Zone (<= 13.0 sec)
+Reference Mean 10.9 (Ages 70-79) Standard Deviation 4.2
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "timedUpAndGo": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 10
-Reference Mean 8.6 (Ages 70-79) Standard Deviation 2.8",
+      "text": "Green Zone (<= 10.0 sec)
+Reference Mean 8.6 (Ages 70-79) Standard Deviation 2.8
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "timedUpAndGoCognitive": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 13.5
-Reference Mean 11.6 (Ages 70-79) Standard Deviation 4.1",
+      "text": "Green Zone (<= 13.6 sec)
+Reference Mean 11.6 (Ages 70-79) Standard Deviation 4.1
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "usualWalkingSpeed": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≥ 1.09
-Reference Mean 1.18 (Ages 70-79) Standard Deviation 0.2",
+      "text": "Green Zone (>= 1.08 m/s)
+Reference Mean 1.18 (Ages 70-79) Standard Deviation 0.2
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
@@ -426,37 +466,42 @@ exports[`Full interpretation scenario snapshots > age/sex matrix > Male dob=1960
   ],
   "fastWalkingSpeed": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≥ 1.26
-Reference Mean 1.4 (Ages 60-69) Standard Deviation 0.3",
+      "text": "Green Zone (>= 1.25 m/s)
+Reference Mean 1.4 (Ages 60-69) Standard Deviation 0.3
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "fourSquareStepTest": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 10.3
-Reference Mean 9.4 (Ages 60-69) Standard Deviation 1.9",
+      "text": "Green Zone (<= 10.3 sec)
+Reference Mean 9.4 (Ages 60-69) Standard Deviation 1.9
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "timedUpAndGo": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 13.8
-Reference Mean 10.6 (Ages 60-69) Standard Deviation 6.4",
+      "text": "Green Zone (<= 13.8 sec)
+Reference Mean 10.6 (Ages 60-69) Standard Deviation 6.4
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "timedUpAndGoCognitive": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 16.7
-Reference Mean 13.2 (Ages 60-69) Standard Deviation 7.3",
+      "text": "Green Zone (<= 16.8 sec)
+Reference Mean 13.2 (Ages 60-69) Standard Deviation 7.3
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "usualWalkingSpeed": [
     {
-      "text": "Preclinical Mobility Limitation (PCML) ≤ 1.18
-Reference Mean 1.27 (Ages 60-69) Standard Deviation 0.71",
-      "type": "warning",
+      "text": "Green Zone (>= 0.92 m/s)
+Reference Mean 1.27 (Ages 60-69) Standard Deviation 0.71
+The participant's performance is similar to others in the same age range and sex.",
+      "type": "success",
     },
   ],
   "vitalSigns": [
@@ -478,41 +523,41 @@ exports[`Full interpretation scenario snapshots > age/sex matrix > Male dob=1970
   ],
   "fastWalkingSpeed": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≥ 1.26
-Reference Mean 1.33 (Ages 50-59) Standard Deviation 0.55",
+      "text": "Green Zone (>= 1.06 m/s)
+Reference Mean 1.33 (Ages 50-59) Standard Deviation 0.55
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "fourSquareStepTest": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 11.8
-Reference Mean 10.2 (Ages 50-59) Standard Deviation 3.3",
+      "text": "Green Zone (<= 11.8 sec)
+Reference Mean 10.2 (Ages 50-59) Standard Deviation 3.3
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "timedUpAndGo": [
     {
-      "text": "Preclinical Mobility Limitation (PCML) ≥ 8.4
-Reference Mean 7.5 (Ages 50-59) Standard Deviation 1.5",
+      "text": "Yellow Zone (> 8.3 sec)
+Reference Mean 7.5 (Ages 50-59) Standard Deviation 1.5
+The participant is performing below normative data, which could be an early indicator of mobility changes, but may not be to a level that it is limiting their daily activities.",
       "type": "warning",
     },
   ],
   "timedUpAndGoCognitive": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 11.2
-Reference Mean 10.1 (Ages 50-59) Standard Deviation 2.1",
+      "text": "Green Zone (<= 11.2 sec)
+Reference Mean 10.1 (Ages 50-59) Standard Deviation 2.1
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "usualWalkingSpeed": [
     {
-      "text": "Preclinical Mobility Limitation (PCML) ≤ 1.22
-Reference Mean 1.31 (Ages 50-59) Standard Deviation 0.16",
-      "type": "warning",
-    },
-    {
-      "text": "Mobility Limitation (ML) ≤ 1.15
-Reference Mean 1.31 (Ages 50-59) Standard Deviation 0.16",
+      "text": "Red Zone (< 1.15 m/s)
+Reference Mean 1.31 (Ages 50-59) Standard Deviation 0.16
+The participant likely has mobility issues that are limiting daily activities.",
       "type": "danger",
     },
   ],
@@ -539,19 +584,21 @@ exports[`Full interpretation scenario snapshots > at risk female 92 1`] = `
       "type": "danger",
     },
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≥ 0.9
-Reference Mean 1.02 (Ages 90+) Standard Deviation 0.27",
+      "text": "Green Zone (>= 0.89 m/s)
+Reference Mean 1.02 (Ages 90+) Standard Deviation 0.27
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "fourSquareStepTest": [
     {
-      "text": "Multiple Fall risk ≥15 (Sn .85, Sp .88)",
+      "text": "Multiple Fall risk >=15 (Sn .85, Sp .88)",
       "type": "danger",
     },
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 28.2
-Reference Mean 20 (Ages 90+) Standard Deviation 16.7",
+      "text": "Green Zone (<= 28.4 sec)
+Reference Mean 20 (Ages 90+) Standard Deviation 16.7
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
@@ -561,12 +608,13 @@ Reference Mean 20 (Ages 90+) Standard Deviation 16.7",
       "type": "danger",
     },
     {
-      "text": "Frailty ≥17.8 (Sn .93, Sp .98)",
+      "text": "Frailty >=17.8 (Sn .93, Sp .98)",
       "type": "danger",
     },
     {
-      "text": "Preclinical Mobility Limitation (PCML) ≥ 18
-Reference Mean 14.7 (Ages 90+) Standard Deviation 6.3",
+      "text": "Yellow Zone (> 17.8 sec)
+Reference Mean 14.7 (Ages 90+) Standard Deviation 6.3
+The participant is performing below normative data, which could be an early indicator of mobility changes, but may not be to a level that it is limiting their daily activities.",
       "type": "warning",
     },
   ],
@@ -576,8 +624,9 @@ Reference Mean 14.7 (Ages 90+) Standard Deviation 6.3",
       "type": "danger",
     },
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 29.3
-Reference Mean 24.3 (Ages 90+) Standard Deviation 10.2",
+      "text": "Green Zone (<= 29.4 sec)
+Reference Mean 24.3 (Ages 90+) Standard Deviation 10.2
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
@@ -587,8 +636,9 @@ Reference Mean 24.3 (Ages 90+) Standard Deviation 10.2",
       "type": "danger",
     },
     {
-      "text": "Preclinical Mobility Limitation (PCML) ≤ 0.65
-Reference Mean 0.76 (Ages 90+) Standard Deviation 0.21",
+      "text": "Yellow Zone (< 0.66 m/s)
+Reference Mean 0.76 (Ages 90+) Standard Deviation 0.21
+The participant is performing below normative data, which could be an early indicator of mobility changes, but may not be to a level that it is limiting their daily activities.",
       "type": "warning",
     },
   ],
@@ -615,56 +665,41 @@ exports[`Full interpretation scenario snapshots > borderline male 55 1`] = `
       "type": "danger",
     },
     {
-      "text": "Preclinical Mobility Limitation (PCML) ≤ 1.25
-Reference Mean 1.33 (Ages 50-59) Standard Deviation 0.55",
-      "type": "warning",
+      "text": "Green Zone (>= 1.06 m/s)
+Reference Mean 1.33 (Ages 50-59) Standard Deviation 0.55
+The participant's performance is similar to others in the same age range and sex.",
+      "type": "success",
     },
   ],
   "fourSquareStepTest": [
     {
-      "text": "Preclinical Mobility Limitation (PCML) ≥ 11.9
-Reference Mean 10.2 (Ages 50-59) Standard Deviation 3.3",
-      "type": "warning",
-    },
-    {
-      "text": "Mobility Limitation (ML) ≥ 13.5
-Reference Mean 10.2 (Ages 50-59) Standard Deviation 3.3",
+      "text": "Red Zone (> 13.5 sec)
+Reference Mean 10.2 (Ages 50-59) Standard Deviation 3.3
+The participant likely has mobility issues that are limiting daily activities.",
       "type": "danger",
     },
   ],
   "timedUpAndGo": [
     {
-      "text": "Preclinical Mobility Limitation (PCML) ≥ 8.4
-Reference Mean 7.5 (Ages 50-59) Standard Deviation 1.5",
-      "type": "warning",
-    },
-    {
-      "text": "Mobility Limitation (ML) ≥ 9
-Reference Mean 7.5 (Ages 50-59) Standard Deviation 1.5",
+      "text": "Red Zone (> 9.0 sec)
+Reference Mean 7.5 (Ages 50-59) Standard Deviation 1.5
+The participant likely has mobility issues that are limiting daily activities.",
       "type": "danger",
     },
   ],
   "timedUpAndGoCognitive": [
     {
-      "text": "Preclinical Mobility Limitation (PCML) ≥ 11.3
-Reference Mean 10.1 (Ages 50-59) Standard Deviation 2.1",
-      "type": "warning",
-    },
-    {
-      "text": "Mobility Limitation (ML) ≥ 12.2
-Reference Mean 10.1 (Ages 50-59) Standard Deviation 2.1",
+      "text": "Red Zone (> 12.2 sec)
+Reference Mean 10.1 (Ages 50-59) Standard Deviation 2.1
+The participant likely has mobility issues that are limiting daily activities.",
       "type": "danger",
     },
   ],
   "usualWalkingSpeed": [
     {
-      "text": "Preclinical Mobility Limitation (PCML) ≤ 1.22
-Reference Mean 1.31 (Ages 50-59) Standard Deviation 0.16",
-      "type": "warning",
-    },
-    {
-      "text": "Mobility Limitation (ML) ≤ 1.15
-Reference Mean 1.31 (Ages 50-59) Standard Deviation 0.16",
+      "text": "Red Zone (< 1.15 m/s)
+Reference Mean 1.31 (Ages 50-59) Standard Deviation 0.16
+The participant likely has mobility issues that are limiting daily activities.",
       "type": "danger",
     },
   ],
@@ -705,13 +740,9 @@ exports[`Full interpretation scenario snapshots > female 75 TUG fall risk 1`] = 
       "type": "danger",
     },
     {
-      "text": "Preclinical Mobility Limitation (PCML) ≥ 10.7
-Reference Mean 9.2 (Ages 70-79) Standard Deviation 2.7",
-      "type": "warning",
-    },
-    {
-      "text": "Mobility Limitation (ML) ≥ 11.9
-Reference Mean 9.2 (Ages 70-79) Standard Deviation 2.7",
+      "text": "Red Zone (> 11.9 sec)
+Reference Mean 9.2 (Ages 70-79) Standard Deviation 2.7
+The participant likely has mobility issues that are limiting daily activities.",
       "type": "danger",
     },
   ],
@@ -742,8 +773,9 @@ exports[`Full interpretation scenario snapshots > female 85 TUG fall risk 1`] = 
       "type": "danger",
     },
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 12.9
-Reference Mean 11.4 (Ages 80-89) Standard Deviation 3",
+      "text": "Green Zone (<= 12.9 sec)
+Reference Mean 11.4 (Ages 80-89) Standard Deviation 3
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
@@ -768,33 +800,44 @@ exports[`Full interpretation scenario snapshots > healthy female 75 1`] = `
   ],
   "fastWalkingSpeed": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≥ 1.37
-Reference Mean 1.52 (Ages 70-79) Standard Deviation 0.33",
+      "text": "Green Zone (>= 1.35 m/s)
+Reference Mean 1.52 (Ages 70-79) Standard Deviation 0.33
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "fourSquareStepTest": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 12.6
-Reference Mean 10.9 (Ages 70-79) Standard Deviation 3.6",
+      "text": "Green Zone (<= 12.7 sec)
+Reference Mean 10.9 (Ages 70-79) Standard Deviation 3.6
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "timedUpAndGo": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 10.6
-Reference Mean 9.2 (Ages 70-79) Standard Deviation 2.7",
+      "text": "Green Zone (<= 10.5 sec)
+Reference Mean 9.2 (Ages 70-79) Standard Deviation 2.7
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "timedUpAndGoCognitive": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 15.3
-Reference Mean 12.9 (Ages 70-79) Standard Deviation 5",
+      "text": "Green Zone (<= 15.4 sec)
+Reference Mean 12.9 (Ages 70-79) Standard Deviation 5
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
-  "usualWalkingSpeed": null,
+  "usualWalkingSpeed": [
+    {
+      "text": "Green Zone (>= 1.02 m/s)
+Reference Mean 1.12 (Ages 70-79) Standard Deviation 0.2
+The participant's performance is similar to others in the same age range and sex.",
+      "type": "success",
+    },
+  ],
   "vitalSigns": [
     {
       "text": "This patient is eligible for physical activity.",
@@ -814,36 +857,41 @@ exports[`Full interpretation scenario snapshots > healthy male 65 1`] = `
   ],
   "fastWalkingSpeed": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≥ 1.26
-Reference Mean 1.4 (Ages 60-69) Standard Deviation 0.3",
+      "text": "Green Zone (>= 1.25 m/s)
+Reference Mean 1.4 (Ages 60-69) Standard Deviation 0.3
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "fourSquareStepTest": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 10.3
-Reference Mean 9.4 (Ages 60-69) Standard Deviation 1.9",
+      "text": "Green Zone (<= 10.3 sec)
+Reference Mean 9.4 (Ages 60-69) Standard Deviation 1.9
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "timedUpAndGo": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 13.8
-Reference Mean 10.6 (Ages 60-69) Standard Deviation 6.4",
+      "text": "Green Zone (<= 13.8 sec)
+Reference Mean 10.6 (Ages 60-69) Standard Deviation 6.4
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "timedUpAndGoCognitive": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≤ 16.7
-Reference Mean 13.2 (Ages 60-69) Standard Deviation 7.3",
+      "text": "Green Zone (<= 16.8 sec)
+Reference Mean 13.2 (Ages 60-69) Standard Deviation 7.3
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
   "usualWalkingSpeed": [
     {
-      "text": "No Preclinical Mobility Limitation (No PCML) ≥ 1.19
-Reference Mean 1.27 (Ages 60-69) Standard Deviation 0.71",
+      "text": "Green Zone (>= 0.92 m/s)
+Reference Mean 1.27 (Ages 60-69) Standard Deviation 0.71
+The participant's performance is similar to others in the same age range and sex.",
       "type": "success",
     },
   ],
@@ -926,29 +974,21 @@ exports[`Full interpretation scenario snapshots > very slow male 75 1`] = `
       "type": "danger",
     },
     {
-      "text": "Preclinical Mobility Limitation (PCML) ≤ 1.33
-Reference Mean 1.58 (Ages 70-79) Standard Deviation 0.51",
-      "type": "warning",
-    },
-    {
-      "text": "Mobility Limitation (ML) ≤ 1.07
-Reference Mean 1.58 (Ages 70-79) Standard Deviation 0.51",
+      "text": "Red Zone (< 1.07 m/s)
+Reference Mean 1.58 (Ages 70-79) Standard Deviation 0.51
+The participant likely has mobility issues that are limiting daily activities.",
       "type": "danger",
     },
   ],
   "fourSquareStepTest": [
     {
-      "text": "Multiple Fall risk ≥15 (Sn .85, Sp .88)",
+      "text": "Multiple Fall risk >=15 (Sn .85, Sp .88)",
       "type": "danger",
     },
     {
-      "text": "Preclinical Mobility Limitation (PCML) ≥ 13
-Reference Mean 10.9 (Ages 70-79) Standard Deviation 4.2",
-      "type": "warning",
-    },
-    {
-      "text": "Mobility Limitation (ML) ≥ 15.1
-Reference Mean 10.9 (Ages 70-79) Standard Deviation 4.2",
+      "text": "Red Zone (> 15.1 sec)
+Reference Mean 10.9 (Ages 70-79) Standard Deviation 4.2
+The participant likely has mobility issues that are limiting daily activities.",
       "type": "danger",
     },
   ],
@@ -958,17 +998,13 @@ Reference Mean 10.9 (Ages 70-79) Standard Deviation 4.2",
       "type": "danger",
     },
     {
-      "text": "Frailty ≥17.8 (Sn .93, Sp .98)",
+      "text": "Frailty >=17.8 (Sn .93, Sp .98)",
       "type": "danger",
     },
     {
-      "text": "Preclinical Mobility Limitation (PCML) ≥ 10.1
-Reference Mean 8.6 (Ages 70-79) Standard Deviation 2.8",
-      "type": "warning",
-    },
-    {
-      "text": "Mobility Limitation (ML) ≥ 11.4
-Reference Mean 8.6 (Ages 70-79) Standard Deviation 2.8",
+      "text": "Red Zone (> 11.4 sec)
+Reference Mean 8.6 (Ages 70-79) Standard Deviation 2.8
+The participant likely has mobility issues that are limiting daily activities.",
       "type": "danger",
     },
   ],
@@ -978,13 +1014,9 @@ Reference Mean 8.6 (Ages 70-79) Standard Deviation 2.8",
       "type": "danger",
     },
     {
-      "text": "Preclinical Mobility Limitation (PCML) ≥ 13.6
-Reference Mean 11.6 (Ages 70-79) Standard Deviation 4.1",
-      "type": "warning",
-    },
-    {
-      "text": "Mobility Limitation (ML) ≥ 15.7
-Reference Mean 11.6 (Ages 70-79) Standard Deviation 4.1",
+      "text": "Red Zone (> 15.7 sec)
+Reference Mean 11.6 (Ages 70-79) Standard Deviation 4.1
+The participant likely has mobility issues that are limiting daily activities.",
       "type": "danger",
     },
   ],
@@ -998,13 +1030,9 @@ Reference Mean 11.6 (Ages 70-79) Standard Deviation 4.1",
       "type": "danger",
     },
     {
-      "text": "Preclinical Mobility Limitation (PCML) ≤ 1.08
-Reference Mean 1.18 (Ages 70-79) Standard Deviation 0.2",
-      "type": "warning",
-    },
-    {
-      "text": "Mobility Limitation (ML) ≤ 0.98
-Reference Mean 1.18 (Ages 70-79) Standard Deviation 0.2",
+      "text": "Red Zone (< 0.98 m/s)
+Reference Mean 1.18 (Ages 70-79) Standard Deviation 0.2
+The participant likely has mobility issues that are limiting daily activities.",
       "type": "danger",
     },
   ],

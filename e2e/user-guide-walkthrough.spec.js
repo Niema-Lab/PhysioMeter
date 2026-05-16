@@ -9,6 +9,7 @@ const __dirname = path.dirname(__filename)
 const SHOTS = path.resolve(__dirname, '..', 'docs', 'user-guide-images')
 
 const PATIENT = { name: 'Jane Doe', dob: '1950-06-15', sex: 'Female' }
+const SESSION_PASSWORD = 'walkthrough-password-1'
 
 // "At-risk female, age ~75" values so the summary exercises both normal and concern interpretations.
 const VITALS = { pulse: '80', bp: '128/82', spo2: '97' }
@@ -105,8 +106,39 @@ test('user guide walkthrough: home -> AMA session -> summary', async ({ page }) 
 
   await clearStorage(page)
 
-  // 1. Landing page
+  // 0. Lock screen flow (first-time setup, then lock/unlock/reset previews).
   await page.goto('/')
+  await expect(page.getByRole('button', { name: 'Start New Session' })).toBeVisible()
+  await shot(page, '00-lock-welcome-first.png')
+
+  await page.getByRole('button', { name: 'Start New Session' }).click()
+  await expect(page.getByText(/permanently unrecoverable/)).toBeVisible()
+  await shot(page, '00-lock-setup-modal.png')
+
+  const setupInputs = page.locator('input[type="password"]')
+  await setupInputs.nth(0).fill(SESSION_PASSWORD)
+  await setupInputs.nth(1).fill(SESSION_PASSWORD)
+  await page.getByRole('button', { name: 'Set Password' }).click()
+  await expect(page.getByRole('heading', { name: 'Home' })).toBeVisible()
+
+  // Demonstrate the lock → returning-welcome → unlock-modal → reset-confirm states.
+  await page.getByRole('button', { name: 'Lock session' }).click()
+  await expect(page.getByRole('button', { name: 'Unlock Session' })).toBeVisible()
+  await shot(page, '00-lock-welcome-returning.png')
+
+  await page.getByRole('button', { name: 'Unlock Session' }).click()
+  await expect(page.getByPlaceholder('Password')).toBeVisible()
+  await shot(page, '00-lock-unlock-modal.png')
+  await page.getByRole('button', { name: 'Cancel' }).click()
+
+  await page.getByRole('button', { name: /Reset everything/ }).click()
+  await expect(page.getByPlaceholder('Type DELETE')).toBeVisible()
+  await shot(page, '00-lock-reset-confirm.png')
+  await page.getByRole('button', { name: 'Cancel' }).click()
+
+  await page.getByRole('button', { name: 'Unlock Session' }).click()
+  await page.locator('input[type="password"]').fill(SESSION_PASSWORD)
+  await page.getByRole('button', { name: 'Unlock', exact: true }).click()
   await expect(page.getByRole('heading', { name: 'Home' })).toBeVisible()
   await expect(page.getByRole('link', { name: 'User Guide' })).toBeVisible()
   await shot(page, '01-home.png', { fullPage: true })
@@ -118,7 +150,7 @@ test('user guide walkthrough: home -> AMA session -> summary', async ({ page }) 
   await expect(page.locator('#user-guide table').getByText('Concern')).toBeVisible()
   await shot(page, 'user-guide.png')
   await page.getByRole('link', { name: /Data persistence and privacy/ }).click()
-  await expect(page.locator('[id="10-data-persistence-and-privacy"]')).toBeInViewport()
+  await expect(page.locator('[id="11-data-persistence-and-privacy"]')).toBeInViewport()
   await page.goBack()
   await expect(page.getByRole('heading', { name: 'Home' })).toBeVisible()
 
@@ -243,7 +275,7 @@ test('user guide walkthrough: home -> AMA session -> summary', async ({ page }) 
   await expect(page.getByRole('heading', { level: 1, name: /^Timed Up and Go(?! Cognitive)/ })).toBeVisible()
   await fillTrials(page, [TRIALS.tug.t1, TRIALS.tug.t2])
   await expect(page.getByText(/Fall risk >13\.5 sec/)).toBeVisible()
-  await expect(page.getByText(/Mobility Limitation \(ML\)/)).toBeVisible()
+  await expect(page.getByText(/Red Zone/)).toBeVisible()
   await expectNoBrokenValues(page)
   await scrollToInputs(page)
   await shot(page, '16-tug.png')
@@ -290,7 +322,7 @@ test('user guide walkthrough: home -> AMA session -> summary', async ({ page }) 
   await shot(page, '18-summary.png', { fullPage: true })
 
   // Navigate back to the patient page so we can capture it with a completed session.
-  await page.goto('/#/existing-patient')
+  await page.evaluate(() => { window.location.hash = '#/existing-patient' })
   await expect(page.getByRole('heading', { level: 1, name: 'Existing Patients' })).toBeVisible()
   await page.getByRole('link', { name: PATIENT.name }).click()
   await expect(page.getByRole('heading', { name: `Patient: ${PATIENT.name}` })).toBeVisible()

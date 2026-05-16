@@ -9,6 +9,7 @@ import Title from './form/Title'
 import { hasData } from './measurements/MeasurementSummary'
 import { downloadCSV, generateMeasurementsCSVRows, generateCalculationsCSVRows, generateInterpretationsCSVRows } from '../utils/csvExport'
 import { generateAndDownloadPDF } from '../utils/pdfExport'
+import { confirmUnencryptedExport } from '../utils/exportConfirm'
 
 function MeasurementCard({ measurementKey, measurement, index, config, validations, isDisabled }) {
     const label = config.defaultLabel || measurementKey
@@ -89,21 +90,25 @@ function GroupedSummary({ formState, validations, disabledValues, isDisabled, pa
     const date = new Date().toISOString().split('T')[0]
 
     const exportMeasurements = () => {
+        if (!confirmUnencryptedExport()) return
         const rows = generateMeasurementsCSVRows(formState, isDisabled)
         downloadCSV(rows, `measurements_${patientName || 'guest'}_${date}.csv`)
     }
 
     const exportCalculations = () => {
+        if (!confirmUnencryptedExport()) return
         const rows = generateCalculationsCSVRows(formState, validations, disabledValues)
         downloadCSV(rows, `calculations_${patientName || 'guest'}_${date}.csv`)
     }
 
     const exportInterpretations = () => {
+        if (!confirmUnencryptedExport()) return
         const rows = generateInterpretationsCSVRows(formState, validations, disabledValues)
         downloadCSV(rows, `interpretations_${patientName || 'guest'}_${date}.csv`)
     }
 
     const exportPDF = () => {
+        if (!confirmUnencryptedExport()) return
         generateAndDownloadPDF(formState, validations, disabledValues, isDisabled, patientName)
     }
 

@@ -5,6 +5,7 @@ import { getCurrentUser, deleteSession } from '../DB'
 import Title from './form/Title'
 import Text from './form/Text'
 import LoadingPage from './LoadingPage'
+import ClearAllData from './ClearAllData'
 
 export class PatientPage extends Component {
     constructor(props) {
@@ -120,6 +121,8 @@ export class PatientPage extends Component {
                         </tbody>
                     </table>
                 </div>
+
+                <ClearAllData />
             </div>
         )
     }

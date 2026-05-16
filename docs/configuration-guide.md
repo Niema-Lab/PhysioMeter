@@ -324,7 +324,7 @@ To generate age/sex-specific mobility classification messages:
         patient_age_from: calculation.age
 ```
 
-This generates "No PCML", "PCML", and "Mobility Limitation" messages based on the patient's age, sex, and the threshold values in `thresholds.yaml`. The label and severity for each classification are defined in the threshold table's `classifications` block (see [Threshold Tables](#threshold-tables)).
+This emits a single Green / Yellow / Red Zone message based on where the patient's value falls relative to the age/sex normative mean and standard deviation in `thresholds.yaml`. Zone boundaries are derived as `mean ± yellow_sd × sd` (yellow) and `mean ± red_sd × sd` (red) using the SD-multipliers in `zone_defaults`, with the direction set by `compare_as` (see [Threshold Tables](#threshold-tables)).
 
 ### Checking another interpretation with `check_interpretation`
 
@@ -356,43 +356,53 @@ You can evaluate another interpretation and act on its result:
 ### Structure
 
 ```yaml
+# Required top-level block: SD-band coefficients and zone descriptions.
+zone_defaults:
+  yellow_sd: 0.5                     # yellow boundary at mean ± yellow_sd × sd
+  red_sd: 1.0                        # red boundary at mean ± red_sd × sd
+  descriptions:
+    green: "The participant's performance is similar to others..."
+    yellow: "The participant is performing below normative data..."
+    red: "The participant likely has mobility issues..."
+
+# One block per measure. Every other top-level key is a threshold table.
 usual_walking_speed:
   compare_as: "higher_is_better"    # or "lower_is_better"
-  classifications:
-    no_pcml:
-      label: "No Preclinical Mobility Limitation (No PCML)"
-      severity: normal       # green
-    pcml:
-      label: "Preclinical Mobility Limitation (PCML)"
-      severity: caution      # yellow
-    ml:
-      label: "Mobility Limitation (ML)"
-      severity: concern      # red
+  unit: "m/s"                        # rendered in the cutoff line
+  decimals: 2                        # precision for the rendered cutoff
   Male:
-    "50-59": { no_pcml: 1.23, pcml: 1.22, ml: 1.15, mean: 1.31, sd: 0.16 }
-    "60-69": { no_pcml: 1.19, pcml: 1.18, ml: 1.10, mean: 1.27, sd: 0.71 }
+    "50-59": { mean: 1.31, sd: 0.16 }
+    "60-69": { mean: 1.27, sd: 0.71 }
     # ...
   Female:
-    "50-59": { no_pcml: 1.18, pcml: 1.17, ml: 1.09, mean: 1.26, sd: 0.17 }
+    "50-59": { mean: 1.26, sd: 0.17 }
     # ...
 ```
 
+### `zone_defaults` fields
+
+- `yellow_sd` -- SD-multiplier for the yellow zone boundary. Must be smaller than `red_sd`.
+- `red_sd` -- SD-multiplier for the red zone boundary.
+- `descriptions.{green,yellow,red}` -- Final-line text rendered after the cutoff and reference lines for each zone.
+
 ### Table-level fields
 
-- `compare_as` -- How to interpret the threshold values:
-  - `higher_is_better` -- Higher values are better (e.g., walking speed). Uses >= for no_pcml, <= for pcml/ml.
-  - `lower_is_better` -- Lower values are better (e.g., completion time). Uses <= for no_pcml, >= for pcml/ml.
-- `classifications` -- Defines the display label and severity for each classification level. Severity options: `concern` (red), `caution` (yellow), `normal` (green), `info` (gray).
+- `compare_as` -- How to interpret the values:
+  - `higher_is_better` -- Lower scores are worse (e.g., walking speed). Yellow boundary is `mean − yellow_sd × sd`; red is `mean − red_sd × sd`.
+  - `lower_is_better` -- Higher scores are worse (e.g., completion time). Yellow boundary is `mean + yellow_sd × sd`; red is `mean + red_sd × sd`.
+- `unit` -- Display unit appended to the cutoff value in the rendered message (e.g., `m/s`, `sec`).
+- `decimals` -- Number of decimal places to render for the cutoff value.
 
 ### Entry-level fields (per age/sex bracket)
 
-- `no_pcml` -- No Preclinical Mobility Limitation cutoff
-- `pcml` -- Preclinical Mobility Limitation cutoff
-- `ml` -- Mobility Limitation cutoff
 - `mean` -- Reference mean for the age/sex group
 - `sd` -- Standard deviation
 
 **Age brackets:** `50-59`, `60-69`, `70-79`, `80-89`, `90+`
+
+### Output
+
+A single Green/Yellow/Red Zone message is emitted using the description text from `zone_defaults`. Severity maps: green → success, yellow → warning, red → danger.
 
 ---
 
@@ -553,7 +563,7 @@ Messages use severity levels to indicate clinical significance:
 |----------|-------|---------|---------|
 | `concern` | Red | Clinical risk or ineligibility | Fall risk, ineligible for testing |
 | `caution` | Yellow | Clinical warning | Frailty risk, screening referrals |
-| `normal` | Green | Normal/positive result | Eligible for testing, no PCML |
+| `normal` | Green | Normal/positive result | Eligible for testing, Green Zone |
 | `info` | Gray | Informational | Reference data, notes |
 
 ---

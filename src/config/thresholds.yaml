@@ -1,134 +1,109 @@
-# Threshold tables for PCML / ML mobility classifications.
-# Structure: table_name → compare_as + classifications + <sex> → <age_bracket> → { no_pcml, pcml, ml, mean, sd }.
+# Reference normative data for SD-band mobility zones.
 #
-# compare_as:
-#   higher_is_better - e.g. walking speed. no_pcml uses >=, pcml/ml use <=.
-#   lower_is_better  - e.g. completion time. no_pcml uses <=, pcml/ml use >=.
+# zone_defaults (required, top-level):
+#   yellow_sd / red_sd - SD-multipliers used as the yellow and red zone boundaries (yellow_sd < red_sd).
+#   descriptions       - Verbatim text rendered after the cutoff and reference lines in each zone message.
 #
-# classifications: label + severity (concern/caution/normal/info) for each of no_pcml, pcml, ml.
+# Threshold tables (every other top-level key):
+#   compare_as - higher_is_better (e.g. walking speed; lower values are worse) or lower_is_better.
+#   unit       - Display unit appended to the cutoff value (e.g., "m/s", "sec").
+#   decimals   - Decimal places to render for the cutoff value.
+#   <sex>      - Male / Female maps of <age_bracket> → { mean, sd }.
+#
+# Zones are derived in interpretationEngine.js as mean ± yellow_sd × sd (yellow boundary)
+# and mean ± red_sd × sd (red boundary), with the direction set by compare_as.
 # Age brackets: 50-59, 60-69, 70-79, 80-89, 90+.
+
+# Defaults are quoted verbatim from the Annual Mobility Assessment Manual v2, page 23.
+zone_defaults:
+  yellow_sd: 0.5
+  red_sd: 1.0
+  descriptions:
+    green: "The participant's performance is similar to others in the same age range and sex."
+    yellow: "The participant is performing below normative data, which could be an early indicator of mobility changes, but may not be to a level that it is limiting their daily activities."
+    red: "The participant likely has mobility issues that are limiting daily activities."
 
 usual_walking_speed:
   compare_as: "higher_is_better"
-  classifications:
-    no_pcml:
-      label: "No Preclinical Mobility Limitation (No PCML)"
-      severity: normal
-    pcml:
-      label: "Preclinical Mobility Limitation (PCML)"
-      severity: caution
-    ml:
-      label: "Mobility Limitation (ML)"
-      severity: concern
+  unit: "m/s"
+  decimals: 2
   Male:
-    "50-59": { no_pcml: 1.23, pcml: 1.22, ml: 1.15, mean: 1.31, sd: 0.16 }
-    "60-69": { no_pcml: 1.19, pcml: 1.18, ml: 1.10, mean: 1.27, sd: 0.71 }
-    "70-79": { no_pcml: 1.09, pcml: 1.08, ml: 0.98, mean: 1.18, sd: 0.20 }
-    "80-89": { no_pcml: 0.93, pcml: 0.92, ml: 0.82, mean: 1.02, sd: 0.20 }
-    "90+":   { no_pcml: 0.83, pcml: 0.82, ml: 0.74, mean: 0.91, sd: 0.17 }
+    "50-59": { mean: 1.31, sd: 0.16 }
+    "60-69": { mean: 1.27, sd: 0.71 }
+    "70-79": { mean: 1.18, sd: 0.20 }
+    "80-89": { mean: 1.02, sd: 0.20 }
+    "90+":   { mean: 0.91, sd: 0.17 }
   Female:
-    "50-59": { no_pcml: 1.18, pcml: 1.17, ml: 1.09, mean: 1.26, sd: 0.17 }
-    "60-69": { no_pcml: 1.15, pcml: 1.14, ml: 1.06, mean: 1.22, sd: 0.16 }
-    "70-79": { no_pcml: 1.03, pcml: 1.02, ml: 0.92, mean: 1.12, sd: 0.20 }
-    "80-89": { no_pcml: 0.89, pcml: 0.88, ml: 0.77, mean: 0.98, sd: 0.21 }
-    "90+":   { no_pcml: 0.66, pcml: 0.65, ml: 0.55, mean: 0.76, sd: 0.21 }
+    "50-59": { mean: 1.26, sd: 0.17 }
+    "60-69": { mean: 1.22, sd: 0.16 }
+    "70-79": { mean: 1.12, sd: 0.20 }
+    "80-89": { mean: 0.98, sd: 0.21 }
+    "90+":   { mean: 0.76, sd: 0.21 }
 
 fast_walking_speed:
   compare_as: "higher_is_better"
-  classifications:
-    no_pcml:
-      label: "No Preclinical Mobility Limitation (No PCML)"
-      severity: normal
-    pcml:
-      label: "Preclinical Mobility Limitation (PCML)"
-      severity: caution
-    ml:
-      label: "Mobility Limitation (ML)"
-      severity: concern
+  unit: "m/s"
+  decimals: 2
   Male:
-    "50-59": { no_pcml: 1.26, pcml: 1.25, ml: 0.78, mean: 1.33, sd: 0.55 }
-    "60-69": { no_pcml: 1.26, pcml: 1.25, ml: 1.10, mean: 1.40, sd: 0.30 }
-    "70-79": { no_pcml: 1.34, pcml: 1.33, ml: 1.07, mean: 1.58, sd: 0.51 }  # TODO: verify -- no_pcml increases vs 60-69 bracket
-    "80-89": { no_pcml: 1.18, pcml: 1.17, ml: 0.98, mean: 1.36, sd: 0.38 }
-    "90+":   { no_pcml: 1.04, pcml: 1.03, ml: 0.87, mean: 1.19, sd: 0.32 }
+    "50-59": { mean: 1.33, sd: 0.55 }
+    "60-69": { mean: 1.40, sd: 0.30 }
+    "70-79": { mean: 1.58, sd: 0.51 }  # TODO: verify -- mean increases vs 60-69 bracket
+    "80-89": { mean: 1.36, sd: 0.38 }
+    "90+":   { mean: 1.19, sd: 0.32 }
   Female:
-    "50-59": { no_pcml: 1.60, pcml: 1.59, ml: 1.16, mean: 1.67, sd: 0.51 }
-    "60-69": { no_pcml: 1.42, pcml: 1.41, ml: 1.22, mean: 1.59, sd: 0.37 }
-    "70-79": { no_pcml: 1.37, pcml: 1.36, ml: 1.19, mean: 1.52, sd: 0.33 }
-    "80-89": { no_pcml: 1.05, pcml: 1.04, ml: 0.87, mean: 1.20, sd: 0.33 }
-    "90+":   { no_pcml: 0.90, pcml: 0.89, ml: 0.75, mean: 1.02, sd: 0.27 }
+    "50-59": { mean: 1.67, sd: 0.51 }
+    "60-69": { mean: 1.59, sd: 0.37 }
+    "70-79": { mean: 1.52, sd: 0.33 }
+    "80-89": { mean: 1.20, sd: 0.33 }
+    "90+":   { mean: 1.02, sd: 0.27 }
 
 four_square_step_test:
   compare_as: "lower_is_better"
-  classifications:
-    no_pcml:
-      label: "No Preclinical Mobility Limitation (No PCML)"
-      severity: normal
-    pcml:
-      label: "Preclinical Mobility Limitation (PCML)"
-      severity: caution
-    ml:
-      label: "Mobility Limitation (ML)"
-      severity: concern
+  unit: "sec"
+  decimals: 1
   Male:
-    "50-59": { no_pcml: 11.8, pcml: 11.9, ml: 13.5, mean: 10.2, sd: 3.3 }
-    "60-69": { no_pcml: 10.3, pcml: 10.4, ml: 11.3, mean: 9.4,  sd: 1.9 }
-    "70-79": { no_pcml: 12.9, pcml: 13.0, ml: 15.1, mean: 10.9, sd: 4.2 }
-    "80-89": { no_pcml: 19.7, pcml: 19.8, ml: 23.8, mean: 15.8, sd: 8.0 }
-    "90+":   { no_pcml: 14.6, pcml: 14.7, ml: 16.4, mean: 13.0, sd: 3.4 }
+    "50-59": { mean: 10.2, sd: 3.3 }
+    "60-69": { mean: 9.4,  sd: 1.9 }
+    "70-79": { mean: 10.9, sd: 4.2 }
+    "80-89": { mean: 15.8, sd: 8.0 }
+    "90+":   { mean: 13.0, sd: 3.4 }
   Female:
-    "50-59": { no_pcml: 12.6, pcml: 12.7, ml: 15.0, mean: 10.3, sd: 4.7 }
-    "60-69": { no_pcml: 10.8, pcml: 10.9, ml: 12.1, mean: 9.7,  sd: 2.4 }
-    "70-79": { no_pcml: 12.6, pcml: 12.7, ml: 14.5, mean: 10.9, sd: 3.6 }
-    "80-89": { no_pcml: 17.6, pcml: 17.7, ml: 20.6, mean: 14.9, sd: 5.7 }
-    "90+":   { no_pcml: 28.2, pcml: 28.3, ml: 36.7, mean: 20.0, sd: 16.7 }  # TODO: verify -- sd is 83% of mean
+    "50-59": { mean: 10.3, sd: 4.7 }
+    "60-69": { mean: 9.7,  sd: 2.4 }
+    "70-79": { mean: 10.9, sd: 3.6 }
+    "80-89": { mean: 14.9, sd: 5.7 }
+    "90+":   { mean: 20.0, sd: 16.7 }  # TODO: verify -- sd is 83% of mean
 
 timed_up_and_go:
   compare_as: "lower_is_better"
-  classifications:
-    no_pcml:
-      label: "No Preclinical Mobility Limitation (No PCML)"
-      severity: normal
-    pcml:
-      label: "Preclinical Mobility Limitation (PCML)"
-      severity: caution
-    ml:
-      label: "Mobility Limitation (ML)"
-      severity: concern
+  unit: "sec"
+  decimals: 1
   Male:
-    "50-59": { no_pcml: 8.3,  pcml: 8.4,  ml: 9.0,  mean: 7.5,  sd: 1.5 }
-    "60-69": { no_pcml: 13.8, pcml: 13.8, ml: 17.0, mean: 10.6, sd: 6.4 }
-    "70-79": { no_pcml: 10.0, pcml: 10.1, ml: 11.4, mean: 8.6,  sd: 2.8 }
-    "80-89": { no_pcml: 13.3, pcml: 13.4, ml: 15.1, mean: 11.5, sd: 3.6 }
-    "90+":   { no_pcml: 16.9, pcml: 17.0, ml: 20.3, mean: 13.4, sd: 6.9 }
+    "50-59": { mean: 7.5,  sd: 1.5 }
+    "60-69": { mean: 10.6, sd: 6.4 }
+    "70-79": { mean: 8.6,  sd: 2.8 }
+    "80-89": { mean: 11.5, sd: 3.6 }
+    "90+":   { mean: 13.4, sd: 6.9 }
   Female:
-    "50-59": { no_pcml: 10.4, pcml: 10.5, ml: 12.0, mean: 8.7,  sd: 3.3 }
-    "60-69": { no_pcml: 9.0,  pcml: 9.1,  ml: 9.9,  mean: 8.1,  sd: 1.8 }
-    "70-79": { no_pcml: 10.6, pcml: 10.7, ml: 11.9, mean: 9.2,  sd: 2.7 }
-    "80-89": { no_pcml: 12.9, pcml: 13.0, ml: 14.4, mean: 11.4, sd: 3.0 }
-    "90+":   { no_pcml: 17.9, pcml: 18.0, ml: 21.0, mean: 14.7, sd: 6.3 }
+    "50-59": { mean: 8.7,  sd: 3.3 }
+    "60-69": { mean: 8.1,  sd: 1.8 }
+    "70-79": { mean: 9.2,  sd: 2.7 }
+    "80-89": { mean: 11.4, sd: 3.0 }
+    "90+":   { mean: 14.7, sd: 6.3 }
 
 timed_up_and_go_cognitive:
   compare_as: "lower_is_better"
-  classifications:
-    no_pcml:
-      label: "No Preclinical Mobility Limitation (No PCML)"
-      severity: normal
-    pcml:
-      label: "Preclinical Mobility Limitation (PCML)"
-      severity: caution
-    ml:
-      label: "Mobility Limitation (ML)"
-      severity: concern
+  unit: "sec"
+  decimals: 1
   Male:
-    "50-59": { no_pcml: 11.2, pcml: 11.3, ml: 12.2, mean: 10.1, sd: 2.1 }
-    "60-69": { no_pcml: 16.7, pcml: 16.8, ml: 20.5, mean: 13.2, sd: 7.3 }
-    "70-79": { no_pcml: 13.5, pcml: 13.6, ml: 15.7, mean: 11.6, sd: 4.1 }
-    "80-89": { no_pcml: 19.4, pcml: 19.5, ml: 22.8, mean: 16.2, sd: 6.6 }
-    "90+":   { no_pcml: 24.9, pcml: 25.0, ml: 29.8, mean: 20.2, sd: 9.6 }
+    "50-59": { mean: 10.1, sd: 2.1 }
+    "60-69": { mean: 13.2, sd: 7.3 }
+    "70-79": { mean: 11.6, sd: 4.1 }
+    "80-89": { mean: 16.2, sd: 6.6 }
+    "90+":   { mean: 20.2, sd: 9.6 }
   Female:
-    "50-59": { no_pcml: 14.9, pcml: 15.0, ml: 17.8, mean: 11.9, sd: 5.9 }
-    "60-69": { no_pcml: 15.4, pcml: 15.5, ml: 18.0, mean: 13.0, sd: 5.0 }
-    "70-79": { no_pcml: 15.3, pcml: 15.4, ml: 17.9, mean: 12.9, sd: 5.0 }
-    "80-89": { no_pcml: 19.5, pcml: 19.6, ml: 22.0, mean: 17.3, sd: 4.7 }
-    "90+":   { no_pcml: 29.3, pcml: 29.4, ml: 34.5, mean: 24.3, sd: 10.2 }
+    "50-59": { mean: 11.9, sd: 5.9 }
+    "60-69": { mean: 13.0, sd: 5.0 }
+    "70-79": { mean: 12.9, sd: 5.0 }
+    "80-89": { mean: 17.3, sd: 4.7 }
+    "90+":   { mean: 24.3, sd: 10.2 }

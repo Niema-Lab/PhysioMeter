@@ -137,7 +137,7 @@ describe('Interpretation: usualWalkingSpeed', () => {
 
     it('includes mobility classification when sex and age available', () => {
         const result = interpret(HEALTHY_MALE_65)
-        expect(result.some(m => m.text.includes('Preclinical Mobility Limitation') || m.text.includes('No Preclinical Mobility Limitation'))).toBe(true)
+        expect(result.some(m => /(Green|Yellow|Red) Zone/.test(m.text))).toBe(true)
     })
 
     it('returns only fall/frailty risk when no demographics', () => {
@@ -196,7 +196,7 @@ describe('Interpretation: fastWalkingSpeed', () => {
 
     it('includes mobility classification with demographics', () => {
         const result = interpret(HEALTHY_MALE_65)
-        expect(result.some(m => m.text.includes('PCML') || m.text.includes('Mobility Limitation'))).toBe(true)
+        expect(result.some(m => /(Green|Yellow|Red) Zone/.test(m.text))).toBe(true)
     })
 
     it('borderline speed just below 1.10 triggers fall risk', () => {
@@ -248,7 +248,7 @@ describe('Interpretation: fourSquareStepTest', () => {
 
     it('includes time-based mobility classification with demographics', () => {
         const result = interpret(HEALTHY_MALE_65)
-        expect(result.some(m => m.text.includes('PCML') || m.text.includes('No Preclinical'))).toBe(true)
+        expect(result.some(m => /(Green|Yellow|Red) Zone/.test(m.text))).toBe(true)
     })
 })
 

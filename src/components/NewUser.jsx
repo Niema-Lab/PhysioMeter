@@ -5,6 +5,8 @@ import Title from './form/Title'
 import Text from './form/Text'
 import Submit from './form/Submit'
 import PatientForm from './form/PatientForm'
+import ClearAllData from './ClearAllData'
+import HIPAANote from './HIPAANote'
 import { createDBUser } from '../DB'
 
 export class NewUser extends Component {
@@ -53,6 +55,7 @@ export class NewUser extends Component {
         return (
             <div id="new-patient">
                 <Title>Create New Patient</Title>
+                <HIPAANote />
                 <Link to="/existing-patient" className="link text-decoration-underline"><h2>View Existing Patients</h2></Link>
 
                 <div className="d-flex flex-column align-items-center">
@@ -63,6 +66,8 @@ export class NewUser extends Component {
                         <Text value={this.state.submitText} type={this.state.submitTextType} />
                     }
                 </div>
+
+                <ClearAllData />
             </div>
         )
     }

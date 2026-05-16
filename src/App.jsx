@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState } from 'react'
-import { HashRouter, Routes, Route, useLocation, useNavigate, Link } from 'react-router-dom'
+import { HashRouter, Routes, Route, useLocation, useNavigate, Link, Navigate } from 'react-router-dom'
 
 import Home from './components/Home'
 import PatientPage from './components/PatientPage'
@@ -14,6 +14,10 @@ import ExistingUser from './components/ExistingUser'
 import NotFound from './components/NotFound'
 import UtilitiesPage from './components/utilities/UtilitiesPage'
 import UserGuide from './components/UserGuide'
+import Lock from './components/Lock'
+import LoadingPage from './components/LoadingPage'
+import { LockProvider, useLock } from './LockContext'
+import { useAutoLock } from './hooks/useAutoLock'
 
 function HomeIcon() {
   return (
@@ -27,47 +31,79 @@ function HomeIcon() {
   )
 }
 
+function LockButton() {
+  const { lock } = useLock()
+  return (
+    <div id="lock-icon" className="nav-icon p-2">
+      <h1>
+        <button
+          type="button"
+          className="btn btn-link p-0 border-0"
+          onClick={lock}
+          aria-label="Lock session"
+          title="Lock session"
+        >
+          <i className="bi bi-lock-fill text-primary"></i>
+        </button>
+      </h1>
+    </div>
+  )
+}
+
+function RequireUnlocked({ children }) {
+  const { ready, isLocked } = useLock()
+  if (!ready) return <LoadingPage />
+  if (isLocked) return <Navigate to="/lock" replace />
+  return children
+}
+
 function AppContent() {
   const [navIcons, setNavIcons] = useState([])
   const [nav, setNav] = useState(null)
+  const { isLocked, lock } = useLock()
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  useAutoLock({ isLocked, lock })
 
   return (
     <div id="app">
       <div id="nav-overlay" className={`position-fixed start-0 top-0 ${nav ? "nav-overlay-active" : "pe-none"}`}>
         <div id="nav-icons-container" className="d-flex flex-row align-items-center mt-3">
-          {[...[<HomeIcon key="home" />], ...navIcons]}
+          {!isLocked && [...[<HomeIcon key="home" />, <LockButton key="lock" />], ...navIcons]}
         </div>
         {nav}
       </div>
 
       <div id="app-content" style={{ opacity: nav ? 0.5 : 1 }}>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/patient" element={<PatientPage />} />
-          <Route path="/patient/edit" element={<PatientEdit />} />
-          <Route path="/new-session" element={<NewSession />} />
-          <Route path="/presets" element={<Presets />} />
-          <Route path="/utilities" element={<UtilitiesPage />} />
-          <Route path="/user-guide" element={<UserGuide />} />
+          <Route path="/lock" element={<Lock />} />
+          <Route path="/" element={<RequireUnlocked><Home /></RequireUnlocked>} />
+          <Route path="/patient" element={<RequireUnlocked><PatientPage /></RequireUnlocked>} />
+          <Route path="/patient/edit" element={<RequireUnlocked><PatientEdit /></RequireUnlocked>} />
+          <Route path="/new-session" element={<RequireUnlocked><NewSession /></RequireUnlocked>} />
+          <Route path="/presets" element={<RequireUnlocked><Presets /></RequireUnlocked>} />
+          <Route path="/utilities" element={<RequireUnlocked><UtilitiesPage /></RequireUnlocked>} />
+          <Route path="/user-guide" element={<RequireUnlocked><UserGuide /></RequireUnlocked>} />
           {PT_TEST_CONFIG.map(({ testKey, component, permittedMeasurements }) => {
             const permittedMeasurementConfigs = permittedMeasurements ? PT_TEST_MEASUREMENT_CONFIG.filter(m => permittedMeasurements.includes(m.stateKey)) : PT_TEST_MEASUREMENT_CONFIG;
             return (
               <>
-                <Route path={`/${testKey}/home`} element={React.createElement(component, { setNavIcons, setNav, shownMeasurement: PT_TEST_HOME_PAGE, location: useLocation(), navigate: useNavigate() })} />
-                <Route path={`/${testKey}/`} element={React.createElement(component, { setNavIcons, setNav, shownMeasurement: PT_TEST_HOME_PAGE, location: useLocation(), navigate: useNavigate() })} />
-                <Route path={`/${testKey}/summary`} element={React.createElement(component, { setNavIcons, setNav, shownMeasurement: PT_TEST_FINAL_PAGE, location: useLocation(), navigate: useNavigate() })} />
+                <Route path={`/${testKey}/home`} element={<RequireUnlocked>{React.createElement(component, { setNavIcons, setNav, shownMeasurement: PT_TEST_HOME_PAGE, location, navigate })}</RequireUnlocked>} />
+                <Route path={`/${testKey}/`} element={<RequireUnlocked>{React.createElement(component, { setNavIcons, setNav, shownMeasurement: PT_TEST_HOME_PAGE, location, navigate })}</RequireUnlocked>} />
+                <Route path={`/${testKey}/summary`} element={<RequireUnlocked>{React.createElement(component, { setNavIcons, setNav, shownMeasurement: PT_TEST_FINAL_PAGE, location, navigate })}</RequireUnlocked>} />
                 {permittedMeasurementConfigs.map(({ stateKey }) => (
                   <Route
                     key={stateKey}
                     path={`/${testKey}/${stateKey}`}
-                    element={React.createElement(component, { setNavIcons, setNav, shownMeasurement: stateKey, location: useLocation(), navigate: useNavigate() })}
+                    element={<RequireUnlocked>{React.createElement(component, { setNavIcons, setNav, shownMeasurement: stateKey, location, navigate })}</RequireUnlocked>}
                   />
                 ))}
               </>
             )
           })}
-          <Route path="/new-patient" element={<NewUser />} />
-          <Route path="/existing-patient" element={<ExistingUser />} />
+          <Route path="/new-patient" element={<RequireUnlocked><NewUser /></RequireUnlocked>} />
+          <Route path="/existing-patient" element={<RequireUnlocked><ExistingUser /></RequireUnlocked>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
@@ -78,7 +114,9 @@ function AppContent() {
 export default function App() {
   return (
     <HashRouter>
-      <AppContent />
+      <LockProvider>
+        <AppContent />
+      </LockProvider>
     </HashRouter>
   )
 }

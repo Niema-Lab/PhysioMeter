@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
-import { openDB } from '../DB'
+import { getAllUsers, deleteUser as dbDeleteUser } from '../DB'
 import Title from './form/Title'
 import Text from './form/Text'
+import ClearAllData from './ClearAllData'
+import HIPAANote from './HIPAANote'
 
 export class ExistingUser extends Component {
     constructor(props) {
@@ -20,17 +22,11 @@ export class ExistingUser extends Component {
     }
 
     componentDidMount = async () => {
-        const db = await openDB()
-
-        const tx = db.transaction('users', 'readonly')
-        const store = tx.objectStore('users')
-
-        const allUsers = store.getAll()
-        allUsers.onsuccess = () => {
-            this.setState({ users: allUsers.result })
-        }
-        allUsers.onerror = (e) => {
-            console.error('Failed to retrieve patients:', e.target.error)
+        try {
+            const users = await getAllUsers()
+            this.setState({ users })
+        } catch (e) {
+            console.error('Failed to retrieve patients:', e)
         }
     }
 
@@ -39,22 +35,16 @@ export class ExistingUser extends Component {
             return
         }
 
-        const db = await openDB()
-
-        const tx = db.transaction('users', 'readwrite')
-        const store = tx.objectStore('users')
-
-        const deleteRequest = store.delete(user.uuid)
-        deleteRequest.onsuccess = () => {
+        try {
+            await dbDeleteUser(user.uuid)
             this.setState((prevState) => ({
                 users: prevState.users.filter(u => u.uuid !== user.uuid),
                 submitText: `Patient ${user.name} deleted successfully.`,
                 submitTextType: 'success'
             }))
-        }
-        deleteRequest.onerror = (e) => {
+        } catch (e) {
             this.setState({
-                submitText: `Failed to delete patient ${user.name}: ${e.target.error}`,
+                submitText: `Failed to delete patient ${user.name}: ${e.message || e}`,
                 submitTextType: 'error'
             })
         }
@@ -102,6 +92,7 @@ export class ExistingUser extends Component {
         return (
             <div id="existing-patient">
                 <Title>Existing Patients</Title>
+                <HIPAANote />
                 <Link to="/new-patient" className="link text-decoration-underline"><h2>Create New Patient</h2></Link>
                 <Title>Select Existing Patient ({this.state.users.length})</Title>
                 {this.state.submitText && (
@@ -151,6 +142,8 @@ export class ExistingUser extends Component {
                         </tbody>
                     </table>
                 </div>
+
+                <ClearAllData />
             </div >
         )
     }

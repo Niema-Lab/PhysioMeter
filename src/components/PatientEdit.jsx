@@ -7,6 +7,7 @@ import Text from './form/Text'
 import Submit from './form/Submit'
 import PatientForm from './form/PatientForm'
 import LoadingPage from './LoadingPage'
+import ClearAllData from './ClearAllData'
 
 export class PatientEdit extends Component {
     constructor(props) {
@@ -78,6 +79,8 @@ export class PatientEdit extends Component {
                         <Text value={this.state.submitText} type={this.state.submitTextType} />
                     )}
                 </div>
+
+                <ClearAllData />
             </div>
         )
     }

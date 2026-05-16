@@ -7,7 +7,7 @@ import MultipleMeasurements from '../measurements/MultipleMeasurements'
 import { hasData } from '../measurements/MeasurementSummary'
 import InlineMeasurementInterpretations from '../interpretations/InlineMeasurementInterpretations'
 import SummaryPage from '../SummaryPage'
-import { getCurrentUser, getCurrentSessionUUID, openDB } from '../../DB'
+import { getCurrentUser, getCurrentSessionUUID, saveSessionData } from '../../DB'
 import { mergePatientDataIntoFormState } from '../../utils/formStateMerge'
 import Title from '../form/Title'
 import ScrollIndicator from '../form/ScrollIndicator'
@@ -385,53 +385,25 @@ export class PhysicalTherapyTest extends Component {
             })
         }
 
-        const db = await openDB()
-
-        const tx = db.transaction('users', 'readwrite')
-        const store = tx.objectStore('users')
-        const getUserRequest = store.get(this.state.user.uuid)
-
-        getUserRequest.onsuccess = () => {
-            const user = getUserRequest.result
-            const session = user.sessions.find(s => s.uuid === this.state.sessionUUID)
-
-            session.data = {
-                formState: JSON.parse(JSON.stringify(this.state.formState)),
-                validations: JSON.parse(JSON.stringify(this.state.validations)),
-                disabledValues: JSON.parse(JSON.stringify(this.state.disabledValues)),
-            }
-
-            const nowISO = new Date().toISOString();
-            session.lastModified = nowISO;
+        try {
+            await saveSessionData(this.state.user.uuid, this.state.sessionUUID, {
+                formState: this.state.formState,
+                validations: this.state.validations,
+                disabledValues: this.state.disabledValues,
+                markSaved: manual && passesValidation,
+            })
 
             if (manual && passesValidation) {
-                session.lastSaved = nowISO;
-            }
-
-            const updateRequest = store.put(user)
-            updateRequest.onsuccess = () => {
-                if (manual && passesValidation) {
-                    this.setState({
-                        submitText: 'Measurements saved successfully!',
-                        submitTextType: 'success'
-                    }, () => {
-                        window.scrollTo(0, document.body.scrollHeight)
-                    })
-                }
-            }
-            updateRequest.onerror = (e) => {
                 this.setState({
-                    submitText: `Error saving measurements: ${e.target.error}`,
-                    submitTextType: 'danger'
+                    submitText: 'Measurements saved successfully!',
+                    submitTextType: 'success'
                 }, () => {
                     window.scrollTo(0, document.body.scrollHeight)
                 })
             }
-        }
-
-        getUserRequest.onerror = (e) => {
+        } catch (e) {
             this.setState({
-                submitText: `Error retrieving patient for saving measurements: ${e.target.error}`,
+                submitText: `Error saving measurements: ${e.message || e}`,
                 submitTextType: 'danger'
             }, () => {
                 window.scrollTo(0, document.body.scrollHeight)

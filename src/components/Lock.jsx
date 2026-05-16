@@ -103,7 +103,7 @@ export default function Lock() {
 
             {mode === 'setup' && (
                 <div className="d-flex flex-column align-items-center mx-auto" style={{ maxWidth: 500 }}>
-                    <h4 className="text-center mb-3">Set a session password</h4>
+                    <h4 className="text-center mb-3">Set a session password (at least {MIN_PASSWORD_LENGTH} characters)</h4>
                     <div className="alert alert-warning text-center" role="alert">
                         If you forget this password, your patient data is permanently
                         unrecoverable. We cannot reset it.

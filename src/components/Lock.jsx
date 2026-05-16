@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Navigate } from 'react-router-dom'
+import { Navigate, useLocation } from 'react-router-dom'
 import { useLock } from '../LockContext'
 import Title from './form/Title'
 import Text from './form/Text'
@@ -11,6 +11,9 @@ const MIN_PASSWORD_LENGTH = 8
 
 export default function Lock() {
     const { ready, isLocked, isInitialized, setupPassword, unlock, wipeEverything } = useLock()
+    const location = useLocation()
+    const from = location.state?.from
+    const redirectTo = from ? `${from.pathname}${from.search || ''}${from.hash || ''}` : '/'
     const [mode, setMode] = useState(null) // null | 'setup' | 'unlock' | 'reset'
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
@@ -19,7 +22,7 @@ export default function Lock() {
     const [busy, setBusy] = useState(false)
 
     if (!ready) return <LoadingPage />
-    if (!isLocked) return <Navigate to="/" replace />
+    if (!isLocked) return <Navigate to={redirectTo} replace />
 
     const reset = () => {
         setMode(null)

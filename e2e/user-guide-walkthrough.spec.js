@@ -108,6 +108,7 @@ test('user guide walkthrough: home -> AMA session -> summary', async ({ page }) 
 
   // 0. Lock screen flow (first-time setup, then lock/unlock/reset previews).
   await page.goto('/')
+  await page.evaluate(() => { window.location.hash = '#/lock' })
   await expect(page.getByRole('button', { name: 'Start New Session' })).toBeVisible()
   await shot(page, '00-lock-welcome-first.png')
 

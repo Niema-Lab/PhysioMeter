@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState } from 'react'
-import { HashRouter, Routes, Route, useLocation, useNavigate, Link, Navigate } from 'react-router-dom'
+import { HashRouter, Routes, Route, useLocation, useNavigate, Navigate } from 'react-router-dom'
 
 import Home from './components/Home'
 import PatientPage from './components/PatientPage'
@@ -20,12 +20,20 @@ import { LockProvider, useLock } from './LockContext'
 import { useAutoLock } from './hooks/useAutoLock'
 
 function HomeIcon() {
+  const navigate = useNavigate()
   return (
-    <div id="home-icon" className="nav-icon p-2">
+    <div
+      id="home-icon"
+      className="nav-icon p-2"
+      role="button"
+      tabIndex={0}
+      aria-label="Home"
+      title="Home"
+      onClick={() => navigate('/')}
+      onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && navigate('/')}
+    >
       <h1>
-        <Link to="/">
-          <i className="bi bi-house-fill text-primary"></i>
-        </Link>
+        <i className="bi bi-house-fill text-primary"></i>
       </h1>
     </div>
   )
@@ -33,18 +41,26 @@ function HomeIcon() {
 
 function LockButton() {
   const { lock } = useLock()
+  const navigate = useNavigate()
+  const location = useLocation()
+  const handleLock = () => {
+    const from = location
+    lock()
+    navigate('/lock', { state: { from }, replace: true })
+  }
   return (
-    <div id="lock-icon" className="nav-icon p-2">
+    <div
+      id="lock-icon"
+      className="nav-icon p-2"
+      role="button"
+      tabIndex={0}
+      aria-label="Lock session"
+      title="Lock session"
+      onClick={handleLock}
+      onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleLock()}
+    >
       <h1>
-        <button
-          type="button"
-          className="btn btn-link p-0 border-0"
-          onClick={lock}
-          aria-label="Lock session"
-          title="Lock session"
-        >
-          <i className="bi bi-lock-fill text-primary"></i>
-        </button>
+        <i className="bi bi-lock-fill text-primary"></i>
       </h1>
     </div>
   )
@@ -52,8 +68,9 @@ function LockButton() {
 
 function RequireUnlocked({ children }) {
   const { ready, isLocked } = useLock()
+  const location = useLocation()
   if (!ready) return <LoadingPage />
-  if (isLocked) return <Navigate to="/lock" replace />
+  if (isLocked) return <Navigate to="/lock" replace state={{ from: location }} />
   return children
 }
 
@@ -70,7 +87,9 @@ function AppContent() {
     <div id="app">
       <div id="nav-overlay" className={`position-fixed start-0 top-0 ${nav ? "nav-overlay-active" : "pe-none"}`}>
         <div id="nav-icons-container" className="d-flex flex-row align-items-center mt-3">
-          {!isLocked && [...[<HomeIcon key="home" />, <LockButton key="lock" />], ...navIcons]}
+          <HomeIcon key="home" />
+          {!isLocked && location.pathname !== '/lock' && <LockButton key="lock" />}
+          {!isLocked && navIcons}
         </div>
         {nav}
       </div>
@@ -78,13 +97,13 @@ function AppContent() {
       <div id="app-content" style={{ opacity: nav ? 0.5 : 1 }}>
         <Routes>
           <Route path="/lock" element={<Lock />} />
-          <Route path="/" element={<RequireUnlocked><Home /></RequireUnlocked>} />
+          <Route path="/" element={<Home />} />
           <Route path="/patient" element={<RequireUnlocked><PatientPage /></RequireUnlocked>} />
           <Route path="/patient/edit" element={<RequireUnlocked><PatientEdit /></RequireUnlocked>} />
           <Route path="/new-session" element={<RequireUnlocked><NewSession /></RequireUnlocked>} />
-          <Route path="/presets" element={<RequireUnlocked><Presets /></RequireUnlocked>} />
-          <Route path="/utilities" element={<RequireUnlocked><UtilitiesPage /></RequireUnlocked>} />
-          <Route path="/user-guide" element={<RequireUnlocked><UserGuide /></RequireUnlocked>} />
+          <Route path="/presets" element={<Presets />} />
+          <Route path="/utilities" element={<UtilitiesPage />} />
+          <Route path="/user-guide" element={<UserGuide />} />
           {PT_TEST_CONFIG.map(({ testKey, component, permittedMeasurements }) => {
             const permittedMeasurementConfigs = permittedMeasurements ? PT_TEST_MEASUREMENT_CONFIG.filter(m => permittedMeasurements.includes(m.stateKey)) : PT_TEST_MEASUREMENT_CONFIG;
             return (

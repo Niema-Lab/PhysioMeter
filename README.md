@@ -9,7 +9,7 @@ Licensed under the GNU General Public License v3.0 — see [`LICENSE`](LICENSE).
 ## Features
 
 - **Fully client-side, encrypted at rest** — every patient record is stored only in the browser and encrypted under a password you set on first launch. No patient data is ever sent to or stored on a server, and the password never leaves the browser. See [`SECURITY.md`](SECURITY.md) for the threat model, cryptographic design, and HIPAA-adopter guidance.
-- **Session lock** — manual lock button plus auto-lock after 30 minutes of inactivity. Forgotten password = data loss (no recovery path, intentionally)
+- **Session lock** — manual lock button plus auto-lock after 30 minutes of inactivity. Forgotten password = data loss (no recovery path, intentionally).
 - **Installable, offline-capable** — packaged as a Progressive Web App; can be installed to a home screen or desktop and works fully offline after first load (see [install instructions](docs/user-guide.md#2-installing-as-an-app-optional-offline-capable))
 - **YAML-driven configuration** — all clinical logic (measurements, calculations, interpretations, thresholds) is defined in YAML files, no code changes needed
 - **Declarative validation** — input validation rules are defined alongside measurements

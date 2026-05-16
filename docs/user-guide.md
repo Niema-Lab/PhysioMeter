@@ -80,15 +80,16 @@ action is needed.
 ## 3. Setting your session password
 
 PhysioMeter encrypts every patient record on this device with a password you
-choose. The password never leaves your browser and is never recoverable.
+choose. The password never leaves your browser and is never recoverable. The
+Home page, Utilities, and User Guide are always accessible; the password is
+only required to view or save patient data.
 
-The first time you open PhysioMeter (or after a reset), you'll see a welcome
-screen with **Start New Session**.
+The first time you click **New Patient** or **Existing Patient** you'll be
+redirected to a welcome screen with **Start New Session**.
 
 <p align="center"><img src="user-guide-images/00-lock-welcome-first.png" alt="Welcome screen — first visit" width="720"></p>
 
-Click it to set a session password. You'll be asked to enter the password
-twice to confirm it.
+Click it and enter the password twice to confirm.
 
 <p align="center"><img src="user-guide-images/00-lock-setup-modal.png" alt="Set session password modal" width="720"></p>
 
@@ -96,24 +97,20 @@ twice to confirm it.
 > permanently unrecoverable. There is no reset link, no escrow, and no
 > support recovery — that's what keeps the data private.
 
-Once set, you land on the **Home** page and the app behaves as normal.
-
-**Locking the session.** Use the lock icon at the top-left of the screen to
-manually lock the session at any time. The app also auto-locks after **30
-minutes of inactivity**.
-
-When the session is locked, returning to PhysioMeter shows an **Unlock
-Session** button instead.
+**Locking and unlocking.** Use the lock icon at the top-left of the screen
+to manually lock at any time; the app also auto-locks after **30 minutes
+of inactivity**. The next time you visit a patient route you'll see an
+**Unlock Session** button.
 
 <p align="center"><img src="user-guide-images/00-lock-welcome-returning.png" alt="Welcome screen — returning visit" width="720"></p>
 
-Click it and re-enter your password to continue.
-
 <p align="center"><img src="user-guide-images/00-lock-unlock-modal.png" alt="Unlock session modal" width="720"></p>
 
-**Forgotten password.** If you've forgotten the password, the only option is
-to wipe all stored patient data and start over. Use the **Reset everything**
-link on the welcome screen; you'll be asked to type `DELETE` to confirm.
+After unlocking you're returned to the route you were trying to reach.
+
+**Forgotten password.** Use the **Reset everything** link on the welcome
+screen; you'll be asked to type `DELETE` to confirm. This permanently wipes
+all stored patient data.
 
 <p align="center"><img src="user-guide-images/00-lock-reset-confirm.png" alt="Reset everything confirmation" width="720"></p>
 
@@ -276,8 +273,8 @@ entirely in the browser; nothing is uploaded.
   authentication server, and no analytics.
 - The encryption key only ever lives in browser memory. Reloading the
   page, opening a new tab, manually clicking **Lock**, or being idle for
-  **30 minutes** all clear the key and return you to the lock screen —
-  you'll need to re-enter your password.
+  **30 minutes** all clear the key, and re-entry is prompted the next time
+  you visit a patient route.
 - **There is no password recovery.** If you forget the password, the only
   option is **Reset everything** from the lock screen, which permanently
   wipes all stored data.

@@ -19,6 +19,7 @@ async function clearStorage(page) {
 
 async function setupPassword(page, password) {
   await page.goto('/')
+  await page.evaluate(() => { window.location.hash = '#/lock' })
   const startBtn = page.getByRole('button', { name: 'Start New Session' })
   await expect(startBtn).toBeVisible()
   await startBtn.click()
@@ -60,7 +61,8 @@ test('lock flow: setup → lock → wrong-password fails → correct unlock succ
   // Correct password.
   await page.locator('input[type="password"]').fill(PASSWORD)
   await page.getByRole('button', { name: 'Unlock', exact: true }).click()
-  await expect(page.getByRole('heading', { name: 'Home' })).toBeVisible()
+  // After unlock, returns to where the user pressed Lock (the new-patient page).
+  await expect(page).toHaveURL(/#\/new-patient/)
 
   // Patient is back.
   await page.evaluate(() => { window.location.hash = '#/existing-patient' })

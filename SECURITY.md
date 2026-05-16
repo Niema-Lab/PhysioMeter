@@ -3,9 +3,12 @@
 PhysioMeter is a client-side web application. No patient data is transmitted
 off the device or stored on any server. Patient records are encrypted on
 disk (in the browser's IndexedDB) under a password that only the clinician
-using the app ever knows. This document describes how that protection works,
-what it does and does not protect against, and how PhysioMeter fits into a
-broader HIPAA-compliance program.
+using the app ever knows. The encryption gate is scoped to patient-data
+routes only — the Home page, Utilities, Presets, and User Guide do not read
+or write patient data and remain accessible without a password. This
+document describes how that protection works, what it does and does not
+protect against, and how PhysioMeter fits into a broader HIPAA-compliance
+program.
 
 ## Threat model
 
@@ -89,8 +92,15 @@ Any of the following clears it and forces re-authentication:
 - Reloading the page.
 - Closing the tab or opening a new tab.
 
-Opening a new tab requires re-entering the password; this is intentional
-and not a bug.
+Re-authentication is enforced lazily, at the patient-route boundary: once
+the key is cleared, the next attempt to visit New Patient, Existing Patient,
+the patient dashboard, a session, or any measurement page redirects the
+clinician to the lock screen. After a successful unlock the clinician is
+returned to the route they were attempting. Non-patient routes (Home,
+Utilities, Presets, User Guide) remain reachable while locked.
+
+Opening a new tab requires re-entering the password before patient data
+becomes visible; this is intentional and not a bug.
 
 ## Operational considerations
 

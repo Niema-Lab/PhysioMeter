@@ -51,10 +51,7 @@ export default function ClearAllData() {
                     <div className="bg-white p-4 rounded shadow" style={{ maxWidth: 500, width: '90%' }}>
                         <h4 id="clear-all-title" className="text-center mb-3">Clear all data?</h4>
                         <div className="alert alert-danger text-center" role="alert">
-                            This will permanently delete <strong>all patient data on this
-                            device</strong>, including every patient, session, and your
-                            session password. This cannot be undone. Type <code>DELETE</code>
-                            to confirm.
+                            This will permanently delete <strong>all patient data on this device</strong>, including every patient, session, and your session password. This cannot be undone. Type <code>DELETE</code> to confirm.
                         </div>
                         <input
                             type="text"

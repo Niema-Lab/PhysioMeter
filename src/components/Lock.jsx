@@ -164,9 +164,7 @@ export default function Lock() {
                 <div className="d-flex flex-column align-items-center mx-auto" style={{ maxWidth: 500 }}>
                     <h4 className="text-center mb-3">Reset everything?</h4>
                     <div className="alert alert-danger text-center" role="alert">
-                        This will permanently delete <strong>all patient data on this
-                        device</strong>. This cannot be undone. Type <code>DELETE</code> to
-                        confirm.
+                        This will permanently delete <strong>all patient data on this device</strong>. This cannot be undone. Type <code>DELETE</code> to confirm.
                     </div>
                     <input
                         type="text"

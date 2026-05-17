@@ -115,6 +115,25 @@ fastWalkingSpeed:
         patient_sex_from: measurement.sex
         patient_age_from: calculation.age
 
+thirtySecondSitToStand:
+  label: "30 Second Sit to Stand"
+  citation: '<a href="https://aptageriatrics.org/wp-content/uploads/2026/02/AMA-InterpChartsFinalv2.1.pdf" target="_blank" rel="noopener noreferrer">Annual Mobility Assessment</a>'
+  rules:
+    - when:
+        from_calculation: thirtySecondSitToStandCount
+        is_missing: true
+      then: skip
+
+    # Mobility classification by age/sex. Bands are SD-derived from mean/SD;
+    # v2.1 chart's printed zone columns for 30STS are internally inconsistent
+    # with the printed mean/SD and are not reproduced (see
+    # THRESHOLDS_DISCREPANCIES.md).
+    - lookup_threshold:
+        value_from_calculation: thirtySecondSitToStandCount
+        table: thirty_second_sit_to_stand
+        patient_sex_from: measurement.sex
+        patient_age_from: calculation.age
+
 fourSquareStepTest:
   label: "Four Square Step Test"
   citation: '<a href="https://aptageriatrics.org/wp-content/uploads/2026/02/AMA-InterpChartsFinalv2.1.pdf" target="_blank" rel="noopener noreferrer">Annual Mobility Assessment</a>'
@@ -139,6 +158,20 @@ fourSquareStepTest:
         patient_sex_from: measurement.sex
         patient_age_from: calculation.age
 
+modifiedFourSquareStepTest:
+  label: "Modified Four Square Step Test"
+  citation: '<a href="https://aptageriatrics.org/wp-content/uploads/2026/02/AMA-InterpChartsFinalv2.1.pdf" target="_blank" rel="noopener noreferrer">Annual Mobility Assessment</a>'
+  rules:
+    - when:
+        from_calculation: modifiedFourSquareStepTestBest
+        is_missing: true
+      then: skip
+
+    - otherwise:
+        show_message:
+          text: "The Modified FSST has no published normative thresholds. Interpretation should be based on whether the patient was able to complete the test and clinician judgment."
+          severity: info
+
 timedUpAndGo:
   label: "Timed Up and Go (TUG)"
   citation: '<a href="https://aptageriatrics.org/wp-content/uploads/2026/02/AMA-InterpChartsFinalv2.1.pdf" target="_blank" rel="noopener noreferrer">Annual Mobility Assessment</a>'
@@ -148,57 +181,25 @@ timedUpAndGo:
         is_missing: true
       then: skip
 
-    # Male fall risk: > 12.0 (different sensitivity depending on age)
+    # Fall risk (per v2.1 chart): single >12.0 cut per sex, with sex-specific Sp.
     - when:
         all_of:
           - from_measurement: sex
             equals: "Male"
           - from_calculation: timedUpAndGoBest
             is_greater_than: 12.0
-          - from_calculation: age
-            is_greater_than: 80
       show_message:
-        text: "Fall risk >12.0 sec (Sn .78, Sp .52)"
+        text: "Fall risk >12.0 sec (Sn .74, Sp .52)"
         severity: concern
 
     - when:
         all_of:
           - from_measurement: sex
-            equals: "Male"
+            equals: "Female"
           - from_calculation: timedUpAndGoBest
             is_greater_than: 12.0
-          - from_calculation: age
-            is_at_most: 80
       show_message:
         text: "Fall risk >12.0 sec (Sn .74, Sp .31)"
-        severity: concern
-
-    # Female fall risk: > 12.0 if age > 80, else > 13.5
-    - when:
-        all_of:
-          - from_measurement: sex
-            equals: "Female"
-          - from_calculation: age
-            is_greater_than: 80
-          - from_calculation: timedUpAndGoBest
-            is_greater_than: 12.0
-      show_message:
-        text: "Fall risk >12.0 sec (Sn .78, Sp .52)"
-        severity: concern
-
-    - when:
-        all_of:
-          - from_measurement: sex
-            equals: "Female"
-          - from_calculation: timedUpAndGoBest
-            is_greater_than: 13.5
-          - any_of:
-              - from_calculation: age
-                is_at_most: 80
-              - from_calculation: age
-                is_missing: true
-      show_message:
-        text: "Fall risk >13.5 sec (Sn .74, Sp .31)"
         severity: concern
 
     # Frailty
@@ -225,12 +226,12 @@ timedUpAndGoCognitive:
         is_missing: true
       then: skip
 
-    # Fall risk
+    # Fall risk (per v2.1 chart)
     - when:
         from_calculation: timedUpAndGoCognitiveBest
-        is_greater_than: 15
+        is_greater_than: 11
       show_message:
-        text: "Fall risk >15 (Sn 1.00, Sp .66)"
+        text: "Fall risk >11 sec (Sn 1.00, Sp .66)"
         severity: concern
 
     # Mobility classification by age/sex

@@ -301,21 +301,21 @@ describe('Interpretation: timedUpAndGo', () => {
         expect(result.some(m => m.text.includes('Fall risk') && m.text.includes('12.0'))).toBe(true)
     })
 
-    it('female age <= 80: fall risk when > 13.5', () => {
-        // FEMALE_75_TUG_FALL_RISK: best=13.6 > 13.5, age 75
+    it('female age <= 80: fall risk when > 12.0', () => {
+        // FEMALE_75_TUG_FALL_RISK: best=13.6 > 12.0, age 75
         const result = interpret(FEMALE_75_TUG_FALL_RISK)
-        expect(result.some(m => m.text.includes('Fall risk') && m.text.includes('13.5'))).toBe(true)
+        expect(result.some(m => m.text.includes('Fall risk') && m.text.includes('12.0'))).toBe(true)
     })
 
-    it('female age <= 80: NO fall risk at 13.5', () => {
+    it('female age <= 80: NO fall risk at 12.0', () => {
         const fs = buildFormState({
             sex: 'Female',
             dob: DOB_AGE_75,
-            tugTrials: [13.5, 14.0],  // best=13.5, NOT > 13.5
+            tugTrials: [12.0, 13.0],  // best=12.0, NOT > 12.0
         })
         const result = interpret(fs)
         if (result) {
-            expect(result.some(m => m.text.includes('Fall risk') && m.text.includes('13.5'))).toBe(false)
+            expect(result.some(m => m.text.includes('Fall risk') && m.text.includes('12.0'))).toBe(false)
         }
     })
 
@@ -380,21 +380,25 @@ describe('Interpretation: timedUpAndGoCognitive', () => {
         expect(interpret(EMPTY_FORM_STATE)).toBe(null)
     })
 
-    it('fall risk when > 15', () => {
-        // AT_RISK_FEMALE_92: best=22.0 > 15
+    it('fall risk when > 11', () => {
+        // AT_RISK_FEMALE_92: best=22.0 > 11
         const result = interpret(AT_RISK_FEMALE_92)
-        expect(result.some(m => m.text.includes('Fall risk') && m.text.includes('15'))).toBe(true)
+        expect(result.some(m => m.text.includes('Fall risk') && m.text.includes('11'))).toBe(true)
     })
 
-    it('no fall risk at exactly 15', () => {
-        // BORDERLINE_MALE_55: best=15.0, NOT > 15
-        const result = interpret(BORDERLINE_MALE_55)
+    it('no fall risk at exactly 11', () => {
+        const fs = buildFormState({
+            sex: 'Female',
+            dob: DOB_AGE_65,
+            tugCogTrials: [[11.0, 1]],  // best time=11.0, NOT > 11
+        })
+        const result = interpret(fs)
         if (result) {
-            expect(result.some(m => m.text.includes('Fall risk') && m.text.includes('>15'))).toBe(false)
+            expect(result.some(m => m.text.includes('Fall risk') && m.text.includes('>11'))).toBe(false)
         }
     })
 
-    it('no fall risk below 15', () => {
+    it('no fall risk below 11', () => {
         // HEALTHY_MALE_65: best=10.0
         const result = interpret(HEALTHY_MALE_65)
         expect(result).not.toBe(null)

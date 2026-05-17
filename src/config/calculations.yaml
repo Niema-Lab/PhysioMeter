@@ -28,6 +28,14 @@ fiveMeterFastWalkingSpeedBest:
   from_measurement: fiveMeterFastWalkingSpeed
   decimal_places: 2
 
+thirtySecondSitToStandCount:
+  label: "30 Second Sit to Stand - Count"
+  unit: "repetitions"
+  operation: field_min
+  from_measurement: thirtySecondSitToStand
+  field_label: "Count"
+  decimal_places: 0
+
 fourSquareStepTestBest:
   label: "Four Square Step Test - Best"
   unit: "s"

@@ -7,6 +7,7 @@ exports[`Calculation Parity: CALCULATION_SECTION_CONFIGS.valueFunction > full sc
   "fiveMeterUsualWalkingSpeedMean": "7.75",
   "fourSquareStepTestBest": "18.00",
   "modifiedFourSquareStepTestBest": null,
+  "thirtySecondSitToStandCount": null,
   "timedUpAndGoBest": "18.00",
   "timedUpAndGoCognitiveBest": "22.00",
 }
@@ -19,6 +20,7 @@ exports[`Calculation Parity: CALCULATION_SECTION_CONFIGS.valueFunction > full sc
   "fiveMeterUsualWalkingSpeedMean": "6.57",
   "fourSquareStepTestBest": "14.50",
   "modifiedFourSquareStepTestBest": null,
+  "thirtySecondSitToStandCount": null,
   "timedUpAndGoBest": "11.50",
   "timedUpAndGoCognitiveBest": "15.00",
 }
@@ -31,6 +33,7 @@ exports[`Calculation Parity: CALCULATION_SECTION_CONFIGS.valueFunction > full sc
   "fiveMeterUsualWalkingSpeedMean": null,
   "fourSquareStepTestBest": null,
   "modifiedFourSquareStepTestBest": null,
+  "thirtySecondSitToStandCount": null,
   "timedUpAndGoBest": null,
   "timedUpAndGoCognitiveBest": null,
 }
@@ -43,6 +46,7 @@ exports[`Calculation Parity: CALCULATION_SECTION_CONFIGS.valueFunction > full sc
   "fiveMeterUsualWalkingSpeedMean": "4.90",
   "fourSquareStepTestBest": "10.50",
   "modifiedFourSquareStepTestBest": null,
+  "thirtySecondSitToStandCount": null,
   "timedUpAndGoBest": "8.50",
   "timedUpAndGoCognitiveBest": "12.00",
 }
@@ -55,6 +59,7 @@ exports[`Calculation Parity: CALCULATION_SECTION_CONFIGS.valueFunction > full sc
   "fiveMeterUsualWalkingSpeedMean": "4.10",
   "fourSquareStepTestBest": "8.50",
   "modifiedFourSquareStepTestBest": null,
+  "thirtySecondSitToStandCount": null,
   "timedUpAndGoBest": "7.50",
   "timedUpAndGoCognitiveBest": "10.00",
 }
@@ -67,6 +72,7 @@ exports[`Calculation Parity: CALCULATION_SECTION_CONFIGS.valueFunction > full sc
   "fiveMeterUsualWalkingSpeedMean": "5.00",
   "fourSquareStepTestBest": null,
   "modifiedFourSquareStepTestBest": null,
+  "thirtySecondSitToStandCount": null,
   "timedUpAndGoBest": null,
   "timedUpAndGoCognitiveBest": null,
 }
@@ -79,6 +85,7 @@ exports[`Calculation Parity: CALCULATION_SECTION_CONFIGS.valueFunction > full sc
   "fiveMeterUsualWalkingSpeedMean": "4.10",
   "fourSquareStepTestBest": "8.50",
   "modifiedFourSquareStepTestBest": null,
+  "thirtySecondSitToStandCount": null,
   "timedUpAndGoBest": "7.50",
   "timedUpAndGoCognitiveBest": "10.00",
 }
@@ -91,6 +98,7 @@ exports[`Calculation Parity: CALCULATION_SECTION_CONFIGS.valueFunction > full sc
   "fiveMeterUsualWalkingSpeedMean": null,
   "fourSquareStepTestBest": null,
   "modifiedFourSquareStepTestBest": null,
+  "thirtySecondSitToStandCount": null,
   "timedUpAndGoBest": null,
   "timedUpAndGoCognitiveBest": null,
 }
@@ -103,6 +111,7 @@ exports[`Calculation Parity: CALCULATION_SECTION_CONFIGS.valueFunction > full sc
   "fiveMeterUsualWalkingSpeedMean": "9.75",
   "fourSquareStepTestBest": "22.00",
   "modifiedFourSquareStepTestBest": null,
+  "thirtySecondSitToStandCount": null,
   "timedUpAndGoBest": "20.00",
   "timedUpAndGoCognitiveBest": "25.00",
 }
@@ -115,6 +124,7 @@ exports[`Calculation Parity: CALCULATION_SECTION_CONFIGS.valueFunction > full sc
   "fiveMeterUsualWalkingSpeedMean": null,
   "fourSquareStepTestBest": null,
   "modifiedFourSquareStepTestBest": null,
+  "thirtySecondSitToStandCount": null,
   "timedUpAndGoBest": null,
   "timedUpAndGoCognitiveBest": null,
 }
@@ -127,6 +137,7 @@ exports[`Calculation Parity: CALCULATION_SECTION_CONFIGS.valueFunction > full sc
   "fiveMeterUsualWalkingSpeedMean": "3.45",
   "fourSquareStepTestBest": "6.50",
   "modifiedFourSquareStepTestBest": null,
+  "thirtySecondSitToStandCount": null,
   "timedUpAndGoBest": "5.50",
   "timedUpAndGoCognitiveBest": "8.00",
 }

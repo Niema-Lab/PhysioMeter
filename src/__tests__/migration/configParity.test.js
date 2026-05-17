@@ -52,10 +52,10 @@ describe('YAML Config Parity: MEASUREMENT_GROUP_MAP', () => {
         expect(m.interpretationKeys).toEqual(['fastWalkingSpeed'])
     })
 
-    it('maps thirtySecondSitToStand with empty arrays', () => {
+    it('maps thirtySecondSitToStand correctly', () => {
         const m = MEASUREMENT_GROUP_MAP.find(e => e.stateKey === 'thirtySecondSitToStand')
-        expect(m.calculationKeys).toEqual([])
-        expect(m.interpretationKeys).toEqual([])
+        expect(m.calculationKeys).toEqual(['thirtySecondSitToStandCount'])
+        expect(m.interpretationKeys).toEqual(['thirtySecondSitToStand'])
     })
 
     it('maps fourSquareStepTest correctly', () => {
@@ -79,7 +79,7 @@ describe('YAML Config Parity: MEASUREMENT_GROUP_MAP', () => {
     it('getInterpretationKeysForMeasurement works correctly', () => {
         expect(getInterpretationKeysForMeasurement('vitalSigns')).toEqual(['vitalSigns', 'annualMobilityAssessment'])
         expect(getInterpretationKeysForMeasurement('fiveMeterUsualWalkingSpeed')).toEqual(['usualWalkingSpeed'])
-        expect(getInterpretationKeysForMeasurement('thirtySecondSitToStand')).toEqual([])
+        expect(getInterpretationKeysForMeasurement('thirtySecondSitToStand')).toEqual(['thirtySecondSitToStand'])
         expect(getInterpretationKeysForMeasurement('nonexistent')).toEqual([])
     })
 

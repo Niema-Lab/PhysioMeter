@@ -19,8 +19,8 @@
       "properties": {
         "yellow_sd": {
           "type": "number",
-          "description": "SD-multiplier for the yellow zone boundary (mean ± yellow_sd × sd). Must be smaller than red_sd.",
-          "exclusiveMinimum": 0
+          "description": "SD-multiplier for the yellow zone boundary (mean ± yellow_sd × sd). Must be < red_sd. 0 places the green/yellow boundary at the mean (per AMA v2.1).",
+          "minimum": 0
         },
         "red_sd": {
           "type": "number",

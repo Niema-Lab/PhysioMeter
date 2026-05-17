@@ -242,9 +242,8 @@ Each per-test interpretation card may contain two kinds of messages:
   with the cutoff value, the age/sex reference mean and standard deviation,
   and a plain-language description of what the zone means. Zone boundaries
   are derived from age/sex normative data and the SD-band coefficients
-  configured in `thresholds.yaml`, per the Annual Mobility Assessment
-  Manual v2.
-- Optional **adverse-event flags** (e.g., "Fall risk >13.5 sec",
+  configured in `thresholds.yaml`, per the AMA v2.1 Interpretation Charts.
+- Optional **adverse-event flags** (e.g., "Fall risk >12.0 sec",
   "Frailty >=17.8") drawn from published cut-scores. These appear in
   addition to the zone classification when the value crosses a known
   risk threshold.
